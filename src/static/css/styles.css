@@ -283,7 +283,7 @@ body.modal-open #background {
 }
 
 .close-modal {
-    font-size: 25px;
+    font-size: 20px;
     background: none;
     border: none;
     cursor: pointer;
@@ -303,7 +303,7 @@ body.modal-open #background {
 }
 
 .song-history-item img {
-    background-image: url("../img/artwork.jpg");
+    content: url("../img/artwork.jpg");
     width: 80px;
     height: 80px;
     margin-right: 15px;
@@ -366,7 +366,6 @@ body.modal-open #background {
     text-align: left;
 }
 
-
 #stationModal .modal-content ul li {
     display: block;
     width: 100%;
@@ -374,14 +373,26 @@ body.modal-open #background {
     padding: 8px 150px 1px 1px;
     cursor: pointer;
     transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
-    border-radius: 7px;
     background: none; /* Ensure no background */
     text-align: left; /* Ensure left alignment */
 }
 
 #stationModal .modal-content ul li:hover {
     transform: scale(1.05);
-    background: rgba(255, 255, 255, 0.1); /* Slight hover effect */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* Bottom line appears on hover */
+}
+
+#stationModal .modal-content ul li.playing {
+    pointer-events: none;
+    position: relative;
+}
+
+#stationModal .modal-content ul li.playing::after {
+    content: url("../img/equalizer.gif");
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 

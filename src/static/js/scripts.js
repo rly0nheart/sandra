@@ -13,6 +13,7 @@ import {
     playbackHistoryModalContent,
     availableStationsModalContent,
     closePlaybackHistoryModalButton,
+    closeStationModalButton,
     modalTitle,
     songHistoryImages,
     volumeMuteUnmuteBtn,
@@ -36,7 +37,7 @@ let songDuration = 0;
 let elapsedTime = 0;
 let songHistory = [];
 let isLoading = false;
-let currentStationShortcode = null;
+let currentStationShortcode = null; // Declare currentStationShortcode here
 
 async function fetchNowPlaying(stationShortcode = currentStationShortcode) {
     try {
@@ -102,9 +103,8 @@ function applyColors(lightColor, darkColor) {
     playPauseButton.style.background = lightColor;
     playbackHistoryModalContent.style.border = `2px solid ${lightColor}`;
     availableStationsModalContent.style.border = `2px solid ${lightColor}`;
-    modalTitle.style.color = lightColor;
     songHistoryImages.forEach(img => img.style.border = `2px solid ${lightColor}`);
-    [playbackHistoryButton, nextButton, previousButton, stationsListButton, volumeMuteUnmuteBtn, closePlaybackHistoryModalButton].forEach(button => button.style.color = lightColor);
+    [playbackHistoryButton, nextButton, previousButton, stationsListButton, volumeMuteUnmuteBtn, closePlaybackHistoryModalButton, closeStationModalButton].forEach(button => button.style.color = lightColor);
     [songTitle, songAlbum, songArtist].forEach(el => {
         el.style.backgroundColor = lightColor;
         el.style.color = darkColor;
@@ -124,6 +124,14 @@ function updateStreamUrl(stationShortcode) {
     radioPlayer.load();
     radioPlayer.addEventListener('canplay', onCanPlay, { once: true });
     radioPlayer.addEventListener('error', onError, { once: true });
+
+    // Update the station list to show the playing indicator
+    const stationItems = stationsList.querySelectorAll("li");
+    stationItems.forEach(item => item.classList.remove("playing"));
+    const currentStationItem = Array.from(stationItems).find(item => item.dataset.shortcode === stationShortcode);
+    if (currentStationItem) {
+        currentStationItem.classList.add("playing");
+    }
 }
 
 function onCanPlay() {
@@ -160,6 +168,7 @@ async function fetchStations() {
         stations.forEach(station => {
             const stationItem = document.createElement("li");
             stationItem.textContent = station.name;
+            stationItem.dataset.shortcode = station.shortcode;
             stationItem.addEventListener("click", () => {
                 updateStreamUrl(station.shortcode);
                 fetchNowPlaying(station.shortcode);
@@ -167,6 +176,14 @@ async function fetchStations() {
             });
             stationsList.appendChild(stationItem);
         });
+
+        // Highlight the current playing station
+        if (currentStationShortcode) {
+            const currentStationItem = Array.from(stationsList.querySelectorAll("li")).find(item => item.dataset.shortcode === currentStationShortcode);
+            if (currentStationItem) {
+                currentStationItem.classList.add("playing");
+            }
+        }
     } catch (error) {
         console.error("Error fetching stations:", error);
     }

@@ -13,7 +13,7 @@ export {
     playbackHistoryModalContent,
     availableStationsModalContent,
     closePlaybackHistoryModalButton,
-    modalTitle,
+    closeStationModalButton,
     songHistoryImages,
     volumeMuteUnmuteBtn,
     volumeSlider,
@@ -43,10 +43,10 @@ const totalTimeDisplay = document.getElementById("total-time");
 const playbackHistoryModal = document.getElementById("playbackHistoryModal");
 const playbackHistoryModalContent = document.querySelector("#playbackHistoryModal .modal-content");
 const availableStationsModalContent = document.querySelector("#stationModal .modal-content");
-const closePlaybackHistoryModalButton = document.querySelector(".close-modal");
+const closePlaybackHistoryModalButton = document.querySelector("#playbackHistoryModal .close-modal");
+const closeStationModalButton = document.querySelector("#stationModal .close-modal");
 const playbackHistoryList = document.getElementById("playbackHistoryList");
 const songHistoryImages = document.querySelectorAll(".song-history-item img");
-const modalTitle = document.querySelector(".modal-title");
 const stationModal = document.getElementById("stationModal");
 const stationsList = document.getElementById("stationsList");
 
@@ -65,7 +65,7 @@ playbackHistoryButton.addEventListener("click", () => {
             <img src="${song.art || DEFAULT_ARTWORK}" alt="Artwork">
             <div>
                 <p><strong>${song.title}</strong></p>
-                <p>${song.artist} - ${song.album}</p>
+                <p>${song.artist || 'Unknown'} - ${song.album || 'Unknown'}</p>
                 <p class="faded">${minutesAgo} minutes ago</p>
             </div>
         `;
@@ -91,6 +91,30 @@ window.addEventListener("click", (event) => {
             playbackHistoryModal.classList.remove("hide");
         }, 300); // Match the transition duration
     }
+});
+
+// Event listener for closing the station modal when clicking outside of it
+window.addEventListener("click", (event) => {
+    if (event.target == stationModal) {
+        stationModal.classList.remove("show");
+        stationModal.classList.add("hide");
+        document.body.classList.remove("modal-open"); // Remove dim effect
+        setTimeout(() => {
+            stationModal.style.display = "none";
+            stationModal.classList.remove("hide");
+        }, 300);
+    }
+});
+
+// Event listener for closing the modal when clicking the close button
+closeStationModalButton.addEventListener("click", () => {
+    stationModal.classList.remove("show");
+    stationModalModal.classList.add("hide");
+    document.body.classList.remove("modal-open"); // Remove dim effect
+    setTimeout(() => {
+        stationModalModal.style.display = "none";
+        stationModalModal.classList.remove("hide");
+    }, 300); // Match the transition duration
 });
 
 // Event listener for closing the modal when clicking the close button
@@ -157,17 +181,6 @@ stationsListButton.addEventListener("click", () => {
     document.body.classList.add("modal-open"); // Dim the background
 });
 
-// Event listener for closing the station modal when clicking outside of it
-window.addEventListener("click", (event) => {
-    if (event.target == stationModal) {
-        stationModal.classList.remove("show");
-        stationModal.classList.add("hide");
-        document.body.classList.remove("modal-open"); // Remove dim effect
-        setTimeout(() => {
-            stationModal.style.display = "none";
-            stationModal.classList.remove("hide");
-        }, 300);
-    }
-});
+
 
 
