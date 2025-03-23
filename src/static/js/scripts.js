@@ -26,8 +26,8 @@ import {
 
 export { songHistory, DEFAULT_ARTWORK };
 
-const AZURACAST_SERVER = "127.0.0.1"; 
-const STREAM_FORMAT = "mp3";
+const AZURACAST_SERVER = "https://s1.cloudmu.id"; 
+const STREAM_FORMAT = "aac";
 const DEFAULT_ARTWORK = "src/static/img/default-arwork.jpg";
 const colorThief = new ColorThief();
 
