@@ -69,6 +69,7 @@ body {
 
 /* Artwork Styles */
 .artwork {
+    background: url("../img/artwork.jpg") no-repeat center/cover;
     width: 250px;
     height: 250px;
     border-radius: 50%;
@@ -302,6 +303,7 @@ body.modal-open #background {
 }
 
 .song-history-item img {
+    background-image: url("../img/artwork.jpg");
     width: 80px;
     height: 80px;
     margin-right: 15px;
@@ -349,4 +351,38 @@ body.modal-open #background {
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.9em;
 }
+
+#stationsList {
+    list-style: none; /* Removes default bullet points */
+    padding: 0; /* Ensures no extra space */
+    margin: 0;
+    text-align: left;
+}
+
+#stationModal .modal-content ul {
+    overflow: auto;
+    list-style: none;
+    padding: 10px 20px; /* Reduce right padding */
+    text-align: left;
+}
+
+
+#stationModal .modal-content ul li {
+    display: block;
+    width: 100%;
+    font-size: 25px;
+    padding: 8px 150px 1px 1px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
+    border-radius: 7px;
+    background: none; /* Ensure no background */
+    text-align: left; /* Ensure left alignment */
+}
+
+#stationModal .modal-content ul li:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.1); /* Slight hover effect */
+}
+
+
 

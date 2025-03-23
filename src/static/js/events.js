@@ -11,6 +11,7 @@ export {
     stationsListButton, 
     playbackHistoryButton,
     playbackHistoryModalContent,
+    availableStationsModalContent,
     closePlaybackHistoryModalButton,
     modalTitle,
     songHistoryImages,
@@ -18,7 +19,9 @@ export {
     volumeSlider,
     progress, 
     currentTimeDisplay, 
-    totalTimeDisplay
+    totalTimeDisplay,
+    stationModal,
+    stationsList
 };
 
 const artworkImg = document.getElementById("artwork");
@@ -38,11 +41,14 @@ const progress = document.getElementById("progress");
 const currentTimeDisplay = document.getElementById("current-time");
 const totalTimeDisplay = document.getElementById("total-time");
 const playbackHistoryModal = document.getElementById("playbackHistoryModal");
-const playbackHistoryModalContent = document.querySelector(".modal-content");
+const playbackHistoryModalContent = document.querySelector("#playbackHistoryModal .modal-content");
+const availableStationsModalContent = document.querySelector("#stationModal .modal-content");
 const closePlaybackHistoryModalButton = document.querySelector(".close-modal");
 const playbackHistoryList = document.getElementById("playbackHistoryList");
 const songHistoryImages = document.querySelectorAll(".song-history-item img");
 const modalTitle = document.querySelector(".modal-title");
+const stationModal = document.getElementById("stationModal");
+const stationsList = document.getElementById("stationsList");
 
 import { songHistory, DEFAULT_ARTWORK } from "./scripts.js";
 
@@ -142,4 +148,26 @@ radioPlayer.addEventListener("play", () => {
 radioPlayer.addEventListener("pause", () => {
     artworkImg.classList.remove("playing"); // Pause but don’t reset
 });
+
+stationsListButton.addEventListener("click", () => {
+    stationModal.style.display = "block";
+    setTimeout(() => {
+        stationModal.classList.add("show");
+    }, 10);
+    document.body.classList.add("modal-open"); // Dim the background
+});
+
+// Event listener for closing the station modal when clicking outside of it
+window.addEventListener("click", (event) => {
+    if (event.target == stationModal) {
+        stationModal.classList.remove("show");
+        stationModal.classList.add("hide");
+        document.body.classList.remove("modal-open"); // Remove dim effect
+        setTimeout(() => {
+            stationModal.style.display = "none";
+            stationModal.classList.remove("hide");
+        }, 300);
+    }
+});
+
 

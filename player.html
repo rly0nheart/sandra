@@ -16,15 +16,14 @@
     <script src="src/assets/color-thief.js/color-thief.min.js"></script>
 </head>
 <body>
-
     <div id="background"></div>
 
     <div class="player-container">
         <img id="artwork" class="artwork" src="" alt="Song Artwork">
         <div class="song-info">
-            <p id="song-title">Loading...</p>
-            <p id="song-album">Album</p>
-            <p id="song-artist">Artist</p>
+            <p id="song-title"></p>
+            <p id="song-album"></p>
+            <p id="song-artist"></p>
         </div>
     </div>
 
@@ -48,6 +47,17 @@
         </div>
     </div>
 
+    <!-- Station Modal -->
+    <div id="stationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Available Stations</h2>
+                <button class="close-modal" title="close"><i class="fa-solid fa-xmark"></i></i></button>
+            </div>
+            <ul id="stationsList"></ul>
+        </div>
+    </div>
+    
     <div id="playbackHistoryModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
