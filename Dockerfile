@@ -1,20 +1,17 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18
+# Use the official Nginx lightweight image
+FROM nginx:alpine
 
-# Set the working directory
-WORKDIR /usr/src/app
+# Set the working directory inside the container
+WORKDIR /usr/share/nginx/html
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Remove default Nginx static files
+RUN rm -rf ./*
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
+# Copy everything from the repo into the Nginx serving directory
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Expose port 80 to serve the site
+EXPOSE 80
 
-# Command to run the application
-CMD ["npm", "start"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]

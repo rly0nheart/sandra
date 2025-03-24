@@ -1,9 +1,8 @@
+
 services:
-  azuradio:
+  web:
+    image: azuradio-web 
     build: .
     ports:
-      - "3000:3000"
-    volumes:
-      - .:/usr/src/app
-    environment:
-      - NODE_ENV=production
+      - "3000:80"
+    restart: unless-stopped

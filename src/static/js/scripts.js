@@ -26,7 +26,7 @@ import {
 
 export { songHistory, DEFAULT_ARTWORK };
 
-const AZURACAST_SERVER = "http://127.0.0.1"; // "https://s1.cloudmu.id"; 
+const AZURACAST_SERVER = "https://s1.cloudmu.id"; 
 const DEFAULT_ARTWORK = "src/static/img/background.jpg";
 const colorThief = new ColorThief();
 
