@@ -19,11 +19,11 @@
     <div id="background"></div>
 
     <div class="player-container">
-        <img id="artwork" class="artwork" src="" alt="Song Artwork">
+        <img id="artwork" class="artwork" src="src/static/img/artwork.jpg">
         <div class="song-info">
-            <p id="song-title"></p>
-            <p id="song-album"></p>
-            <p id="song-artist"></p>
+            <p id="song-title">Title</p>
+            <p id="song-album">Album</p>
+            <p id="song-artist">Artist</p>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
     <div class="controls">
         <button id="stationsListBtn" class="control-button" title="Radio Stations"><i class="fa-solid fa-radio"></i></button>
         <button id="playPreviousBtn" class="control-button" title="Previous Channel"><i class="fa-solid fa-backward-step"></i></button>
-        <button id="playPauseBtn" class="control-button"><i class="fas fa-play"></i></button>
+        <button id="playPauseBtn" class="control-button"><i class="fas fa-pause"></i></button>
         <button id="playNextBtn" class="control-button" title="Next Channel"><i class="fa-solid fa-forward-step"></i></button>
         <button id="playbackHistoryBtn" class="control-button" title="Playback History"><i class="fa-solid fa-clock-rotate-left"></i></button>
         <div class="volume-container">
@@ -52,17 +52,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Radio Stations</h2>
-                <button class="close-modal" title="close"><i class="fa-solid fa-xmark"></i></i></button>
+                <button class="close-modal" title="close"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <ul id="stationsList"></ul>
         </div>
     </div>
     
+    <!-- Playback History Modal -->
     <div id="playbackHistoryModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Playback History</h2>
-                <button class="close-modal" title="close"><i class="fa-solid fa-xmark"></i></i></button>
+                <button class="close-modal" title="close"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="playbackHistoryList"></div>
         </div>

@@ -65,6 +65,8 @@ body {
     max-width: 900px;
     gap: 20px;
     margin-bottom: 20px;
+    margin-top: 300px;
+    margin-right: 580px;
 }
 
 /* Artwork Styles */
@@ -303,7 +305,7 @@ body.modal-open #background {
 }
 
 .song-history-item img {
-    content: url("../img/artwork.jpg");
+    background-image: url("../img/artwork.jpg");
     width: 80px;
     height: 80px;
     margin-right: 15px;
@@ -352,6 +354,7 @@ body.modal-open #background {
     font-size: 0.9em;
 }
 
+/* Stations List */
 #stationsList {
     list-style: none; /* Removes default bullet points */
     padding: 0; /* Ensures no extra space */
@@ -370,7 +373,7 @@ body.modal-open #background {
     display: block;
     width: 100%;
     font-size: 25px;
-    padding: 8px 150px 1px 1px;
+    padding: 8px 250px 0px 1px;
     cursor: pointer;
     transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
     background: none; /* Ensure no background */

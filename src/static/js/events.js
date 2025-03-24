@@ -52,11 +52,37 @@ const stationsList = document.getElementById("stationsList");
 
 import { songHistory, DEFAULT_ARTWORK } from "./scripts.js";
 
-// Event listener for playback history button
-playbackHistoryButton.addEventListener("click", () => {
-    playbackHistoryList.innerHTML = "";
+/**
+ * Show the modal with a slight delay to ensure the display property is set before adding the class.
+ * @param {HTMLElement} modal - The modal element to show.
+ */
+function showModal(modal) {
+    modal.style.display = "block";
+    setTimeout(() => {
+        modal.classList.add("show");
+    }, 10);
+    document.body.classList.add("modal-open"); // Dim the background
+}
 
-    // Populate playback history modal with song history
+/**
+ * Hide the modal with a slight delay to match the transition duration.
+ * @param {HTMLElement} modal - The modal element to hide.
+ */
+function hideModal(modal) {
+    modal.classList.remove("show");
+    modal.classList.add("hide");
+    document.body.classList.remove("modal-open"); // Remove dim effect
+    setTimeout(() => {
+        modal.style.display = "none";
+        modal.classList.remove("hide");
+    }, 300); // Match the transition duration
+}
+
+/**
+ * Populate the playback history modal with song history.
+ */
+function populatePlaybackHistory() {
+    playbackHistoryList.innerHTML = "";
     songHistory.forEach(song => {
         const minutesAgo = Math.floor((new Date() - new Date(song.playedAt)) / 60000);
         const songItem = document.createElement("div");
@@ -71,61 +97,30 @@ playbackHistoryButton.addEventListener("click", () => {
         `;
         playbackHistoryList.appendChild(songItem);
     });
+}
 
-    // Show the playback history modal
-    playbackHistoryModal.style.display = "block";
-    setTimeout(() => {
-        playbackHistoryModal.classList.add("show");
-    }, 10); // Slight delay to ensure the display property is set before adding the class
-    document.body.classList.add("modal-open"); // Dim the background
+// Event listener for playback history button
+playbackHistoryButton.addEventListener("click", () => {
+    populatePlaybackHistory();
+    showModal(playbackHistoryModal);
 });
 
 // Event listener for closing the modal when clicking outside of it
 window.addEventListener("click", (event) => {
     if (event.target == playbackHistoryModal) {
-        playbackHistoryModal.classList.remove("show");
-        playbackHistoryModal.classList.add("hide");
-        document.body.classList.remove("modal-open"); // Remove dim effect
-        setTimeout(() => {
-            playbackHistoryModal.style.display = "none";
-            playbackHistoryModal.classList.remove("hide");
-        }, 300); // Match the transition duration
+        hideModal(playbackHistoryModal);
+    } else if (event.target == stationModal) {
+        hideModal(stationModal);
     }
-});
-
-// Event listener for closing the station modal when clicking outside of it
-window.addEventListener("click", (event) => {
-    if (event.target == stationModal) {
-        stationModal.classList.remove("show");
-        stationModal.classList.add("hide");
-        document.body.classList.remove("modal-open"); // Remove dim effect
-        setTimeout(() => {
-            stationModal.style.display = "none";
-            stationModal.classList.remove("hide");
-        }, 300);
-    }
-});
-
-// Event listener for closing the modal when clicking the close button
-closeStationModalButton.addEventListener("click", () => {
-    stationModal.classList.remove("show");
-    stationModalModal.classList.add("hide");
-    document.body.classList.remove("modal-open"); // Remove dim effect
-    setTimeout(() => {
-        stationModalModal.style.display = "none";
-        stationModalModal.classList.remove("hide");
-    }, 300); // Match the transition duration
 });
 
 // Event listener for closing the modal when clicking the close button
 closePlaybackHistoryModalButton.addEventListener("click", () => {
-    playbackHistoryModal.classList.remove("show");
-    playbackHistoryModal.classList.add("hide");
-    document.body.classList.remove("modal-open"); // Remove dim effect
-    setTimeout(() => {
-        playbackHistoryModal.style.display = "none";
-        playbackHistoryModal.classList.remove("hide");
-    }, 300); // Match the transition duration
+    hideModal(playbackHistoryModal);
+});
+
+closeStationModalButton.addEventListener("click", () => {
+    hideModal(stationModal);
 });
 
 // Event listener for play/pause button
@@ -174,11 +169,7 @@ radioPlayer.addEventListener("pause", () => {
 });
 
 stationsListButton.addEventListener("click", () => {
-    stationModal.style.display = "block";
-    setTimeout(() => {
-        stationModal.classList.add("show");
-    }, 10);
-    document.body.classList.add("modal-open"); // Dim the background
+    showModal(stationModal);
 });
 
 
