@@ -24,7 +24,7 @@ import {
     stationsList
 } from "./events.js";
 
-export { songHistory, DEFAULT_ARTWORK };
+export { songHistory, DEFAULT_ARTWORK, currentStationShortcode };
 
 const AZURACAST_SERVER = "https://s1.cloudmu.id"; 
 const DEFAULT_ARTWORK = "src/static/img/background.jpg";
@@ -89,7 +89,7 @@ function updateNowPlaying(station) {
     artworkImg.crossOrigin = "Anonymous";
     artworkImg.src = song.art || DEFAULT_ARTWORK;
     background.style.backgroundImage = `url(${song.art})` || `url("${DEFAULT_ARTWORK}")`;
-    document.title = `${song.title} by ${song.artist} - AzuRadio`;
+    document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
     artworkImg.onload = () => extractColors(artworkImg);
 }
 
@@ -124,19 +124,31 @@ function getLuminance(color) {
  * @param {string} darkColor - The dark color to apply.
  */
 function applyColors(lightColor, darkColor) {
-    playPauseButton.style.color = darkColor;
-    playPauseButton.style.background = lightColor;
-    playbackHistoryModalContent.style.border = `2px solid ${lightColor}`;
-    availableStationsModalContent.style.border = `2px solid ${lightColor}`;
+    setElementStyles([
+        { element: playPauseButton, styles: { color: darkColor, background: lightColor } },
+        { element: playbackHistoryModalContent, styles: { border: `2px solid ${lightColor}` } },
+        { element: availableStationsModalContent, styles: { border: `2px solid ${lightColor}` } },
+        { element: artworkImg, styles: { border: `3px solid ${lightColor}` } },
+        { element: progress, styles: { background: `linear-gradient(to right, ${lightColor}, ${darkColor})` } },
+        { element: volumeSlider, styles: { accentColor: lightColor } }
+    ]);
+
     songHistoryImages.forEach(img => img.style.border = `2px solid ${lightColor}`);
     [playbackHistoryButton, nextButton, previousButton, stationsListButton, volumeMuteUnmuteBtn, closePlaybackHistoryModalButton, closeStationModalButton].forEach(button => button.style.color = lightColor);
     [songTitle, songAlbum, songArtist].forEach(el => {
         el.style.backgroundColor = lightColor;
         el.style.color = darkColor;
     });
-    artworkImg.style.border = `3px solid ${lightColor}`;
-    progress.style.background = `linear-gradient(to right, ${lightColor}, ${darkColor})`;
-    volumeSlider.style.accentColor = lightColor;
+}
+
+/**
+ * Sets multiple styles on multiple elements.
+ * @param {Array} elements - Array of objects containing elements and their styles.
+ */
+function setElementStyles(elements) {
+    elements.forEach(({ element, styles }) => {
+        Object.assign(element.style, styles);
+    });
 }
 
 /**
@@ -167,6 +179,22 @@ function updateStreamUrl(station) {
     if (currentStationItem) {
         currentStationItem.classList.add("playing");
     }
+
+    // Enable/disable previous and next buttons
+    const currentIndex = Array.from(stationItems).indexOf(currentStationItem);
+    updateButtonState(previousButton, currentIndex === 0);
+    updateButtonState(nextButton, currentIndex === stationItems.length - 1);
+}
+
+/**
+ * Updates the state of a button (enabled/disabled).
+ * @param {HTMLElement} button - The button element to update.
+ * @param {boolean} isDisabled - Whether the button should be disabled.
+ */
+function updateButtonState(button, isDisabled) {
+    button.disabled = isDisabled;
+    button.style.opacity = isDisabled ? 0.5 : 1;
+    button.style.pointerEvents = isDisabled ? 'none' : 'auto';
 }
 
 /**
@@ -242,9 +270,22 @@ async function fetchStations() {
                 currentStationItem.classList.add("playing");
             }
         }
+
+        // Update button states based on the current station
+        updateButtonStates();
     } catch (error) {
         console.error("Error fetching stations:", error);
     }
+}
+
+/**
+ * Updates the state of the previous and next buttons based on the current station.
+ */
+function updateButtonStates() {
+    const stationItems = Array.from(stationsList.querySelectorAll("li"));
+    const currentIndex = stationItems.findIndex(item => item.dataset.shortcode === currentStationShortcode);
+    updateButtonState(previousButton, currentIndex === 0);
+    updateButtonState(nextButton, currentIndex === stationItems.length - 1);
 }
 
 fetchNowPlaying();

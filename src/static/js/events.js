@@ -50,7 +50,7 @@ const songHistoryImages = document.querySelectorAll(".song-history-item img");
 const stationModal = document.getElementById("stationModal");
 const stationsList = document.getElementById("stationsList");
 
-import { songHistory, DEFAULT_ARTWORK } from "./scripts.js";
+import { songHistory, DEFAULT_ARTWORK, currentStationShortcode } from "./scripts.js";
 
 /**
  * Show the modal with a slight delay to ensure the display property is set before adding the class.
@@ -99,13 +99,51 @@ function populatePlaybackHistory() {
     });
 }
 
-// Event listener for playback history button
+/**
+ * Toggles the play/pause state of the radio player.
+ */
+function togglePlayPause() {
+    if (radioPlayer.paused) {
+        radioPlayer.play();
+        playPauseButton.innerHTML = '<i class="fas fa-pause"></i>'; // Change icon to pause
+    } else {
+        radioPlayer.pause();
+        playPauseButton.innerHTML = '<i class="fas fa-play"></i>'; // Change icon to play
+    }
+}
+
+/**
+ * Updates the volume icon based on the current volume level.
+ */
+function updateVolumeIcon() {
+    if (radioPlayer.volume === 0) {
+        volumeMuteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+    } else if (radioPlayer.volume > 0 && radioPlayer.volume < 0.5) {
+        volumeMuteUnmuteBtn.innerHTML = '<i class="fa-solid fa-volume-low"></i>';
+    } else {
+        volumeMuteUnmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    }
+}
+
+/**
+ * Toggles the mute/unmute state of the radio player.
+ */
+function toggleMuteUnmute() {
+    radioPlayer.muted = !radioPlayer.muted;
+    updateVolumeIcon();
+}
+
+/**
+ * Event listener for playback history button
+ */
 playbackHistoryButton.addEventListener("click", () => {
     populatePlaybackHistory();
     showModal(playbackHistoryModal);
 });
 
-// Event listener for closing the modal when clicking outside of it
+/**
+ * Event listener for closing the modal when clicking outside of it
+ */
 window.addEventListener("click", (event) => {
     if (event.target == playbackHistoryModal) {
         hideModal(playbackHistoryModal);
@@ -114,7 +152,9 @@ window.addEventListener("click", (event) => {
     }
 });
 
-// Event listener for closing the modal when clicking the close button
+/**
+ * Event listener for closing the modal when clicking the close button
+ */
 closePlaybackHistoryModalButton.addEventListener("click", () => {
     hideModal(playbackHistoryModal);
 });
@@ -123,51 +163,65 @@ closeStationModalButton.addEventListener("click", () => {
     hideModal(stationModal);
 });
 
-// Event listener for play/pause button
-playPauseButton.addEventListener("click", () => {
-    if (radioPlayer.paused) {
-        radioPlayer.play();
-        playPauseButton.innerHTML = '<i class="fas fa-pause"></i>'; // Change icon to pause
-    } else {
-        radioPlayer.pause();
-        playPauseButton.innerHTML = '<i class="fas fa-play"></i>'; // Change icon to play
-    }
-});
+/**
+ * Event listener for play/pause button
+ */
+playPauseButton.addEventListener("click", togglePlayPause);
 
-// Event listener for volume slider
+/**
+ * Event listener for volume slider
+ */
 volumeSlider.addEventListener("input", () => {
     radioPlayer.volume = volumeSlider.value;
-
-    // Update volume icon based on volume level
-    if (radioPlayer.volume === 0) {
-        volumeMuteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-    } else if (radioPlayer.volume > 0 && radioPlayer.volume < 0.5) {
-        volumeMuteUnmuteBtn.innerHTML = '<i class="fa-solid fa-volume-low"></i>';
-    } else {
-        volumeMuteUnmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-    }
+    updateVolumeIcon();
 });
 
-// Event listener for mute/unmute button
-volumeMuteUnmuteBtn.addEventListener("click", () => {
-    radioPlayer.muted = !radioPlayer.muted;
-    volumeMuteUnmuteBtn.innerHTML = radioPlayer.muted 
-        ? '<i class="fas fa-volume-mute"></i>' 
-        : (radioPlayer.volume > 0 && radioPlayer.volume < 0.5 
-            ? '<i class="fa-solid fa-volume-low"></i>' 
-            : '<i class="fas fa-volume-up"></i>');
-});
+/**
+ * Event listener for mute/unmute button
+ */
+volumeMuteUnmuteBtn.addEventListener("click", toggleMuteUnmute);
 
-// Event listener for when the radio starts playing
+/**
+ * Event listener for when the radio starts playing
+ */
 radioPlayer.addEventListener("play", () => {
     artworkImg.classList.add("playing"); // Resume rotation
 });
 
-// Event listener for when the radio is paused
+/**
+ * Event listener for when the radio is paused
+ */
 radioPlayer.addEventListener("pause", () => {
     artworkImg.classList.remove("playing"); // Pause but don’t reset
 });
 
+/**
+ * Event listener for previous button
+ */
+previousButton.addEventListener("click", () => {
+    const stationItems = Array.from(stationsList.querySelectorAll("li"));
+    const currentIndex = stationItems.findIndex(item => item.dataset.shortcode === currentStationShortcode);
+    if (currentIndex > 0) {
+        const previousStation = stationItems[currentIndex - 1];
+        previousStation.click();
+    }
+});
+
+/**
+ * Event listener for next button
+ */
+nextButton.addEventListener("click", () => {
+    const stationItems = Array.from(stationsList.querySelectorAll("li"));
+    const currentIndex = stationItems.findIndex(item => item.dataset.shortcode === currentStationShortcode);
+    if (currentIndex < stationItems.length - 1) {
+        const nextStation = stationItems[currentIndex + 1];
+        nextStation.click();
+    }
+});
+
+/**
+ * Event listener for stations list button
+ */
 stationsListButton.addEventListener("click", () => {
     showModal(stationModal);
 });
