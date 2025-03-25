@@ -3,7 +3,6 @@ import {
     songTitle, 
     songAlbum, 
     songArtist, 
-    background, 
     radioPlayer, 
     playPauseButton, 
     previousButton, 
@@ -14,20 +13,23 @@ import {
     availableStationsModalContent,
     closePlaybackHistoryModalButton,
     closeStationModalButton,
-    songHistoryImages,
     volumeMuteUnmuteBtn,
+    playerControls,
+    playerProgressContainer,
     volumeSlider,
     progress, 
     currentTimeDisplay, 
     totalTimeDisplay,
     stationModal,
-    stationsList
+    stationsList,
+    stationModalHeader,
+    playbackHistoryModalHeader,
 } from "./events.js";
 
-export { songHistory, DEFAULT_ARTWORK, currentStationShortcode };
+export { songHistory, currentStationShortcode };
 
 const AZURACAST_SERVER = "https://s1.cloudmu.id"; 
-const DEFAULT_ARTWORK = "src/static/img/background.jpg";
+const WIKIPEDIA_URL = "https://en.wikipedia.org"; // We use this to get, background image, otherwise it will fallback to the artwork
 const colorThief = new ColorThief();
 
 let lastSong = "";
@@ -78,26 +80,84 @@ async function fetchNowPlaying(stationShortcode = currentStationShortcode) {
 }
 
 /**
+ * Fetches the artist's image from Wikipedia.
+ * @param {string} artistName - The name of the artist.
+ * @returns {Promise<string|null>} The artist's image URL or null if not found.
+ */
+async function getWikipediaArtistImage(artistName) {
+    try {
+        const url = `${WIKIPEDIA_URL}/w/api.php?action=query&titles=${encodeURIComponent(artistName)}&prop=pageimages&format=json&pithumbsize=600&origin=*`;
+        const response = await fetch(url);
+
+        if (!response.ok) throw new Error(`Wikipedia API request failed with status: ${response.status}`);
+
+        const data = await response.json();
+        const pages = data.query.pages;
+        const firstPage = Object.values(pages)[0]; // Get the first page result
+        
+        // Check if the page has a thumbnail with a source image URL
+        if (firstPage.thumbnail && firstPage.thumbnail.source) {
+            return firstPage.thumbnail.source; // Return Wikipedia image if found
+        }
+
+        return null; // No image found
+    } catch (error) {
+        console.error("Error fetching Wikipedia artist image:", error);
+        return null; // On failure, return null (i.e., fallback to artwork)
+    }
+}
+
+/**
  * Updates the UI with the currently playing song information.
  * @param {Object} station - The station object containing the now playing song information.
  */
-function updateNowPlaying(station) {
+async function updateNowPlaying(station) {
     const { song } = station.now_playing;
     songTitle.textContent = song.title;
     songAlbum.textContent = song.album || "Unknown";
     songArtist.textContent = song.artist || "Unknown";
     artworkImg.crossOrigin = "Anonymous";
-    artworkImg.src = song.art || DEFAULT_ARTWORK;
-    background.style.backgroundImage = `url(${song.art})` || `url("${DEFAULT_ARTWORK}")`;
+    artworkImg.src = song.art;
     document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
-    artworkImg.onload = () => extractColors(artworkImg);
+
+    try {
+        // Fetch artist image from Wikipedia, fallback to artwork if not found
+        const artistImage = await getWikipediaArtistImage(song.artist);
+
+        if (artistImage) {
+            // If Wikipedia image exists, apply it and extract colours
+            document.body.style.background = `url(${artistImage}) center/cover no-repeat fixed`;
+            extractColorsFromExternalImage(artistImage); // Extract colours from Wikipedia image
+        } else {
+            // If no Wikipedia image, fallback to song artwork
+            document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
+            artworkImg.onload = () => extractColorsFromInternalImage(artworkImg); // Extract colours from artwork image
+        }
+    } catch (error) {
+        // Fallback scenario: if an error occurs, just use song artwork
+        console.error("Error while setting background image:", error);
+        document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`; // Use artwork as fallback
+        artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
+    }
 }
 
 /**
- * Extracts the dominant colors from the song artwork and applies them to the UI.
- * @param {HTMLImageElement} image - The image element containing the song artwork.
+ * Loads an external image (from Wikipedia or similar) and extracts its dominant colours.
+ * @param {string} imageUrl - The URL of the image to process.
  */
-function extractColors(image) {
+function extractColorsFromExternalImage(imageUrl) {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = imageUrl;
+    img.onload = () => extractColorsFromInternalImage(img);
+}
+
+/**
+ * Extracts the dominant colours from a given image and applies them to the UI.
+ * This function is used for both external images (like Wikipedia) and song artwork.
+ * @param {HTMLImageElement} image - The image element from which to extract colours.
+ */
+function extractColorsFromInternalImage(image) {
     if (image.complete) {
         const colors = colorThief.getPalette(image, 2);
         if (colors && colors.length >= 2) {
@@ -125,20 +185,56 @@ function getLuminance(color) {
  */
 function applyColors(lightColor, darkColor) {
     setElementStyles([
-        { element: playPauseButton, styles: { color: darkColor, background: lightColor } },
-        { element: playbackHistoryModalContent, styles: { border: `2px solid ${lightColor}` } },
-        { element: availableStationsModalContent, styles: { border: `2px solid ${lightColor}` } },
+        { element: playPauseButton, styles: { color: lightColor, background: darkColor } },
+        { element: closePlaybackHistoryModalButton, styles: { color: darkColor  } },
+        { element: closeStationModalButton, styles: { color: darkColor  } },
+        { element: playbackHistoryModalContent, styles: { border: `1px solid ${lightColor}` } },
+        { element: availableStationsModalContent, styles: { border: `1px solid ${lightColor}` } },
         { element: artworkImg, styles: { border: `3px solid ${lightColor}` } },
         { element: progress, styles: { background: `linear-gradient(to right, ${lightColor}, ${darkColor})` } },
         { element: volumeSlider, styles: { accentColor: lightColor } }
     ]);
+    
+    // Apply colors and hover effect color change to buttons
+    [
+        playbackHistoryButton,
+        nextButton,
+        previousButton,
+        stationsListButton,
+        volumeMuteUnmuteBtn,
+    ].forEach(button => {
+        button.style.color = lightColor;
 
-    songHistoryImages.forEach(img => img.style.border = `2px solid ${lightColor}`);
-    [playbackHistoryButton, nextButton, previousButton, stationsListButton, volumeMuteUnmuteBtn, closePlaybackHistoryModalButton, closeStationModalButton].forEach(button => button.style.color = lightColor);
-    [songTitle, songAlbum, songArtist].forEach(el => {
-        el.style.backgroundColor = lightColor;
-        el.style.color = darkColor;
+        /*button.addEventListener("mouseover", () => {
+            button.style.color = lightColor;
+        });
+    
+        button.addEventListener("mouseout", () => {
+            button.style.color = darkColor;
+        });*/
     });
+
+    [ stationModalHeader, playbackHistoryModalHeader ].forEach (header => {
+        header.style.color = darkColor;
+        header.style.background = lightColor;
+    });
+
+    // Apply colors to labels
+    [songTitle, songAlbum, songArtist].forEach(label => {
+        label.style.backgroundColor = lightColor;
+        label.style.color = darkColor;
+    });
+
+    // Apply colors to Play/Pause button
+    playPauseButton.addEventListener("mouseover", () => {
+        playPauseButton.style.color = darkColor;
+        playPauseButton.style.background = lightColor;
+    })
+
+    playPauseButton.addEventListener("mouseout", () => {
+        playPauseButton.style.color = lightColor;
+        playPauseButton.style.background = darkColor;
+    })
 }
 
 /**
@@ -150,6 +246,63 @@ function setElementStyles(elements) {
         Object.assign(element.style, styles);
     });
 }
+
+/**
+ * Hides specified elements after a period of user inactivity (no mouse movement).
+ *
+ * @param {HTMLElement[]} elementsArray - An array of actual DOM elements (e.g., [document.querySelector(".controls"), document.getElementById("navBar")]).
+ * @param {number} [timeout=5000] - The inactivity time (in milliseconds) before hiding the elements. Default is 5000ms (5 seconds).
+ */
+function hideOnInactivity(elementsArray, timeout = 5000) {
+    if (!Array.isArray(elementsArray) || elementsArray.length === 0) {
+        console.error("Invalid input: Provide an array of elements.");
+        return;
+    }
+
+    let inactivityTimer;
+
+    /**
+     * Hides all target elements by setting opacity to 0 and then display to none.
+     */
+    function hideElements() {
+        elementsArray.forEach(element => {
+            if (element instanceof HTMLElement) {
+                element.style.opacity = "0";
+                setTimeout(() => {
+                    element.style.display = "none";
+                }, 300); // Match the transition duration
+            }
+        });
+    }
+
+    /**
+     * Resets the inactivity timer, makes the elements visible,
+     * and starts a new countdown to hide them.
+     */
+    function resetTimer() {
+        elementsArray.forEach(element => {
+            if (element instanceof HTMLElement) {
+                element.style.display = "flex";
+                setTimeout(() => {
+                    element.style.opacity = "1";
+                }, 10); // Slight delay to ensure display is set before changing opacity
+            }
+        });
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(hideElements, timeout);
+    }
+
+    // Listen for mouse movement to reset the timer
+    document.addEventListener("mousemove", resetTimer);
+
+    // Start the timer initially
+    resetTimer();
+}
+
+// Apply smooth transition to the elements that will be hidden on curesor inactivity 
+[playerControls, playerProgressContainer].forEach(element => {
+    element.style.transition = "opacity 0.3s ease-in-out";
+});
 
 /**
  * Updates the stream URL for the radio player and handles the loading state.
@@ -257,9 +410,8 @@ async function fetchStations() {
             stationItem.addEventListener("click", () => {
                 updateStreamUrl(stationData); // Pass the full stationData (which includes .station)
                 fetchNowPlaying(station.shortcode); // Update UI with now-playing info
-                stationModal.classList.remove("show");
+                hideModal(stationModal); // Ensure the modal is hidden and dim effect is removed
             });
-
             stationsList.appendChild(stationItem);
         });
 
@@ -288,7 +440,9 @@ function updateButtonStates() {
     updateButtonState(nextButton, currentIndex === stationItems.length - 1);
 }
 
+
 fetchNowPlaying();
 setInterval(fetchNowPlaying, 7000);
 setInterval(updateProgress, 1000);
+hideOnInactivity([playerControls, playerProgressContainer], 2000); // Call the function directly
 fetchStations();

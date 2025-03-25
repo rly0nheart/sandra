@@ -3,7 +3,6 @@ export {
     songTitle, 
     songAlbum, 
     songArtist, 
-    background, 
     radioPlayer, 
     playPauseButton, 
     previousButton, 
@@ -16,25 +15,30 @@ export {
     closeStationModalButton,
     songHistoryImages,
     volumeMuteUnmuteBtn,
+    playerControls,
+    playerProgressContainer,
     volumeSlider,
     progress, 
     currentTimeDisplay, 
     totalTimeDisplay,
+    stationModalHeader,
+    playbackHistoryModalHeader,
     stationModal,
-    stationsList
+    stationsList,
 };
 
 const artworkImg = document.getElementById("artwork");
 const songTitle = document.getElementById("song-title");
 const songAlbum = document.getElementById("song-album");
 const songArtist = document.getElementById("song-artist");
-const background = document.getElementById("background");
 const radioPlayer = document.getElementById("radioPlayer");
 const playPauseButton = document.getElementById("playPauseBtn");
 const previousButton = document.getElementById("playPreviousBtn");
 const nextButton = document.getElementById("playNextBtn");
 const stationsListButton = document.getElementById("stationsListBtn");
 const playbackHistoryButton = document.getElementById("playbackHistoryBtn");
+const playerControls = document.querySelector(".controls");
+const playerProgressContainer = document.querySelector(".progress-container");
 const volumeSlider = document.getElementById("volume-slider");
 const volumeMuteUnmuteBtn = document.getElementById("volumeMuteUnmuteBtn");
 const progress = document.getElementById("progress");
@@ -47,10 +51,12 @@ const closePlaybackHistoryModalButton = document.querySelector("#playbackHistory
 const closeStationModalButton = document.querySelector("#stationModal .close-modal");
 const playbackHistoryList = document.getElementById("playbackHistoryList");
 const songHistoryImages = document.querySelectorAll(".song-history-item img");
+const stationModalHeader = document.querySelector("#stationModal .modal-header");
+const playbackHistoryModalHeader = document.querySelector("#playbackHistoryModal .modal-header");
 const stationModal = document.getElementById("stationModal");
 const stationsList = document.getElementById("stationsList");
 
-import { songHistory, DEFAULT_ARTWORK, currentStationShortcode } from "./scripts.js";
+import { songHistory, currentStationShortcode } from "./scripts.js";
 
 /**
  * Show the modal with a slight delay to ensure the display property is set before adding the class.
@@ -71,8 +77,8 @@ function showModal(modal) {
 function hideModal(modal) {
     modal.classList.remove("show");
     modal.classList.add("hide");
-    document.body.classList.remove("modal-open"); // Remove dim effect
     setTimeout(() => {
+        document.body.classList.remove("modal-open"); // Remove dim effect
         modal.style.display = "none";
         modal.classList.remove("hide");
     }, 300); // Match the transition duration
@@ -88,7 +94,7 @@ function populatePlaybackHistory() {
         const songItem = document.createElement("div");
         songItem.className = "song-history-item";
         songItem.innerHTML = `
-            <img src="${song.art || DEFAULT_ARTWORK}" alt="Artwork">
+            <img src="${song.art}" alt="Artwork">
             <div>
                 <p><strong>${song.title}</strong></p>
                 <p>${song.artist || 'Unknown'} - ${song.album || 'Unknown'}</p>
@@ -113,10 +119,10 @@ function togglePlayPause() {
 }
 
 /**
- * Updates the volume icon based on the current volume level.
+ * Updates the volume icon based on the current volume level and mute state.
  */
 function updateVolumeIcon() {
-    if (radioPlayer.volume === 0) {
+    if (radioPlayer.muted || radioPlayer.volume === 0) {
         volumeMuteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
     } else if (radioPlayer.volume > 0 && radioPlayer.volume < 0.5) {
         volumeMuteUnmuteBtn.innerHTML = '<i class="fa-solid fa-volume-low"></i>';
@@ -224,6 +230,15 @@ nextButton.addEventListener("click", () => {
  */
 stationsListButton.addEventListener("click", () => {
     showModal(stationModal);
+});
+
+/**
+ * Event listener for station item click
+ */
+stationsList.addEventListener("click", (event) => {
+    if (event.target.tagName === "LI") {
+        hideModal(stationModal);
+    }
 });
 
 
