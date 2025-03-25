@@ -25,6 +25,7 @@ export {
     playbackHistoryModalHeader,
     stationModal,
     stationsList,
+    hideModal
 };
 
 const artworkImg = document.getElementById("artwork");

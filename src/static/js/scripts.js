@@ -1,4 +1,5 @@
 import {
+    hideModal,
     artworkImg, 
     songTitle, 
     songAlbum, 
@@ -28,7 +29,7 @@ import {
 
 export { songHistory, currentStationShortcode };
 
-const AZURACAST_SERVER = "https://s1.cloudmu.id"; 
+const AZURACAST_SERVER = "http://127.0.0.1";//https://s1.cloudmu.id"; 
 const WIKIPEDIA_URL = "https://en.wikipedia.org"; // We use this to get, background image, otherwise it will fallback to the artwork
 const colorThief = new ColorThief();
 
