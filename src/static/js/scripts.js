@@ -28,7 +28,7 @@ import {
 
 export { songHistory, currentStationShortcode };
 
-const AZURACAST_SERVER = "http://127.0.0.1"; //"https://s1.cloudmu.id"; 
+const AZURACAST_SERVER = "https://s1.cloudmu.id"; 
 const WIKIPEDIA_URL = "https://en.wikipedia.org"; // We use this to get, background image, otherwise it will fallback to the artwork
 const colorThief = new ColorThief();
 
@@ -113,6 +113,7 @@ async function getWikipediaArtistImage(artistName) {
  */
 async function updateNowPlaying(station) {
     const { song } = station.now_playing;
+    const artistImage = await getWikipediaArtistImage(song.artist);
     songTitle.textContent = song.title;
     songAlbum.textContent = song.album || "Unknown";
     songArtist.textContent = song.artist || "Unknown";
@@ -120,24 +121,20 @@ async function updateNowPlaying(station) {
     artworkImg.src = song.art;
     document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
 
-    try {
-        // Fetch artist image from Wikipedia, fallback to artwork if not found
-        const artistImage = await getWikipediaArtistImage(song.artist);
-
-        if (artistImage) {
-            // If Wikipedia image exists, apply it and extract colours
-            document.body.style.background = `url(${artistImage}) center/cover no-repeat fixed`;
-            extractColorsFromExternalImage(artistImage); // Extract colours from Wikipedia image
+    if (artistImage) {
+        // If Wikipedia image exists, apply it as background
+        document.body.style.background = `url(${artistImage}) center/cover no-repeat fixed`;
+        // Try to extract colors from Wikipedia image
+        extractColorsFromExternalImage(artistImage);
+    } else {
+        // If no Wikipedia image, fallback to song artwork
+        document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
+        // Always extract colors from song artwork
+        if (artworkImg.complete) {
+            extractColorsFromInternalImage(artworkImg);
         } else {
-            // If no Wikipedia image, fallback to song artwork
-            document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
-            artworkImg.onload = () => extractColorsFromInternalImage(artworkImg); // Extract colours from artwork image
+            artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
         }
-    } catch (error) {
-        // Fallback scenario: if an error occurs, just use song artwork
-        console.error("Error while setting background image:", error);
-        document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`; // Use artwork as fallback
-        artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
     }
 }
 
