@@ -188,8 +188,8 @@ function applyColors(lightColor, darkColor) {
         { element: playPauseButton, styles: { color: lightColor, background: darkColor } },
         { element: closePlaybackHistoryModalButton, styles: { color: darkColor  } },
         { element: closeStationModalButton, styles: { color: darkColor  } },
-        { element: playbackHistoryModalContent, styles: { border: `1px solid ${lightColor}` } },
-        { element: availableStationsModalContent, styles: { border: `1px solid ${lightColor}` } },
+        { element: playbackHistoryModalContent, styles: { background: darkColor, border: `1px solid ${lightColor}` } },
+        { element: availableStationsModalContent, styles: { background: darkColor, border: `1px solid ${lightColor}` } },
         { element: artworkImg, styles: { border: `3px solid ${lightColor}` } },
         { element: progress, styles: { background: `linear-gradient(to right, ${lightColor}, ${darkColor})` } },
         { element: volumeSlider, styles: { accentColor: lightColor } }
