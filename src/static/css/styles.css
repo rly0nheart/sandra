@@ -258,7 +258,7 @@ body::before {
     margin: 0 auto;
     justify-content: left;
     width: 80%;
-    max-width: fit-content;
+    max-width: 500px;
     max-height: fit-content;
     color: white;
     border-radius: 8px;
