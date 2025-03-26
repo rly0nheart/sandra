@@ -25,13 +25,12 @@ import {
     stationsList,
     stationModalHeader,
     playbackHistoryModalHeader,
-    spinningDiscIcon
 } from "./events.js";
 
 export { songHistory, currentStationShortcode };
 
-const AZURACAST_SERVER = "http://127.0.0.1";//"https://s1.cloudmu.id"; 
-const WIKIPEDIA_URL = "https://en.wikipedia.org"; // We use this to get, background image, otherwise it will fallback to the artwork
+const response = await fetch('static/json/config.json');
+const config = await response.json();
 const colorThief = new ColorThief();
 
 let lastSong = "";
@@ -47,7 +46,7 @@ let currentStationShortcode = null;
  */
 async function fetchNowPlaying(stationShortcode = currentStationShortcode) {
     try {
-        const response = await fetch(`${AZURACAST_SERVER}/api/nowplaying`);
+        const response = await fetch(`${config.azuracast.server}/api/nowplaying`);
         const stations = await response.json();
         const station = stationShortcode 
             ? stations.find(st => st.station.shortcode === stationShortcode)
@@ -92,15 +91,29 @@ function updateStationListItems(stations) {
     stationsList.innerHTML = ""; // Clear the list before appending new items
     stations.forEach(stationData => {
         const stationItem = document.createElement("li");
+
+        // Conditionally construct the HTML for Up Next, only if available
+        const upNextHTML = stationData.playing_next 
+            ? `<p class="up-next"><strong>Up Next</strong>: <u>${stationData.playing_next.song.title ?? "N/A"}</u> by <strong>${stationData.playing_next.song.artist ?? "N/A"}</strong></p>`
+            : '';
+
         stationItem.innerHTML = `
-            <img src="${stationData.now_playing.song.art}" alt="Artwork" class="station-artwork">
+            <div class="station-artwork">
+                <img src="${stationData.now_playing.song.art}" alt="Artwork">
+                <div class="equalizer"></div>
+            </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><u><strong>Now Playing</strong></u>: <i>${stationData.now_playing.song.title}</i> by <strong>${stationData.now_playing.song.artist}</strong></p>
-                <p class="up-next"><u><strong>Up Next</strong></u>: <i>${stationData.playing_next?.song?.title ?? "N/A"}</i> by <strong>${stationData.playing_next?.song?.artist ?? "N/A"}</strong></p>
+                <p class="now-playing"><strong>Now Playing</strong>: <u>${stationData.now_playing.song.title}</u> by <strong>${stationData.now_playing.song.artist}</strong></p>
+                ${upNextHTML} <!-- Insert Up Next info only if it exists -->
             </div>
         `;
         stationItem.dataset.shortcode = stationData.station.shortcode;
+
+        // Highlight the current station if it matches the current station shortcode
+        if (currentStationShortcode && stationData.station.shortcode === currentStationShortcode) {
+            stationItem.classList.add("playing");
+        }
 
         stationItem.addEventListener("click", () => {
             updateStreamUrl(stationData); // Pass the full stationData (which includes .station)
@@ -109,15 +122,8 @@ function updateStationListItems(stations) {
         });
         stationsList.appendChild(stationItem);
     });
-
-    // Highlight the current playing station
-    if (currentStationShortcode) {
-        const currentStationItem = Array.from(stationsList.querySelectorAll("li")).find(item => item.dataset.shortcode === currentStationShortcode);
-        if (currentStationItem) {
-            currentStationItem.classList.add("playing");
-        }
-    }
 }
+
 
 /**
  * Fetches the artist's image from Wikipedia.
@@ -126,7 +132,7 @@ function updateStationListItems(stations) {
  */
 async function getWikipediaArtistImage(artistName) {
     try {
-        const url = `${WIKIPEDIA_URL}/w/api.php?action=query&titles=${encodeURIComponent(artistName)}&prop=pageimages&format=json&pithumbsize=600&origin=*`;
+        const url = `${config.ui.artistImageApi}?action=query&titles=${encodeURIComponent(artistName)}&prop=pageimages&format=json&pithumbsize=600&origin=*`;
         const response = await fetch(url);
 
         if (!response.ok) throw new Error(`Wikipedia API request failed with status: ${response.status}`);
@@ -153,7 +159,8 @@ async function getWikipediaArtistImage(artistName) {
  */
 async function updateNowPlaying(station) {
     const { song } = station.now_playing;
-    const artistImage = await getWikipediaArtistImage(song.artist);
+    const artistImage = config.ui.artistImageAsBackground ? await getWikipediaArtistImage(song.artist) : null; // Check if we want the Wikipedia image
+
     songTitle.textContent = song.title;
     songAlbum.textContent = song.album || "Unknown";
     songArtist.textContent = song.artist || "Unknown";
@@ -161,13 +168,13 @@ async function updateNowPlaying(station) {
     artworkImg.src = song.art;
     document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
 
-    if (artistImage) {
-        // If Wikipedia image exists, apply it as background
+    if (artistImage && config.ui.artistImageAsBackground) {
+        // If Wikipedia image exists and config.ui.artistImageAsBackground is true, apply it as background
         document.body.style.background = `url(${artistImage}) center/cover no-repeat fixed`;
         // Try to extract colors from Wikipedia image
         extractColorsFromExternalImage(artistImage);
     } else {
-        // If no Wikipedia image, fallback to song artwork
+        // If no Wikipedia image or config.ui.artistImageAsBackground is false, fallback to song artwork
         document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
         // Always extract colors from song artwork
         if (artworkImg.complete) {
@@ -177,6 +184,7 @@ async function updateNowPlaying(station) {
         }
     }
 }
+
 
 /**
  * Loads an external image (from Wikipedia or similar) and extracts its dominant colours.
@@ -435,7 +443,7 @@ function formatTime(seconds) {
  */
 async function fetchStations() {
     try {
-        const response = await fetch(`${AZURACAST_SERVER}/api/nowplaying`); // Fetch only from /nowplaying
+        const response = await fetch(`${config.azuracast.server}/api/nowplaying`); // Fetch only from /nowplaying
         const nowPlayingStations = await response.json();
         stationsList.innerHTML = "";
 

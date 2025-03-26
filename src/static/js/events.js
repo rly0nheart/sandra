@@ -26,7 +26,6 @@ export {
     stationModal,
     stationsList,
     hideModal,
-    spinningDiscIcon
 };
 
 const artworkImg = document.getElementById("artwork");
@@ -63,7 +62,6 @@ let volumeLowIcon = '<i class="fa-solid fa-volume-low"></i>';
 let volumeUpIcon = '<i class="fas fa-volume-up"></i>';
 let pauseIcon = '<i class="fas fa-pause"></i>';
 let playIcon = '<i class="fas fa-play"></i>';
-let spinningDiscIcon = '<i class="fa-solid fa-compact-disc fa-spin"></i>'
 
 import { songHistory, currentStationShortcode } from "./scripts.js";
 
