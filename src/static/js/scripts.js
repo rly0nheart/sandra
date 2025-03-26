@@ -163,8 +163,8 @@ async function updateNowPlaying(station) {
     const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; // Check if we want the Wikipedia image
 
     songTitle.textContent = song.title;
-    songAlbum.textContent = song.album || "Unknown";
-    songArtist.textContent = song.artist || "Unknown";
+    songAlbum.textContent = song.album || "Unknown album";
+    songArtist.textContent = song.artist || "Unknown artist";
     artworkImg.crossOrigin = "Anonymous";
     artworkImg.src = song.art;
     document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
