@@ -1,0 +1,14 @@
+{
+    "azuracast": {
+        "server": "https://s1.cloudmu.id",
+        "online": "https://s1.cloudmu.id"
+    },
+    "ui": {
+        "artistImageAsBackground": false,
+        "artistImageAPI": "https://en.wikipedia.org/w/api.php"
+    },
+    "audio": {
+        "autoPlay": true,
+        "volumeLevel": 0.8
+    }
+}
