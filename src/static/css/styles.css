@@ -76,20 +76,20 @@ body::before {
 /* Artwork Styles */
 .artwork {
     background: url("../img/artwork.jpg") no-repeat center/cover;
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    animation: var(--artwork-animation);
-    -webkit-animation: var(--artwork-animation);
+    width: 200px; /* 250 */
+    height: 200px; /* 250 */
+    border-radius: 15px; /* 50% */
+    /*animation: var(--artwork-animation);
+    -webkit-animation: var(--artwork-animation);*/
     pointer-events: none;
-    animation-play-state: paused;
-    -webkit-animation-play-state: paused;
+    /*animation-play-state: paused;
+    -webkit-animation-play-state: paused;*/
 }
 
-.artwork.playing {
+/*.artwork.playing {
     animation-play-state: running;
     -webkit-animation-play-state: running;
-}
+}*
 
 /* Song Info */
 .song-info {
@@ -336,6 +336,13 @@ body::before {
     text-align: left;
 }
 
+.song-history-item p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Prevents text from overflowing */
+    max-width: 500px; /* Ensures text stays within its container */
+     
+}
 .song-history-item p:first-child {
     font-weight: bold;
     font-size: 23px;
