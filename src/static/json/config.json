@@ -1,11 +1,11 @@
 {
     "azuracast": {
-        "server": "https://s1.cloudmu.id",
+        "server": "http://127.0.0.1",
         "online": "https://s1.cloudmu.id"
     },
     "ui": {
-        "artistImageAsBackground": false,
-        "artistImageAPI": "https://en.wikipedia.org/w/api.php"
+        "artistImageAsBackground": true,
+        "artistImageAPI": "https://api.deezer.com/search/artist"
     },
     "audio": {
         "autoPlay": true,

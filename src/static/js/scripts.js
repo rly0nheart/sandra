@@ -126,32 +126,33 @@ function updateStationListItems(stations) {
 
 
 /**
- * Fetches the artist's image from Wikipedia.
+ * Fetches the artist's image from Deezer API.
  * @param {string} artistName - The name of the artist.
  * @returns {Promise<string|null>} The artist's image URL or null if not found.
  */
-async function getWikipediaArtistImage(artistName) {
+async function getArtistImageFromDeezer(artistName) {
     try {
-        const url = `${config.ui.artistImageApi}?action=query&titles=${encodeURIComponent(artistName)}&prop=pageimages&format=json&pithumbsize=600&origin=*`;
-        const response = await fetch(url);
-
-        if (!response.ok) throw new Error(`Wikipedia API request failed with status: ${response.status}`);
-
-        const data = await response.json();
-        const pages = data.query.pages;
-        const firstPage = Object.values(pages)[0]; // Get the first page result
+        // Use CORS proxy service
+        const proxyUrl = 'https://corsproxy.io/?';
+        const url = `${config.ui.artistImageAPI}?q=${encodeURIComponent(artistName)}`;
         
-        // Check if the page has a thumbnail with a source image URL
-        if (firstPage.thumbnail && firstPage.thumbnail.source) {
-            return firstPage.thumbnail.source; // Return Wikipedia image if found
+        const response = await fetch(proxyUrl + url);
+        if (!response.ok) throw new Error(`Deezer API request failed with status: ${response.status}`);
+        
+        const data = await response.json();
+        
+        // Check if the artist data exists and contains the image
+        if (data.data && data.data.length > 0 && data.data[0].picture_xl) {
+            return data.data[0].picture_xl; // Return the artist's image (large size)
         }
 
-        return null; // No image found
+        return null; // No image found for the artist
     } catch (error) {
-        console.error("Error fetching Wikipedia artist image:", error);
-        return null; // On failure, return null (i.e., fallback to artwork)
+        console.error("Error fetching Deezer artist image:", error);
+        return null; // On failure, return null
     }
 }
+
 
 /**
  * Updates the UI with the currently playing song information.
@@ -159,7 +160,7 @@ async function getWikipediaArtistImage(artistName) {
  */
 async function updateNowPlaying(station) {
     const { song } = station.now_playing;
-    const artistImage = config.ui.artistImageAsBackground ? await getWikipediaArtistImage(song.artist) : null; // Check if we want the Wikipedia image
+    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; // Check if we want the Wikipedia image
 
     songTitle.textContent = song.title;
     songAlbum.textContent = song.album || "Unknown";
