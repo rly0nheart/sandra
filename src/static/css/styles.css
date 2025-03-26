@@ -197,6 +197,18 @@ body::before {
     transform: scale(1.1);
 }
 
+/* Apply background light effect on click to all buttons except playPause and volume buttons */
+.control-button:active {
+    background-color: rgba(255, 255, 255, 0.3); /* Light background on click */
+    transform: scale(0.95); /* Slight shrink effect */
+}
+
+/* Exclude playPauseBtn and volumeMuteUnmuteBtn from the active effect */
+#playPauseBtn:active, #volumeMuteUnmuteBtn:active {
+    background: none; /* No background effect */
+    transform: none; /* No shrinking */
+}
+
 #muteButton {
     color: white;
     background: none;
@@ -258,13 +270,14 @@ body::before {
     margin: 0 auto;
     justify-content: left;
     width: 80%;
-    max-width: 500px;
-    max-height: fit-content;
+    max-width: fit-content;
+    max-height: 80%;
     color: white;
     border-radius: 8px;
     transition: opacity 0.3s ease, transform 0.3s ease-in-out;
     transform: translateY(-100%);
     margin-top: 20px;
+    overflow: auto;
 }
 
 .modal.show .modal-content {
@@ -307,10 +320,10 @@ body::before {
 
 .song-history-item img {
     background-image: url("../img/artwork.jpg");
-    width: 80px;
-    height: 80px;
+    width: 85px;
+    height: 85px;
     margin-right: 15px;
-    border-radius: 50%;
+    border-radius: 5px;
     pointer-events: none;
     border: 2px solid antiquewhite;
 }
@@ -327,6 +340,7 @@ body::before {
     font-weight: bold;
     font-size: 23px;
     margin-bottom: 2px;
+    text-wrap: wrap;
 }
 
 .song-history-item p:nth-child(2) {
@@ -368,19 +382,43 @@ body::before {
 }
 
 #stationModal .modal-content ul li {
-    display: block;
-    width: 100%;
+    display: flex;
+    align-items: center;
     font-size: 25px;
-    padding: 8px 250px 0px 1px;
+    padding: 8px 100px 8px 8px;
     cursor: pointer;
     transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
     background: none;
     text-align: left;
+    border-radius: 4px;
 }
+
+#stationModal .modal-content ul li .station-artwork {
+    width: 90px;
+    height: 90px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 2px solid antiquewhite;
+}
+
+#stationModal .modal-content ul li .station-info {
+    display: flex;
+    flex-direction: column;
+}
+
+#stationModal .modal-content ul li .station-name {
+    font-weight: bold;
+}
+
+#stationModal .modal-content ul li .now-playing, #stationModal .modal-content ul li .up-next {
+    font-size: 22px;
+    margin: 2px 0;
+}
+
 
 #stationModal .modal-content ul li:hover {
     transform: scale(1.05);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 #stationModal .modal-content ul li.playing {
@@ -460,7 +498,7 @@ body::before {
     }
 
     .modal-content {
-        width: fit-content;
+        width: 400px;
         height: fit-content;
     }
 }

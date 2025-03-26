@@ -25,7 +25,8 @@ export {
     playbackHistoryModalHeader,
     stationModal,
     stationsList,
-    hideModal
+    hideModal,
+    spinningDiscIcon
 };
 
 const artworkImg = document.getElementById("artwork");
@@ -56,6 +57,13 @@ const stationModalHeader = document.querySelector("#stationModal .modal-header")
 const playbackHistoryModalHeader = document.querySelector("#playbackHistoryModal .modal-header");
 const stationModal = document.getElementById("stationModal");
 const stationsList = document.getElementById("stationsList");
+
+let volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
+let volumeLowIcon = '<i class="fa-solid fa-volume-low"></i>';
+let volumeUpIcon = '<i class="fas fa-volume-up"></i>';
+let pauseIcon = '<i class="fas fa-pause"></i>';
+let playIcon = '<i class="fas fa-play"></i>';
+let spinningDiscIcon = '<i class="fa-solid fa-compact-disc fa-spin"></i>'
 
 import { songHistory, currentStationShortcode } from "./scripts.js";
 
@@ -92,12 +100,12 @@ function populatePlaybackHistory() {
     playbackHistoryList.innerHTML = "";
     songHistory.forEach(song => {
         const minutesAgo = Math.floor((new Date() - new Date(song.playedAt)) / 60000);
-        const songItem = document.createElement("div");
+        const songItem = document.createElement("li");
         songItem.className = "song-history-item";
         songItem.innerHTML = `
-            <img src="${song.art}" alt="Artwork">
+            <img src="${song.art}" alt="Artwork" _target="blank">
             <div>
-                <p><strong>${song.title}</strong></p>
+                <p>${song.title}</p>
                 <p>${song.artist || 'Unknown'} - ${song.album || 'Unknown'}</p>
                 <p class="faded">${minutesAgo} minutes ago</p>
             </div>
@@ -112,10 +120,10 @@ function populatePlaybackHistory() {
 function togglePlayPause() {
     if (radioPlayer.paused) {
         radioPlayer.play();
-        playPauseButton.innerHTML = '<i class="fas fa-pause"></i>'; // Change icon to pause
+        playPauseButton.innerHTML = pauseIcon; // Change icon to pause
     } else {
         radioPlayer.pause();
-        playPauseButton.innerHTML = '<i class="fas fa-play"></i>'; // Change icon to play
+        playPauseButton.innerHTML = playIcon; // Change icon to play
     }
 }
 
@@ -124,11 +132,11 @@ function togglePlayPause() {
  */
 function updateVolumeIcon() {
     if (radioPlayer.muted || radioPlayer.volume === 0) {
-        volumeMuteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        volumeMuteUnmuteBtn.innerHTML = volumeMuteIcon;
     } else if (radioPlayer.volume > 0 && radioPlayer.volume < 0.5) {
-        volumeMuteUnmuteBtn.innerHTML = '<i class="fa-solid fa-volume-low"></i>';
+        volumeMuteUnmuteBtn.innerHTML = volumeLowIcon;
     } else {
-        volumeMuteUnmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        volumeMuteUnmuteBtn.innerHTML = volumeUpIcon;
     }
 }
 

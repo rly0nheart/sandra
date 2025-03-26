@@ -25,11 +25,12 @@ import {
     stationsList,
     stationModalHeader,
     playbackHistoryModalHeader,
+    spinningDiscIcon
 } from "./events.js";
 
 export { songHistory, currentStationShortcode };
 
-const AZURACAST_SERVER = "http://127.0.0.1";//https://s1.cloudmu.id"; 
+const AZURACAST_SERVER = "http://127.0.0.1";//"https://s1.cloudmu.id"; 
 const WIKIPEDIA_URL = "https://en.wikipedia.org"; // We use this to get, background image, otherwise it will fallback to the artwork
 const colorThief = new ColorThief();
 
@@ -74,9 +75,47 @@ async function fetchNowPlaying(stationShortcode = currentStationShortcode) {
                 art: song.song.art,
                 playedAt: new Date(song.played_at * 1000)
             }));
+
+            // Update the station list items dynamically
+            updateStationListItems(stations);
         }
     } catch (error) {
         console.error("Error fetching now playing data:", error);
+    }
+}
+
+/**
+ * Updates the station list items with the latest now playing and up next information.
+ * @param {Array} stations - The array of station data.
+ */
+function updateStationListItems(stations) {
+    stationsList.innerHTML = ""; // Clear the list before appending new items
+    stations.forEach(stationData => {
+        const stationItem = document.createElement("li");
+        stationItem.innerHTML = `
+            <img src="${stationData.now_playing.song.art}" alt="Artwork" class="station-artwork">
+            <div class="station-info">
+                <span class="station-name">${stationData.station.name}</span>
+                <p class="now-playing"><u><strong>Now Playing</strong></u>: <i>${stationData.now_playing.song.title}</i> by <strong>${stationData.now_playing.song.artist}</strong></p>
+                <p class="up-next"><u><strong>Up Next</strong></u>: <i>${stationData.playing_next?.song?.title ?? "N/A"}</i> by <strong>${stationData.playing_next?.song?.artist ?? "N/A"}</strong></p>
+            </div>
+        `;
+        stationItem.dataset.shortcode = stationData.station.shortcode;
+
+        stationItem.addEventListener("click", () => {
+            updateStreamUrl(stationData); // Pass the full stationData (which includes .station)
+            fetchNowPlaying(stationData.station.shortcode); // Update UI with now-playing info
+            hideModal(stationModal); // Ensure the modal is hidden and dim effect is removed
+        });
+        stationsList.appendChild(stationItem);
+    });
+
+    // Highlight the current playing station
+    if (currentStationShortcode) {
+        const currentStationItem = Array.from(stationsList.querySelectorAll("li")).find(item => item.dataset.shortcode === currentStationShortcode);
+        if (currentStationItem) {
+            currentStationItem.classList.add("playing");
+        }
     }
 }
 
@@ -335,6 +374,9 @@ function updateStreamUrl(station) {
     const currentIndex = Array.from(stationItems).indexOf(currentStationItem);
     updateButtonState(previousButton, currentIndex === 0);
     updateButtonState(nextButton, currentIndex === stationItems.length - 1);
+
+    // Immediately update the player info
+    updateNowPlaying(station);
 }
 
 /**
@@ -397,21 +439,8 @@ async function fetchStations() {
         const nowPlayingStations = await response.json();
         stationsList.innerHTML = "";
 
-        nowPlayingStations.forEach(stationData => {
-            const station = stationData.station; // Extract station details
-            if (!station) return;
-
-            const stationItem = document.createElement("li");
-            stationItem.textContent = station.name;
-            stationItem.dataset.shortcode = station.shortcode;
-
-            stationItem.addEventListener("click", () => {
-                updateStreamUrl(stationData); // Pass the full stationData (which includes .station)
-                fetchNowPlaying(station.shortcode); // Update UI with now-playing info
-                hideModal(stationModal); // Ensure the modal is hidden and dim effect is removed
-            });
-            stationsList.appendChild(stationItem);
-        });
+        // Update the station list items dynamically
+        updateStationListItems(nowPlayingStations);
 
         // Highlight the current playing station
         if (currentStationShortcode) {
@@ -440,7 +469,7 @@ function updateButtonStates() {
 
 
 fetchNowPlaying();
-setInterval(fetchNowPlaying, 7000);
+setInterval(fetchNowPlaying, 5000);
 setInterval(updateProgress, 1000);
 hideOnInactivity([playerControls, playerProgressContainer], 2000); // Call the function directly
 fetchStations();
