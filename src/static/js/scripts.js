@@ -478,7 +478,7 @@ function updateButtonStates() {
 
 
 fetchNowPlaying();
-setInterval(fetchNowPlaying, 7000);
+setInterval(fetchNowPlaying, 5000);
 setInterval(updateProgress, 1000);
 hideOnInactivity([playerControls, playerProgressContainer], 2000); // Call the function directly
 fetchStations();

@@ -448,12 +448,14 @@ body::before {
 /* Now Playing & Up Next */
 #stationModal .modal-content ul li .now-playing, 
 #stationModal .modal-content ul li .up-next {
+    display: block; 
     font-size: 22px;
     margin: 2px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 100%; /* Ensures text stays within its container */
+    max-width: 500px; /* Ensures text stays within its container */
+     
 }
 
 /* Hover Effect */
