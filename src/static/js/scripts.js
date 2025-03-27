@@ -162,7 +162,7 @@ async function updateNowPlaying(station) {
     const { song } = station.now_playing;
     const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; // Check if we want the Wikipedia image
 
-    songTitle.textContent = song.title;
+    songTitle.textContent = song.title || "Unknown title";
     songAlbum.textContent = song.album || "Unknown album";
     songArtist.textContent = song.artist || "Unknown artist";
     artworkImg.crossOrigin = "Anonymous";
@@ -188,7 +188,7 @@ async function updateNowPlaying(station) {
 
 
 /**
- * Loads an external image (from Wikipedia or similar) and extracts its dominant colours.
+ * Loads an external image and extracts its dominant colours.
  * @param {string} imageUrl - The URL of the image to process.
  */
 function extractColorsFromExternalImage(imageUrl) {

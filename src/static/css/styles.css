@@ -89,7 +89,7 @@ body::before {
 /*.artwork.playing {
     animation-play-state: running;
     -webkit-animation-play-state: running;
-}*
+}*/
 
 /* Song Info */
 .song-info {
@@ -319,7 +319,7 @@ body::before {
 }
 
 .song-history-item img {
-    background-image: url("../img/artwork.jpg");
+    /*background-image: url("../img/artwork.jpg");*/
     width: 85px;
     height: 85px;
     margin-right: 15px;
