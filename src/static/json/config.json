@@ -1,12 +1,18 @@
 {
     "azuracast": {
         "server": "http://127.0.0.1",
-        "online": "https://s1.cloudmu.id"
+        "subscriptions": {
+                "station:boomer_fm": { "recover": true },
+                "station:abba_radio": { "recover": true },
+                "station:afro_flava": { "recover": true },
+                "station:colors": { "recover": true }
+            }
     },
     "ui": {
         "artistImageAsBackground": true,
         "artistImageAPI": "https://api.deezer.com/search/artist"
     },
+    "corsProxy": "https://corsproxy.io/?",
     "audio": {
         "autoPlay": true,
         "volumeLevel": 0.8

@@ -3,7 +3,9 @@ export {
     songTitle, 
     songAlbum, 
     songArtist, 
-    radioPlayer, 
+    radioPlayer,
+    playIcon,
+    pauseIcon,
     playPauseButton, 
     previousButton, 
     nextButton, 
@@ -26,6 +28,7 @@ export {
     stationModal,
     stationsList,
     hideModal,
+    populatePlaybackHistory
 };
 
 const artworkImg = document.getElementById("artwork");

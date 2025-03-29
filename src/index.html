@@ -19,9 +19,9 @@
     <div class="player-container">
         <img id="artwork" class="artwork" src="static/img/artwork.jpg">
         <div class="song-info">
-            <p id="song-title">Title</p>
-            <p id="song-album">Album</p>
-            <p id="song-artist">Artist</p>
+            <p id="title">Unknown title</p>
+            <p id="artist">Unknown artist</p>
+            <p id="album">Unknown album</p>
         </div>
     </div>
 
@@ -68,6 +68,8 @@
     </div>
 
     <audio id="radioPlayer" preload="auto"></audio>
+
+    <!-- Note: Ensure the AzuraCast server supports SSE at the /api/nowplaying/sse endpoint -->
 
     <!-- External JavaScript -->
     <script type="module" src="static/js/scripts.js"></script>

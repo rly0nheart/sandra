@@ -22,12 +22,17 @@ import {
     currentTimeDisplay, 
     totalTimeDisplay,
     stationModal,
+    albumIconSpinning,
+    artistIcon,
     stationsList,
     stationModalHeader,
     playbackHistoryModalHeader,
+    playIcon,
+    pauseIcon,
+    populatePlaybackHistory, // Import the function to update the modal
 } from "./events.js";
 
-export { songHistory, currentStationShortcode };
+export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI }; // Export updateNowPlayingUI
 
 const response = await fetch('static/json/config.json');
 const config = await response.json();
@@ -37,63 +42,43 @@ let lastSong = "";
 let songDuration = 0;
 let elapsedTime = 0;
 let songHistory = [];
-let isLoading = false;
+let isLoading = false; // Ensure this is exported
 let currentStationShortcode = null; 
 
-/**
- * Fetches the currently playing song information from the server.
- * @param {string} stationShortcode - The shortcode of the station to fetch data for.
- */
-async function fetchNowPlaying(stationShortcode = currentStationShortcode) {
-    try {
-        const response = await fetch(`${config.azuracast.server}/api/nowplaying`);
-        const stations = await response.json();
-        const station = stationShortcode 
-            ? stations.find(st => st.station.shortcode === stationShortcode)
-            : stations[0];
-
-        if (!station) {
-            console.error("No matching station found.");
-            return;
-        }
-
-        if (station.now_playing && station.now_playing.song) {
-            const currentSong = station.now_playing.song.title;
-            if (currentSong !== lastSong) {
-                lastSong = currentSong;
-                updateNowPlaying(station);
-                updateStreamUrl(station);
-            }
-            elapsedTime = station.now_playing.elapsed;
-            songDuration = station.now_playing.duration;
-            totalTimeDisplay.textContent = formatTime(songDuration);
-            songHistory = station.song_history.map(song => ({
-                title: song.song.title,
-                album: song.song.album,
-                artist: song.song.artist,
-                art: song.song.art,
-                playedAt: new Date(song.played_at * 1000)
-            }));
-
-            // Update the station list items dynamically
-            updateStationListItems(stations);
-        }
-    } catch (error) {
-        console.error("Error fetching now playing data:", error);
-    }
-}
 
 /**
- * Updates the station list items with the latest now playing and up next information.
- * @param {Array} stations - The array of station data.
+ * Updates the station list items dynamically without clearing the entire list.
+ * Also ensures the currently playing station is marked with the "playing" class.
+ * @param {Object} stationData - The station data to update or add.
  */
-function updateStationListItems(stations) {
-    stationsList.innerHTML = ""; // Clear the list before appending new items
-    stations.forEach(stationData => {
+function updateStationListItem(stationData) {
+    const existingItem = stationsList.querySelector(`[data-shortcode="${stationData.station.shortcode}"]`);
+
+    // If the station already exists in the list, update it
+    if (existingItem) {
+        existingItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
+        const upNextHTML = stationData.playing_next
+            ? `<p class="up-next"><strong>Up Next</strong>: <u>${stationData.playing_next.song.title ?? "N/A"}</u> by <strong>${stationData.playing_next.song.artist ?? "N/A"}</strong></p>`
+            : '';
+
+        existingItem.innerHTML = `
+            <div class="station-artwork">
+                <img src="${stationData.now_playing.song.art}" alt="Artwork">
+                <div class="equalizer"></div>
+            </div>
+            <div class="station-info">
+                <span class="station-name">${stationData.station.name}</span>
+                <p class="now-playing"><strong>Now Playing</strong>: <u>${stationData.now_playing.song.title}</u> by <strong>${stationData.now_playing.song.artist}</strong></p>
+                ${upNextHTML} <!-- Insert Up Next info only if it exists -->
+            </div>
+        `;
+    } else {
+        // If the station does not exist, create a new list item
         const stationItem = document.createElement("li");
+        stationItem.dataset.shortcode = stationData.station.shortcode;
+        stationItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
 
-        // Conditionally construct the HTML for Up Next, only if available
-        const upNextHTML = stationData.playing_next 
+        const upNextHTML = stationData.playing_next
             ? `<p class="up-next"><strong>Up Next</strong>: <u>${stationData.playing_next.song.title ?? "N/A"}</u> by <strong>${stationData.playing_next.song.artist ?? "N/A"}</strong></p>`
             : '';
 
@@ -108,22 +93,33 @@ function updateStationListItems(stations) {
                 ${upNextHTML} <!-- Insert Up Next info only if it exists -->
             </div>
         `;
-        stationItem.dataset.shortcode = stationData.station.shortcode;
-
-        // Highlight the current station if it matches the current station shortcode
-        if (currentStationShortcode && stationData.station.shortcode === currentStationShortcode) {
-            stationItem.classList.add("playing");
-        }
 
         stationItem.addEventListener("click", () => {
-            updateStreamUrl(stationData); // Pass the full stationData (which includes .station)
-            fetchNowPlaying(stationData.station.shortcode); // Update UI with now-playing info
-            hideModal(stationModal); // Ensure the modal is hidden and dim effect is removed
+            updateStreamUrlAndPlay(stationData); // Pass the full stationData (which includes .station)
+            localStorage.setItem("currentStation", stationData.station.shortcode); // Persist the current station shortcode
         });
-        stationsList.appendChild(stationItem);
-    });
-}
 
+        stationsList.appendChild(stationItem);
+    }
+
+    const stationItems = Array.from(stationsList.querySelectorAll("li"));
+    // Sort stations alphabetically by name
+    stationItems.sort((a, b) => {
+        const nameA = a.querySelector(".station-name").textContent.toLowerCase();
+        const nameB = b.querySelector(".station-name").textContent.toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
+    stationItems.forEach(item => stationsList.appendChild(item));
+
+    // Highlight the current station if it matches the current station shortcode
+    if (currentStationShortcode === stationData.station.shortcode) {
+        stationItems.forEach(item => item.classList.remove("playing")); // Remove "playing" class from all items
+        const currentItem = stationsList.querySelector(`[data-shortcode="${currentStationShortcode}"]`);
+        if (currentItem) {
+            currentItem.classList.add("playing"); // Add "playing" class to the current station
+        }
+    }
+}
 
 /**
  * Fetches the artist's image from Deezer API.
@@ -132,11 +128,9 @@ function updateStationListItems(stations) {
  */
 async function getArtistImageFromDeezer(artistName) {
     try {
-        // Use CORS proxy service
-        const proxyUrl = 'https://corsproxy.io/?';
         const url = `${config.ui.artistImageAPI}?q=${encodeURIComponent(artistName)}`;
         
-        const response = await fetch(proxyUrl + url);
+        const response = await fetch(config.corsProxy + url);
         if (!response.ok) throw new Error(`Deezer API request failed with status: ${response.status}`);
         
         const data = await response.json();
@@ -158,24 +152,23 @@ async function getArtistImageFromDeezer(artistName) {
  * Updates the UI with the currently playing song information.
  * @param {Object} station - The station object containing the now playing song information.
  */
-async function updateNowPlaying(station) {
+async function updateNowPlayingUI(station) {
     const { song } = station.now_playing;
     const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; // Check if we want the Wikipedia image
-
     songTitle.textContent = song.title || "Unknown title";
-    songAlbum.textContent = song.album || "Unknown album";
-    songArtist.textContent = song.artist || "Unknown artist";
+    songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown album"}`;
+    songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown artist"}`;
     artworkImg.crossOrigin = "Anonymous";
     artworkImg.src = song.art;
     document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
 
     if (artistImage && config.ui.artistImageAsBackground) {
-        // If Wikipedia image exists and config.ui.artistImageAsBackground is true, apply it as background
+        // If artist image exists and config.ui.artistImageAsBackground is true, apply it as background
         document.body.style.background = `url(${artistImage}) center/cover no-repeat fixed`;
-        // Try to extract colors from Wikipedia image
+        // Try to extract colors from the image
         extractColorsFromExternalImage(artistImage);
     } else {
-        // If no Wikipedia image or config.ui.artistImageAsBackground is false, fallback to song artwork
+        // If no artist image or config.ui.artistImageAsBackground is false, fallback to song artwork
         document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
         // Always extract colors from song artwork
         if (artworkImg.complete) {
@@ -184,6 +177,17 @@ async function updateNowPlaying(station) {
             artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
         }
     }
+
+    // Update the playback history
+    songHistory = station.song_history.map(song => ({
+        title: song.song.title,
+        album: song.song.album,
+        artist: song.song.artist,
+        art: song.song.art,
+        playedAt: new Date(song.played_at * 1000)
+    }));
+
+    populatePlaybackHistory(); // Immediately update the playback history modal
 }
 
 
@@ -299,7 +303,7 @@ function setElementStyles(elements) {
  * @param {HTMLElement[]} elementsArray - An array of actual DOM elements (e.g., [document.querySelector(".controls"), document.getElementById("navBar")]).
  * @param {number} [timeout=5000] - The inactivity time (in milliseconds) before hiding the elements. Default is 5000ms (5 seconds).
  */
-function hideOnInactivity(elementsArray, timeout = 5000) {
+function hideElementsOnInactivity(elementsArray, timeout = 5000) {
     if (!Array.isArray(elementsArray) || elementsArray.length === 0) {
         console.error("Invalid input: Provide an array of elements.");
         return;
@@ -354,7 +358,7 @@ function hideOnInactivity(elementsArray, timeout = 5000) {
  * Updates the stream URL for the radio player and handles the loading state.
  * @param {Object} station - The station object containing the listen URL.
  */
-function updateStreamUrl(station) {
+function updateStreamUrlAndPlay(station) {
     if (isLoading || (station && currentStationShortcode === station.station.shortcode)) return;
     currentStationShortcode = station.station.shortcode;
 
@@ -365,10 +369,18 @@ function updateStreamUrl(station) {
     }
 
     isLoading = true;
-    radioPlayer.pause();
-    radioPlayer.src = STREAM_URL;
-    radioPlayer.load();
-    radioPlayer.addEventListener('canplay', onCanPlay, { once: true });
+    radioPlayer.src = STREAM_URL; // Do not pause playback when switching channels
+    radioPlayer.load(); // Load the stream without starting playback
+    radioPlayer.play();
+
+    // Update the play/pause button to reflect the paused state
+    playPauseButton.innerHTML = playIcon;
+
+    radioPlayer.addEventListener('canplay', () => {
+        isLoading = false;
+        console.log(`Stream loaded for station: ${station.station.name}`);
+    }, { once: true });
+
     radioPlayer.addEventListener('error', onError, { once: true });
 
     // Update the station list to show the playing indicator
@@ -385,7 +397,7 @@ function updateStreamUrl(station) {
     updateButtonState(nextButton, currentIndex === stationItems.length - 1);
 
     // Immediately update the player info
-    updateNowPlaying(station);
+    updateNowPlayingUI(station);
 }
 
 /**
@@ -439,46 +451,136 @@ function formatTime(seconds) {
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
+
 /**
- * Fetches the list of available stations and updates the UI.
+ * Handles incoming SSE data and updates the UI.
+ * 
+ * @param {Object} ssePayload - The SSE payload data containing station and song information.
+ * @param {boolean} isfirstStationInitialised - Indicates whether the first station has been initialised.
+ * @param {boolean} [useTime=true] - Whether to update the current time from the SSE payload.
  */
-async function fetchStations() {
-    try {
-        const response = await fetch(`${config.azuracast.server}/api/nowplaying`); // Fetch only from /nowplaying
-        const nowPlayingStations = await response.json();
-        stationsList.innerHTML = "";
+function handleSSEData(ssePayload, isfirstStationInitialised, useTime = true) {
+    let currentTime = 0;
+    const jsonData = ssePayload.data;
 
-        // Update the station list items dynamically
-        updateStationListItems(nowPlayingStations);
+    if (useTime && 'current_time' in jsonData) {
+        currentTime = jsonData.current_time;
+    }
 
-        // Highlight the current playing station
-        if (currentStationShortcode) {
-            const currentStationItem = Array.from(stationsList.querySelectorAll("li")).find(item => item.dataset.shortcode === currentStationShortcode);
-            if (currentStationItem) {
-                currentStationItem.classList.add("playing");
+    const nowplaying = jsonData.np;
+
+    // Automatically prepare the first station on page load
+    if (!isfirstStationInitialised) {
+        const savedStationShortcode = localStorage.getItem("currentStation");
+        if (savedStationShortcode) {
+            // Play the saved station
+            currentStationShortcode = savedStationShortcode;
+            const savedStationItem = stationsList.querySelector(`[data-shortcode="${savedStationShortcode}"]`);
+            if (savedStationItem) {
+                const savedStationData = JSON.parse(savedStationItem.dataset.stationData);
+                updateStreamUrlAndPlay(savedStationData);
             }
+        } else {
+            // Play the first initialised station
+            currentStationShortcode = nowplaying.station.shortcode;
+            updateStreamUrlAndPlay(nowplaying);
         }
 
-        // Update button states based on the current station
-        updateButtonStates();
-    } catch (error) {
-        console.error("Error fetching stations:", error);
+        // Mark the current station as "playing" in the stations modal
+        const currentStationItem = stationsList.querySelector(`[data-shortcode="${currentStationShortcode}"]`);
+        if (currentStationItem) {
+            currentStationItem.classList.add("playing");
+        }
+
+        isfirstStationInitialised = true;
     }
+
+    // Update the UI for the current station
+    if (nowplaying.station.shortcode === currentStationShortcode) {
+        const currentSong = nowplaying.now_playing.song.title;
+        if (currentSong !== lastSong) {
+            lastSong = currentSong;
+            updateNowPlayingUI(nowplaying);
+            updateStreamUrlAndPlay(nowplaying);
+        }
+        elapsedTime = nowplaying.now_playing.elapsed;
+        songDuration = nowplaying.now_playing.duration;
+        totalTimeDisplay.textContent = formatTime(songDuration);
+        songHistory = nowplaying.song_history.map(song => ({
+            title: song.song.title,
+            album: song.song.album,
+            artist: song.song.artist,
+            art: song.song.art,
+            playedAt: new Date(song.played_at * 1000)
+        }));
+    }
+
+    // Update the station list dynamically
+    updateStationListItem(nowplaying);
 }
 
 /**
- * Updates the state of the previous and next buttons based on the current station.
+ * Initialises the SSE connection to receive real-time updates from the AzuraCast API.
  */
-function updateButtonStates() {
-    const stationItems = Array.from(stationsList.querySelectorAll("li"));
-    const currentIndex = stationItems.findIndex(item => item.dataset.shortcode === currentStationShortcode);
-    updateButtonState(previousButton, currentIndex === 0);
-    updateButtonState(nextButton, currentIndex === stationItems.length - 1);
+function initialiseSSE() {
+    const sseBaseUri = `${config.azuracast.server}/api/live/nowplaying/sse`;
+    const sseUriParams = new URLSearchParams({
+        "cf_connect": JSON.stringify({
+            "subs": config.azuracast.subscriptions
+        })
+    });
+    const sseUri = `${sseBaseUri}?${sseUriParams.toString()}`;
+    const sse = new EventSource(sseUri);
+
+    let isfirstStationInitialised = false;
+
+    // Handle incoming SSE messages
+    sse.onmessage = (e) => {
+        const jsonData = JSON.parse(e.data);
+
+        if ('connect' in jsonData) {
+            const connectData = jsonData.connect;
+
+            if ('data' in connectData) {
+                // Legacy SSE data
+                connectData.data.forEach((initialRow) => handleSSEData(initialRow));
+            } else {
+                // New Centrifugo cached NowPlaying initial push
+                for (const subName in connectData.subs) {
+                    const sub = connectData.subs[subName];
+                    if ('publications' in sub && sub.publications.length > 0) {
+                        sub.publications.forEach((initialRow) => handleSSEData(initialRow, false));
+                    }
+                }
+            }
+        } else if ('pub' in jsonData) {
+            handleSSEData(jsonData.pub, isfirstStationInitialised);
+        }
+    };
+
+    // Handle SSE connection errors
+    sse.onerror = (error) => {
+        console.error("SSE connection error:", error);
+        sse.close(); // Close the connection on error
+    };
+
+    // Log when the SSE connection is successfully established
+    sse.onopen = () => {
+        console.log("SSE connection established.");
+    };
+
+    // Add beforeunload event listener to close the SSE connection on page unload
+    window.addEventListener("beforeunload", function () {
+        if (sse !== null) {
+            sse.close();
+        }
+    });
 }
 
+// Replace polling with SSE initialization
+initialiseSSE();
 
-fetchNowPlaying();
-setInterval(fetchNowPlaying, 5000);
+// Keep the progress update logic
 setInterval(updateProgress, 1000);
-hideOnInactivity([playerControls, playerProgressContainer], 2000); // Call the function directly
-fetchStations();
+
+hideElementsOnInactivity([playerControls, playerProgressContainer], 2000); // Call the function directly
