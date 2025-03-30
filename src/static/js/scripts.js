@@ -22,8 +22,8 @@ import {
     currentTimeDisplay, 
     totalTimeDisplay,
     stationModal,
-    albumIconSpinning,
     artistIcon,
+    albumIconSpinning,
     stationsList,
     stationModalHeader,
     playbackHistoryModalHeader,
@@ -102,8 +102,8 @@ function updateStationListItem(stationData) {
         stationsList.appendChild(stationItem);
     }
 
-    const stationItems = Array.from(stationsList.querySelectorAll("li"));
     // Sort stations alphabetically by name
+    const stationItems = Array.from(stationsList.querySelectorAll("li"));
     stationItems.sort((a, b) => {
         const nameA = a.querySelector(".station-name").textContent.toLowerCase();
         const nameB = b.querySelector(".station-name").textContent.toLowerCase();
@@ -360,6 +360,7 @@ function hideElementsOnInactivity(elementsArray, timeout = 5000) {
  */
 function updateStreamUrlAndPlay(station) {
     if (isLoading || (station && currentStationShortcode === station.station.shortcode)) return;
+
     currentStationShortcode = station.station.shortcode;
 
     const STREAM_URL = station.station.listen_url;
@@ -369,21 +370,14 @@ function updateStreamUrlAndPlay(station) {
     }
 
     isLoading = true;
-    radioPlayer.src = STREAM_URL; // Do not pause playback when switching channels
+    radioPlayer.src = STREAM_URL; // Update the audio stream
     radioPlayer.load(); // Load the stream without starting playback
-    radioPlayer.play();
+    radioPlayer.play(); // Start playback
 
-    // Update the play/pause button to reflect the paused state
-    playPauseButton.innerHTML = playIcon;
+    // Update the play/pause button to reflect the playing state
+    playPauseButton.innerHTML = pauseIcon;
 
-    radioPlayer.addEventListener('canplay', () => {
-        isLoading = false;
-        console.log(`Stream loaded for station: ${station.station.name}`);
-    }, { once: true });
-
-    radioPlayer.addEventListener('error', onError, { once: true });
-
-    // Update the station list to show the playing indicator
+    // Mark the station as "playing" in the station list
     const stationItems = stationsList.querySelectorAll("li");
     stationItems.forEach(item => item.classList.remove("playing"));
     const currentStationItem = Array.from(stationItems).find(item => item.dataset.shortcode === station.station.shortcode);
@@ -396,8 +390,13 @@ function updateStreamUrlAndPlay(station) {
     updateButtonState(previousButton, currentIndex === 0);
     updateButtonState(nextButton, currentIndex === stationItems.length - 1);
 
-    // Immediately update the player info
-    updateNowPlayingUI(station);
+    // Handle loading state
+    radioPlayer.addEventListener('canplay', () => {
+        console.log(`Stream loaded for station: ${station.station.name}`);
+        isLoading = false;
+    }, { once: true });
+
+    radioPlayer.addEventListener('error', onError, { once: true });
 }
 
 /**
@@ -451,74 +450,6 @@ function formatTime(seconds) {
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-
-/**
- * Handles incoming SSE data and updates the UI.
- * 
- * @param {Object} ssePayload - The SSE payload data containing station and song information.
- * @param {boolean} isfirstStationInitialised - Indicates whether the first station has been initialised.
- * @param {boolean} [useTime=true] - Whether to update the current time from the SSE payload.
- */
-function handleSSEData(ssePayload, isfirstStationInitialised, useTime = true) {
-    let currentTime = 0;
-    const jsonData = ssePayload.data;
-
-    if (useTime && 'current_time' in jsonData) {
-        currentTime = jsonData.current_time;
-    }
-
-    const nowplaying = jsonData.np;
-
-    // Automatically prepare the first station on page load
-    if (!isfirstStationInitialised) {
-        const savedStationShortcode = localStorage.getItem("currentStation");
-        if (savedStationShortcode) {
-            // Play the saved station
-            currentStationShortcode = savedStationShortcode;
-            const savedStationItem = stationsList.querySelector(`[data-shortcode="${savedStationShortcode}"]`);
-            if (savedStationItem) {
-                const savedStationData = JSON.parse(savedStationItem.dataset.stationData);
-                updateStreamUrlAndPlay(savedStationData);
-            }
-        } else {
-            // Play the first initialised station
-            currentStationShortcode = nowplaying.station.shortcode;
-            updateStreamUrlAndPlay(nowplaying);
-        }
-
-        // Mark the current station as "playing" in the stations modal
-        const currentStationItem = stationsList.querySelector(`[data-shortcode="${currentStationShortcode}"]`);
-        if (currentStationItem) {
-            currentStationItem.classList.add("playing");
-        }
-
-        isfirstStationInitialised = true;
-    }
-
-    // Update the UI for the current station
-    if (nowplaying.station.shortcode === currentStationShortcode) {
-        const currentSong = nowplaying.now_playing.song.title;
-        if (currentSong !== lastSong) {
-            lastSong = currentSong;
-            updateNowPlayingUI(nowplaying);
-            updateStreamUrlAndPlay(nowplaying);
-        }
-        elapsedTime = nowplaying.now_playing.elapsed;
-        songDuration = nowplaying.now_playing.duration;
-        totalTimeDisplay.textContent = formatTime(songDuration);
-        songHistory = nowplaying.song_history.map(song => ({
-            title: song.song.title,
-            album: song.song.album,
-            artist: song.song.artist,
-            art: song.song.art,
-            playedAt: new Date(song.played_at * 1000)
-        }));
-    }
-
-    // Update the station list dynamically
-    updateStationListItem(nowplaying);
-}
-
 /**
  * Initialises the SSE connection to receive real-time updates from the AzuraCast API.
  */
@@ -532,7 +463,64 @@ function initialiseSSE() {
     const sseUri = `${sseBaseUri}?${sseUriParams.toString()}`;
     const sse = new EventSource(sseUri);
 
-    let isfirstStationInitialised = false;
+    let currentTime = 0;
+    let firstStationInitialised = false;
+
+    /**
+     * Handles incoming SSE data and updates the UI.
+     * @param {Object} ssePayload - The SSE payload data.
+     * @param {boolean} useTime - Whether to update the current time.
+     */
+    function handleSseData(ssePayload, useTime = true) {
+        const jsonData = ssePayload.data;
+
+        if (useTime && 'current_time' in jsonData) {
+            currentTime = jsonData.current_time;
+        }
+
+        const nowplaying = jsonData.np;
+
+        // Automatically prepare the first station on page load
+        if (!firstStationInitialised) {
+            const savedStationShortcode = localStorage.getItem("currentStation");
+            if (savedStationShortcode && savedStationShortcode === nowplaying.station.shortcode) {
+                currentStationShortcode = savedStationShortcode;
+            } else {
+                currentStationShortcode = nowplaying.station.shortcode;
+            }
+            updateStreamUrlAndPlay(nowplaying);
+
+            // Mark the first station as "playing" in the stations modal
+            const firstStationItem = stationsList.querySelector(`[data-shortcode="${currentStationShortcode}"]`);
+            if (firstStationItem) {
+                firstStationItem.classList.add("playing");
+            }
+
+            firstStationInitialised = true;
+        }
+
+        // Update the UI for the current station
+        if (nowplaying.station.shortcode === currentStationShortcode) {
+            elapsedTime = nowplaying.now_playing.elapsed;
+            const currentSong = nowplaying.now_playing.song.title;
+            songDuration = nowplaying.now_playing.duration;
+            if (currentSong !== lastSong) {
+                lastSong = currentSong;
+                updateNowPlayingUI(nowplaying);
+            }
+            totalTimeDisplay.textContent = formatTime(songDuration);
+            songHistory = nowplaying.song_history.map(song => ({
+                title: song.song.title,
+                album: song.song.album,
+                artist: song.song.artist,
+                art: song.song.art,
+                playedAt: new Date(song.played_at * 1000)
+            }));
+        }
+
+        // Update the station list dynamically
+        updateStationListItem(nowplaying);
+    }
 
     // Handle incoming SSE messages
     sse.onmessage = (e) => {
@@ -540,21 +528,20 @@ function initialiseSSE() {
 
         if ('connect' in jsonData) {
             const connectData = jsonData.connect;
-
             if ('data' in connectData) {
                 // Legacy SSE data
-                connectData.data.forEach((initialRow) => handleSSEData(initialRow));
+                connectData.data.forEach((initialRow) => handleSseData(initialRow));
             } else {
                 // New Centrifugo cached NowPlaying initial push
                 for (const subName in connectData.subs) {
                     const sub = connectData.subs[subName];
                     if ('publications' in sub && sub.publications.length > 0) {
-                        sub.publications.forEach((initialRow) => handleSSEData(initialRow, false));
+                        sub.publications.forEach((initialRow) => handleSseData(initialRow, false));
                     }
                 }
             }
         } else if ('pub' in jsonData) {
-            handleSSEData(jsonData.pub, isfirstStationInitialised);
+            handleSseData(jsonData.pub);
         }
     };
 

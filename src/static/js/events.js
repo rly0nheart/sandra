@@ -3,9 +3,7 @@ export {
     songTitle, 
     songAlbum, 
     songArtist, 
-    radioPlayer,
-    playIcon,
-    pauseIcon,
+    radioPlayer, 
     playPauseButton, 
     previousButton, 
     nextButton, 
@@ -28,13 +26,20 @@ export {
     stationModal,
     stationsList,
     hideModal,
-    populatePlaybackHistory
+    playIcon,
+    pauseIcon,
+    volumeMuteIcon,
+    volumeLowIcon,
+    volumeUpIcon,
+    populatePlaybackHistory,
+    albumIconSpinning,
+    artistIcon
 };
 
 const artworkImg = document.getElementById("artwork");
-const songTitle = document.getElementById("song-title");
-const songAlbum = document.getElementById("song-album");
-const songArtist = document.getElementById("song-artist");
+const songTitle = document.getElementById("title");
+const songAlbum = document.getElementById("album");
+const songArtist = document.getElementById("artist");
 const radioPlayer = document.getElementById("radioPlayer");
 const playPauseButton = document.getElementById("playPauseBtn");
 const previousButton = document.getElementById("playPreviousBtn");
@@ -65,8 +70,10 @@ let volumeLowIcon = '<i class="fa-solid fa-volume-low"></i>';
 let volumeUpIcon = '<i class="fas fa-volume-up"></i>';
 let pauseIcon = '<i class="fas fa-pause"></i>';
 let playIcon = '<i class="fas fa-play"></i>';
+let albumIconSpinning = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
+let artistIcon = '<i class="fa-solid fa-user"></i> '
 
-import { songHistory, currentStationShortcode } from "./scripts.js";
+import { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI } from "./scripts.js"; // Import isLoading
 
 /**
  * Show the modal with a slight delay to ensure the display property is set before adding the class.
@@ -120,13 +127,41 @@ function populatePlaybackHistory() {
  */
 function togglePlayPause() {
     if (radioPlayer.paused) {
-        radioPlayer.play();
-        playPauseButton.innerHTML = pauseIcon; // Change icon to pause
+        radioPlayer.load();
+        radioPlayer.play().then(() => {
+            playPauseButton.innerHTML = pauseIcon; // Change icon to pause
+        }).catch((error) => {
+            console.error("Error playing the stream:", error);
+        });
     } else {
         radioPlayer.pause();
         playPauseButton.innerHTML = playIcon; // Change icon to play
     }
 }
+
+// Ensure the play/pause button starts in the paused state
+playPauseButton.innerHTML = playIcon;
+
+// Add event listeners to update the play/pause button icon based on playback state
+radioPlayer.addEventListener("play", () => {
+    playPauseButton.innerHTML = pauseIcon; // Update to pause icon when playing
+});
+
+radioPlayer.addEventListener("pause", () => {
+    playPauseButton.innerHTML = playIcon; // Update to play icon when paused
+});
+
+// Add a listener to ensure playback only starts after user interaction
+playPauseButton.addEventListener("click", () => {
+    if (radioPlayer.paused && !isLoading) {
+        radioPlayer.load();
+        radioPlayer.play().then(() => {
+            playPauseButton.innerHTML = pauseIcon; // Update button to "pause" state
+        }).catch((error) => {
+            console.error("Error playing the stream after user interaction:", error);
+        });
+    }
+}, { once: true });
 
 /**
  * Updates the volume icon based on the current volume level and mute state.
@@ -219,7 +254,9 @@ previousButton.addEventListener("click", () => {
     const currentIndex = stationItems.findIndex(item => item.dataset.shortcode === currentStationShortcode);
     if (currentIndex > 0) {
         const previousStation = stationItems[currentIndex - 1];
-        previousStation.click();
+        previousStation.click(); // Simulate a click to switch stations
+        const previousStationData = JSON.parse(previousStation.dataset.stationData); // Get the station data
+        updateNowPlayingUI(previousStationData); // Pass the station data to update the UI
     }
 });
 
@@ -231,7 +268,9 @@ nextButton.addEventListener("click", () => {
     const currentIndex = stationItems.findIndex(item => item.dataset.shortcode === currentStationShortcode);
     if (currentIndex < stationItems.length - 1) {
         const nextStation = stationItems[currentIndex + 1];
-        nextStation.click();
+        nextStation.click(); // Simulate a click to switch stations
+        const nextStationData = JSON.parse(nextStation.dataset.stationData); // Get the station data
+        updateNowPlayingUI(nextStationData); // Pass the station data to update the UI
     }
 });
 
