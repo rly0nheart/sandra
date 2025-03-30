@@ -334,7 +334,7 @@ body::before {
     width: 85px;
     height: 85px;
     margin-right: 15px;
-    border-radius: 5px;
+    border-radius: 50%;
     pointer-events: none;
     border: 2px solid antiquewhite;
 }
@@ -429,7 +429,6 @@ body::before {
 #stationModal .modal-content ul li .station-artwork img {
     width: 100%;
     height: 100%;
-    border-radius: 5px;
     filter: brightness(50%);
 }
 
@@ -448,16 +447,6 @@ body::before {
 /* Show Equalizer When Playing */
 #stationModal .modal-content ul li.playing .station-artwork .equalizer {
     display: block;
-}
-
-/* Spinning Animation */
-@keyframes spin {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
 }
 
 /* Station Info Container */

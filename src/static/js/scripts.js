@@ -336,7 +336,6 @@ function hideElementsOnInactivity(elementsArray, timeout = 5000) {
         console.error("Invalid input: Provide an array of elements.");
         return;
     }
-
     let inactivityTimer;
 
     /**
