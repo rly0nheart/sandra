@@ -1,16 +1,11 @@
 /* Font Definitions */
 @font-face {
-    font-family: Hazel;
+    font-family: Hazel; /* https://www.1001fonts.com/cs-hazel-demo-font.html */
     src: url('../fonts/cs-hazel-demo.regular.otf') format('opentype');
 }
 
 @font-face {
-    font-family: "Impact Label";
-    src: url("../../static/fonts/Impact\ Label.ttf") format("truetype");
-}
-
-@font-face {
-    font-family: "Font Awesome 6 Free";
+    font-family: "Font Awesome 6 Free"; /* https://fontawesome.com */
     font-style: normal;
     font-weight: 900;
     src: url("../../assets/fontawesome/webfonts/fa-solid-900.woff2") format("woff2");
@@ -85,13 +80,12 @@ body::before {
     width: 1px; /* Thickness of the line */
     height: 100%; /* Full height of the container */
     background: rgba(255, 255, 255, 0.2); /* Light line color */
-    
     order: 1; /* Ensure the line appears after the artwork */
 }
 
 /* Artwork Styles */
 .artwork {
-    background: url("../img/artwork.jpg") no-repeat center/cover;
+    background: url("../img/artwork.jpg") no-repeat center/cover; /* I have completely forgotten where I found this */
     width: 200px; /* 250 */
     height: 200px; /* 250 */
     border-radius: 50%; /* 50% */
@@ -147,8 +141,6 @@ body::before {
 
 #artist {
     font-size: 25px;
- 
-    /*opacity: 0.8;*/
 }
 
 /* Progress Container */
