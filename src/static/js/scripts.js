@@ -32,7 +32,7 @@ import {
     populatePlaybackHistory, // Import the function to update the modal
 } from "./events.js";
 
-export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI }; // Export updateNowPlayingUI
+export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay }; // Export updateNowPlayingUI
 
 const response = await fetch('static/json/config.json');
 const config = await response.json();
@@ -93,11 +93,6 @@ function updateStationListItem(stationData) {
                 ${upNextHTML} <!-- Insert Up Next info only if it exists -->
             </div>
         `;
-
-        stationItem.addEventListener("click", () => {
-            updateStreamUrlAndPlay(stationData); // Pass the full stationData (which includes .station)
-            localStorage.setItem("currentStation", stationData.station.shortcode); // Persist the current station shortcode
-        });
 
         stationsList.appendChild(stationItem);
     }
