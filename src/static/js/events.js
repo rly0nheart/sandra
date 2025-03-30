@@ -23,17 +23,15 @@ export {
     totalTimeDisplay,
     stationModalHeader,
     playbackHistoryModalHeader,
-    stationModal,
     stationsList,
-    hideModal,
-    playIcon,
     pauseIcon,
     volumeMuteIcon,
     volumeLowIcon,
     volumeUpIcon,
-    populatePlaybackHistory,
     albumIconSpinning,
-    artistIcon
+    artistIcon,
+    hideModal,
+    populatePlaybackHistory
 };
 
 const artworkImg = document.getElementById("artwork");
@@ -73,7 +71,7 @@ let playIcon = '<i class="fas fa-play"></i>';
 let albumIconSpinning = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
 let artistIcon = '<i class="fa-solid fa-user"></i> '
 
-import { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI } from "./scripts.js"; // Import isLoading
+import { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay } from "./scripts.js"; // Import isLoading
 
 /**
  * Show the modal with a slight delay to ensure the display property is set before adding the class.

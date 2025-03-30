@@ -21,13 +21,11 @@ import {
     progress, 
     currentTimeDisplay, 
     totalTimeDisplay,
-    stationModal,
     artistIcon,
     albumIconSpinning,
     stationsList,
     stationModalHeader,
     playbackHistoryModalHeader,
-    playIcon,
     pauseIcon,
     populatePlaybackHistory, // Import the function to update the modal
 } from "./events.js";
@@ -45,6 +43,93 @@ let songHistory = [];
 let isLoading = false; // Ensure this is exported
 let currentStationShortcode = null; 
 
+
+/**
+ * Updates the UI with the currently playing song information.
+ * @param {Object} station - The station object containing the now playing song information.
+ */
+async function updateNowPlayingUI(station) {
+    const { song } = station.now_playing;
+    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; // Check if we want the Wikipedia image
+    songTitle.textContent = song.title || "Unknown title";
+    songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown album"}`;
+    songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown artist"}`;
+    artworkImg.crossOrigin = "Anonymous";
+    artworkImg.src = song.art;
+    document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
+
+    if (artistImage && config.ui.artistImageAsBackground) {
+        // If artist image exists and config.ui.artistImageAsBackground is true, apply it as background
+        document.body.style.background = `url(${artistImage}) center/cover no-repeat fixed`;
+        // Try to extract colors from the image
+        extractColorsFromExternalImage(artistImage);
+    } else {
+        // If no artist image or config.ui.artistImageAsBackground is false, fallback to song artwork
+        document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
+        // Always extract colors from song artwork
+        if (artworkImg.complete) {
+            extractColorsFromInternalImage(artworkImg);
+        } else {
+            artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
+        }
+    }
+
+    // Update the playback history
+    songHistory = station.song_history.map(song => ({
+        title: song.song.title,
+        album: song.song.album,
+        artist: song.song.artist,
+        art: song.song.art,
+        playedAt: new Date(song.played_at * 1000)
+    }));
+
+    populatePlaybackHistory(); // Immediately update the playback history modal
+}
+
+/**
+ * Updates the stream URL for the radio player and handles the loading state.
+ * @param {Object} station - The station object containing the listen URL.
+ */
+function updateStreamUrlAndPlay(station) {
+    if (isLoading || (station && currentStationShortcode === station.station.shortcode)) return;
+
+    currentStationShortcode = station.station.shortcode;
+
+    const STREAM_URL = station.station.listen_url;
+    if (!STREAM_URL) {
+        console.error("No listen_url found for station:", station.station.name);
+        return;
+    }
+
+    isLoading = true;
+    radioPlayer.src = STREAM_URL; // Update the audio stream
+    radioPlayer.load(); // Load the stream without starting playback
+    radioPlayer.play(); // Start playback
+
+    // Update the play/pause button to reflect the playing state
+    playPauseButton.innerHTML = pauseIcon;
+
+    // Mark the station as "playing" in the station list
+    const stationItems = stationsList.querySelectorAll("li");
+    stationItems.forEach(item => item.classList.remove("playing"));
+    const currentStationItem = Array.from(stationItems).find(item => item.dataset.shortcode === station.station.shortcode);
+    if (currentStationItem) {
+        currentStationItem.classList.add("playing");
+    }
+
+    // Enable/disable previous and next buttons
+    const currentIndex = Array.from(stationItems).indexOf(currentStationItem);
+    updateButtonState(previousButton, currentIndex === 0);
+    updateButtonState(nextButton, currentIndex === stationItems.length - 1);
+
+    // Handle loading state
+    radioPlayer.addEventListener('canplay', () => {
+        console.log(`Stream loaded for station: ${station.station.name}`);
+        isLoading = false;
+    }, { once: true });
+
+    radioPlayer.addEventListener('error', onError, { once: true });
+}
 
 /**
  * Updates the station list items dynamically without clearing the entire list.
@@ -142,50 +227,6 @@ async function getArtistImageFromDeezer(artistName) {
     }
 }
 
-
-/**
- * Updates the UI with the currently playing song information.
- * @param {Object} station - The station object containing the now playing song information.
- */
-async function updateNowPlayingUI(station) {
-    const { song } = station.now_playing;
-    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; // Check if we want the Wikipedia image
-    songTitle.textContent = song.title || "Unknown title";
-    songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown album"}`;
-    songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown artist"}`;
-    artworkImg.crossOrigin = "Anonymous";
-    artworkImg.src = song.art;
-    document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
-
-    if (artistImage && config.ui.artistImageAsBackground) {
-        // If artist image exists and config.ui.artistImageAsBackground is true, apply it as background
-        document.body.style.background = `url(${artistImage}) center/cover no-repeat fixed`;
-        // Try to extract colors from the image
-        extractColorsFromExternalImage(artistImage);
-    } else {
-        // If no artist image or config.ui.artistImageAsBackground is false, fallback to song artwork
-        document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
-        // Always extract colors from song artwork
-        if (artworkImg.complete) {
-            extractColorsFromInternalImage(artworkImg);
-        } else {
-            artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
-        }
-    }
-
-    // Update the playback history
-    songHistory = station.song_history.map(song => ({
-        title: song.song.title,
-        album: song.song.album,
-        artist: song.song.artist,
-        art: song.song.art,
-        playedAt: new Date(song.played_at * 1000)
-    }));
-
-    populatePlaybackHistory(); // Immediately update the playback history modal
-}
-
-
 /**
  * Loads an external image and extracts its dominant colours.
  * @param {string} imageUrl - The URL of the image to process.
@@ -249,14 +290,6 @@ function applyColors(lightColor, darkColor) {
         volumeMuteUnmuteBtn,
     ].forEach(button => {
         button.style.color = lightColor;
-
-        /*button.addEventListener("mouseover", () => {
-            button.style.color = lightColor;
-        });
-    
-        button.addEventListener("mouseout", () => {
-            button.style.color = darkColor;
-        });*/
     });
 
     [ stationModalHeader, playbackHistoryModalHeader ].forEach (header => {
@@ -349,50 +382,6 @@ function hideElementsOnInactivity(elementsArray, timeout = 5000) {
     element.style.transition = "opacity 0.3s ease-in-out";
 });
 
-/**
- * Updates the stream URL for the radio player and handles the loading state.
- * @param {Object} station - The station object containing the listen URL.
- */
-function updateStreamUrlAndPlay(station) {
-    if (isLoading || (station && currentStationShortcode === station.station.shortcode)) return;
-
-    currentStationShortcode = station.station.shortcode;
-
-    const STREAM_URL = station.station.listen_url;
-    if (!STREAM_URL) {
-        console.error("No listen_url found for station:", station.station.name);
-        return;
-    }
-
-    isLoading = true;
-    radioPlayer.src = STREAM_URL; // Update the audio stream
-    radioPlayer.load(); // Load the stream without starting playback
-    radioPlayer.play(); // Start playback
-
-    // Update the play/pause button to reflect the playing state
-    playPauseButton.innerHTML = pauseIcon;
-
-    // Mark the station as "playing" in the station list
-    const stationItems = stationsList.querySelectorAll("li");
-    stationItems.forEach(item => item.classList.remove("playing"));
-    const currentStationItem = Array.from(stationItems).find(item => item.dataset.shortcode === station.station.shortcode);
-    if (currentStationItem) {
-        currentStationItem.classList.add("playing");
-    }
-
-    // Enable/disable previous and next buttons
-    const currentIndex = Array.from(stationItems).indexOf(currentStationItem);
-    updateButtonState(previousButton, currentIndex === 0);
-    updateButtonState(nextButton, currentIndex === stationItems.length - 1);
-
-    // Handle loading state
-    radioPlayer.addEventListener('canplay', () => {
-        console.log(`Stream loaded for station: ${station.station.name}`);
-        isLoading = false;
-    }, { once: true });
-
-    radioPlayer.addEventListener('error', onError, { once: true });
-}
 
 /**
  * Updates the state of a button (enabled/disabled).
@@ -403,14 +392,6 @@ function updateButtonState(button, isDisabled) {
     button.disabled = isDisabled;
     button.style.opacity = isDisabled ? 0.5 : 1;
     button.style.pointerEvents = isDisabled ? 'none' : 'auto';
-}
-
-/**
- * Event handler for when the radio player can start playing.
- */
-function onCanPlay() {
-    isLoading = false;
-    radioPlayer.play().catch(error => console.error("Error playing the stream:", error));
 }
 
 /**
@@ -559,10 +540,6 @@ function initialiseSSE() {
     });
 }
 
-// Replace polling with SSE initialization
 initialiseSSE();
-
-// Keep the progress update logic
-setInterval(updateProgress, 1000);
-
-hideElementsOnInactivity([playerControls, playerProgressContainer], 2000); // Call the function directly
+setInterval(updateProgress, 1000); // Update progress bar every 1 second
+hideElementsOnInactivity([playerControls, playerProgressContainer], 3000); // Hide player controls on inactivity for 3 seconds
