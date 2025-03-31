@@ -97,9 +97,6 @@ function updateStreamUrlAndPlay(station) {
         return;
     }
 
-    // Save the current station
-    saveCurrentStation(station);
-
     isLoading = true;
     radioPlayer.src = STREAM_URL; // Update the audio stream
     radioPlayer.load(); // Load the stream without starting playback
@@ -450,21 +447,6 @@ function setPlayerVolume(player, defaultVolume = config.audio.defaultVolume) {
 }
 
 /**
- * Saves the currently playing station to localStorage.
- * @param {Object} stationData - The station object containing the shortcode and stream URL.
- */
-function saveCurrentStation(stationData) {
-    if (!stationData || !stationData.station || !stationData.station.shortcode || !stationData.station.listen_url) {
-        console.error("Invalid station data, cannot save.");
-        return;
-    }
-
-    localStorage.setItem("currentStation", stationData.station.shortcode);
-    localStorage.setItem("currentStreamUrl", stationData.station.listen_url);
-}
-
-
-/**
  * Initialises the SSE connection to receive real-time updates from the AzuraCast API.
  */
 function initialiseSSE() {
@@ -506,7 +488,6 @@ function initialiseSSE() {
             } else {
                 currentStationShortcode = nowplaying.station.shortcode;
                 updateStreamUrlAndPlay(nowplaying);
-                saveCurrentStation(nowplaying); // Save initial station
             }
             
 
@@ -523,7 +504,6 @@ function initialiseSSE() {
 
         // Update the UI for the current station
         if (nowplaying.station.shortcode === currentStationShortcode) {
-            saveCurrentStation(nowplaying);
             elapsedTime = nowplaying.now_playing.elapsed;
             const currentSong = nowplaying.now_playing.song.title;
             songDuration = nowplaying.now_playing.duration;
