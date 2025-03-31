@@ -15,6 +15,6 @@
     "corsProxy": "https://corsproxy.io/?",
     "audio": {
         "autoPlay": true,
-        "volumeLevel": 0.8
+        "defaultVolume": 0.8
     }
 }

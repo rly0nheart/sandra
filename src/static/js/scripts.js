@@ -67,11 +67,7 @@ async function updateNowPlayingUI(station) {
         // If no artist image or config.ui.artistImageAsBackground is false, fallback to song artwork
         document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
         // Always extract colors from song artwork
-        if (artworkImg.complete) {
-            extractColorsFromInternalImage(artworkImg);
-        } else {
-            artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
-        }
+        artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
     }
 
     // Update the playback history
@@ -101,6 +97,9 @@ function updateStreamUrlAndPlay(station) {
         return;
     }
 
+    // Save the current station
+    saveCurrentStation(station);
+
     isLoading = true;
     radioPlayer.src = STREAM_URL; // Update the audio stream
     radioPlayer.load(); // Load the stream without starting playback
@@ -116,11 +115,6 @@ function updateStreamUrlAndPlay(station) {
     if (currentStationItem) {
         currentStationItem.classList.add("playing");
     }
-
-    // Enable/disable previous and next buttons
-    const currentIndex = Array.from(stationItems).indexOf(currentStationItem);
-    updateButtonState(previousButton, currentIndex === 0);
-    updateButtonState(nextButton, currentIndex === stationItems.length - 1);
 
     // Handle loading state
     radioPlayer.addEventListener('canplay', () => {
@@ -182,7 +176,7 @@ function updateStationListItem(stationData) {
         stationsList.appendChild(stationItem);
     }
 
-    // Sort stations alphabetically by name
+    // Ensure the station list order remains consistent
     const stationItems = Array.from(stationsList.querySelectorAll("li"));
     stationItems.sort((a, b) => {
         const nameA = a.querySelector(".station-name").textContent.toLowerCase();
@@ -190,6 +184,14 @@ function updateStationListItem(stationData) {
         return nameA.localeCompare(nameB);
     });
     stationItems.forEach(item => stationsList.appendChild(item));
+
+    // Recalculate the current station index **after sorting**
+    const currentStationItem = stationsList.querySelector(`[data-shortcode="${currentStationShortcode}"]`);
+    const currentIndex = Array.from(stationsList.querySelectorAll("li")).indexOf(currentStationItem);
+
+    // Update the button states **after** sorting and reattaching elements
+    updateButtonState(previousButton, currentIndex === 0);
+    updateButtonState(nextButton, currentIndex === stationItems.length - 1);
 
     // Highlight the current station if it matches the current station shortcode
     if (currentStationShortcode === stationData.station.shortcode) {
@@ -426,6 +428,43 @@ function formatTime(seconds) {
 }
 
 /**
+ * Sets the player's volume based on saved settings or defaults.
+ * Also ensures that volume changes are saved persistently.
+ * @param {HTMLAudioElement} player - The audio player element.
+ * @param {number} [defaultVolume=0.5] - The default volume if none is saved.
+ */
+function setPlayerVolume(player, defaultVolume = config.audio.defaultVolume) {
+    if (!player) {
+        console.error("Audio player not found.");
+        return;
+    }
+
+    // Retrieve saved volume from localStorage or use the default
+    const savedVolume = localStorage.getItem("playerVolume");
+    player.volume = savedVolume ? parseFloat(savedVolume) : defaultVolume;
+
+    // Save volume when user adjusts it
+    player.addEventListener("volumechange", () => {
+        localStorage.setItem("playerVolume", player.volume);
+    });
+}
+
+/**
+ * Saves the currently playing station to localStorage.
+ * @param {Object} stationData - The station object containing the shortcode and stream URL.
+ */
+function saveCurrentStation(stationData) {
+    if (!stationData || !stationData.station || !stationData.station.shortcode || !stationData.station.listen_url) {
+        console.error("Invalid station data, cannot save.");
+        return;
+    }
+
+    localStorage.setItem("currentStation", stationData.station.shortcode);
+    localStorage.setItem("currentStreamUrl", stationData.station.listen_url);
+}
+
+
+/**
  * Initialises the SSE connection to receive real-time updates from the AzuraCast API.
  */
 function initialiseSSE() {
@@ -458,12 +497,18 @@ function initialiseSSE() {
         // Automatically prepare the first station on page load
         if (!firstStationInitialised) {
             const savedStationShortcode = localStorage.getItem("currentStation");
-            if (savedStationShortcode && savedStationShortcode === nowplaying.station.shortcode) {
+            const savedStreamUrl = localStorage.getItem("currentStreamUrl");
+
+            if (savedStationShortcode && savedStreamUrl) {
                 currentStationShortcode = savedStationShortcode;
+                radioPlayer.src = savedStreamUrl;
+                updateNowPlayingUI(nowplaying);
             } else {
                 currentStationShortcode = nowplaying.station.shortcode;
+                updateStreamUrlAndPlay(nowplaying);
+                saveCurrentStation(nowplaying); // Save initial station
             }
-            updateStreamUrlAndPlay(nowplaying);
+            
 
             // Mark the first station as "playing" in the stations modal
             const firstStationItem = stationsList.querySelector(`[data-shortcode="${currentStationShortcode}"]`);
@@ -472,10 +517,13 @@ function initialiseSSE() {
             }
 
             firstStationInitialised = true;
+
+            updateStreamUrlAndPlay(nowplaying);
         }
 
         // Update the UI for the current station
         if (nowplaying.station.shortcode === currentStationShortcode) {
+            saveCurrentStation(nowplaying);
             elapsedTime = nowplaying.now_playing.elapsed;
             const currentSong = nowplaying.now_playing.song.title;
             songDuration = nowplaying.now_playing.duration;
@@ -540,5 +588,6 @@ function initialiseSSE() {
 }
 
 initialiseSSE();
+setPlayerVolume(radioPlayer);
 setInterval(updateProgress, 1000); // Update progress bar every 1 second
 hideElementsOnInactivity([playerControls, playerProgressContainer], 3000); // Hide player controls on inactivity for 3 seconds

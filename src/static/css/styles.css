@@ -321,6 +321,9 @@ body::before {
     cursor: pointer;
 }
 
+#playbackHistoryModal .modal-content {
+    max-width: 450px;
+}
 /* Song History */
 .song-history-item {
     display: flex;
@@ -366,17 +369,20 @@ body::before {
     color: rgba(255, 255, 255, 0.8);
     font-size: 18px;
     margin-bottom: 2px;
+    text-wrap: wrap;
 }
 
 .song-history-item p:nth-child(3) {
     color: rgba(255, 255, 255, 0.9);
     font-size: 18px;
     margin-bottom: 4px;
+    text-wrap: wrap;
 }
 
 .song-history-item p:last-child {
     font-size: 15px;
     color: rgba(255, 255, 255, 0.5);
+    text-wrap: wrap;
 }
 
 .faded {
@@ -503,6 +509,9 @@ body::before {
         gap: 10px;
     }  
 
+    #playbackHistoryModal .modal-content {
+        max-width: 350px;
+    }
     .artwork {  
         width: 250px;
         height: 250px;

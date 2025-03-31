@@ -283,19 +283,15 @@ stationsListButton.addEventListener("click", () => {
  * Event listener for station item click
  */
 stationsList.addEventListener("click", (event) => {
-    if (event.target.tagName === "li") {
-        hideModal(stationModal);
-    }
-});
-
-// Add event delegation for station list clicks
-stationsList.addEventListener("click", (event) => {
     const stationItem = event.target.closest("li");
     if (stationItem && stationItem.dataset.shortcode) {
         const stationData = JSON.parse(stationItem.dataset.stationData);
         updateStreamUrlAndPlay(stationData); // Pass the full stationData (which includes .station)
         updateNowPlayingUI(stationData);
-        localStorage.setItem("currentStation", stationData.station.shortcode); // Persist the current station shortcode
+
+        // Save the current station and stream URL in localStorage
+        localStorage.setItem("currentStation", stationData.station.shortcode);
+        localStorage.setItem("currentStreamUrl", stationData.station.listen_url);
     }
 });
 
