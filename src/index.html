@@ -6,13 +6,14 @@
     <title>AzuRadio</title>
 
     <!-- Font Awesome (Free) -->
-    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css"> <!-- https://fontawesome.com -->
+    <!-- https://fontawesome.com -->
+    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
 
-    <!-- External CSS -->
     <link rel="stylesheet" href="static/css/styles.css">
     <link rel="icon" type="image/x-icon" href="static/img/radio.png"> <!-- https://www.flaticon.com/free-icon/radio_12078630 -->
 
-    <!-- Color Thief Library -->
+    <!-- Color Thief Library v2.6.0 -->
+    <!-- https://github.com/lokesh/color-thief -->
     <script src="assets/color-thief.js/color-thief.min.js"></script>
 </head>
 <body>
@@ -69,12 +70,8 @@
 
     <audio id="radioPlayer" preload="auto"></audio>
 
-    <!-- Note: Ensure the AzuraCast server supports SSE at the /api/nowplaying/sse endpoint -->
-
-    <!-- External JavaScript -->
     <script type="module" src="static/js/scripts.js"></script>
     <script type="module" src="static/js/events.js"></script>
     <script src="assets/fontawesome/js/all.min.js"></script>
-
 </body>
 </html>
