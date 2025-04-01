@@ -476,7 +476,7 @@ function initialiseSSE() {
 
         const nowplaying = jsonData.np;
 
-        // Automatically prepare the first station on page load
+        // Automatically prepare the first station to be receive data
         if (!firstStationInitialised) {
             const savedStationShortcode = localStorage.getItem("currentStation");
             const savedStreamUrl = localStorage.getItem("currentStreamUrl");
@@ -491,7 +491,7 @@ function initialiseSSE() {
             }
             
 
-            // Mark the first station as "playing" in the stations modal
+            // Mark the first station (to receive updates) as "playing" in the stations modal
             const firstStationItem = stationsList.querySelector(`[data-shortcode="${currentStationShortcode}"]`);
             if (firstStationItem) {
                 firstStationItem.classList.add("playing");

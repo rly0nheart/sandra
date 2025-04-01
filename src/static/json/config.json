@@ -5,6 +5,7 @@
                 "station:boomer_fm": { "recover": true },
                 "station:abba_radio": { "recover": true },
                 "station:afro_flava": { "recover": true },
+                "station:rap_royalty": { "recover": true },
                 "station:colors": { "recover": true }
             }
     },
