@@ -1,8 +1,7 @@
-
 services:
   web:
-    image: anais-docker 
     build: .
+    container_name: anais-web
     ports:
-      - "3000:3000"
+      - "3000:80"
     restart: unless-stopped

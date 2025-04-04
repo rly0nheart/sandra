@@ -1,17 +1,14 @@
-# Use the official Nginx lightweight image
-FROM nginx:alpine
+# Use official Apache image
+FROM httpd:alpine
 
-# Set the working directory inside the container
-WORKDIR /usr/share/nginx/html
+# Remove default files
+RUN rm -rf /usr/local/apache2/htdocs/*
 
-# Remove default Nginx static files
-RUN rm -rf ./*
+# Copy your site from the src folder into Apache's web root
+COPY src/ /usr/local/apache2/htdocs/
 
-# Copy everything from the repo into the Nginx serving directory
-COPY . .
+# Add .htaccess if you're using client-side routing
+COPY .htaccess /usr/local/apache2/htdocs/
 
-# Expose port 80 to serve the site
+# Expose port 80
 EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
