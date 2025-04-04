@@ -27,10 +27,10 @@ import {
     stationModalHeader,
     playbackHistoryModalHeader,
     pauseIcon,
-    populatePlaybackHistory, // Import the function to update the modal
+    populatePlaybackHistory,
 } from "./events.js";
 
-export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay }; // Export updateNowPlayingUI
+export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay }; 
 
 const response = await fetch('static/json/config.json');
 const config = await response.json();
@@ -40,7 +40,7 @@ let lastSong = "";
 let songDuration = 0;
 let elapsedTime = 0;
 let songHistory = [];
-let isLoading = false; // Ensure this is exported
+let isLoading = false;
 let currentStationShortcode = null; 
 
 
@@ -50,7 +50,7 @@ let currentStationShortcode = null;
  */
 async function updateNowPlayingUI(station) {
     const { song } = station.now_playing;
-    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; // Check if we want the Wikipedia image
+    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; 
     songTitle.textContent = song.title || "Unknown title";
     songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown album"}`;
     songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown artist"}`;
