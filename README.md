@@ -3,7 +3,7 @@
     <br>
     <mark>ANAIS</mark>
     <br>
-    <i>Anais is an SSE-powered Azuracast Radio Player.</i>
+    <i>Anais is an elegant SSE-powered Azuracast Radio Player.</i>
     <br>
     <br>
     <img src="https://github.com/user-attachments/assets/8cb5ade0-8ee1-4cb5-8b64-a08df8b8e1ef">
