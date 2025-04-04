@@ -5,7 +5,7 @@
 </p>
 
 
-<details>
+<details align="center">
   <summary><strong>Screenshots</strong></summary>
 
   <ul>
