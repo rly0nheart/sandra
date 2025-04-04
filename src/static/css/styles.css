@@ -492,7 +492,7 @@ body::before {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 500px; /* Ensures text stays within its container */
+    max-width: 400px; /* Ensures text stays within its container */
      
 }
 

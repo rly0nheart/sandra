@@ -1,7 +1,9 @@
 <p align="center">
-    <strong>Anais</strong>
+    <img src="src/static/img/favicon.png" style="height: 90px; width: 90px">
     <br>
-    <it></it>Anais is an SSE-powered Azuracast Radio Player.</it>
+    <mark>ANAIS</mark>
+    <br>
+    <i>Anais is an elegant SSE-powered Azuracast Radio Player.</i>
     <br>
     <br>
     <img src="https://github.com/user-attachments/assets/8cb5ade0-8ee1-4cb5-8b64-a08df8b8e1ef">
