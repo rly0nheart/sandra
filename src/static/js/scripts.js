@@ -30,7 +30,7 @@ import {
     populatePlaybackHistory,
 } from "./events.js";
 
-export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay }; // Export updateNowPlayingUI
+export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay }; 
 
 const response = await fetch('static/json/config.json');
 const config = await response.json();
@@ -50,7 +50,7 @@ let currentStationShortcode = null;
  */
 async function updateNowPlayingUI(station) {
     const { song } = station.now_playing;
-    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; // Check if we want the Wikipedia image
+    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; 
     songTitle.textContent = song.title || "Unknown title";
     songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown album"}`;
     songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown artist"}`;
