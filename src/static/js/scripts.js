@@ -27,7 +27,7 @@ import {
     stationModalHeader,
     playbackHistoryModalHeader,
     pauseIcon,
-    populatePlaybackHistory, // Import the function to update the modal
+    populatePlaybackHistory,
 } from "./events.js";
 
 export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay }; // Export updateNowPlayingUI
@@ -40,7 +40,7 @@ let lastSong = "";
 let songDuration = 0;
 let elapsedTime = 0;
 let songHistory = [];
-let isLoading = false; // Ensure this is exported
+let isLoading = false;
 let currentStationShortcode = null; 
 
 
