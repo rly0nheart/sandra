@@ -56,7 +56,7 @@ async function updateNowPlayingUI(station) {
     songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown artist"}`;
     artworkImg.crossOrigin = "Anonymous";
     artworkImg.src = song.art;
-    document.title = `${song.title} by ${song.artist} - ${station.station.name}`;
+    document.title = `Playing: ${song.title} by ${song.artist} on ${station.station.name}`;
 
     if (artistImage && config.ui.artistImageAsBackground) {
         // If artist image exists and config.ui.artistImageAsBackground is true, apply it as background

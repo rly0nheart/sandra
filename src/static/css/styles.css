@@ -344,7 +344,6 @@ body::before {
 }
 
 .song-history-item img {
-    /*background-image: url("../img/artwork.jpg");*/
     width: 90px;
     height: 90px;
     margin-right: 15px;
@@ -371,7 +370,7 @@ body::before {
 .song-history-item p:first-child {
     font-family: "Higher Jump";
     font-weight: bold;
-    font-size: 10px;
+    font-size: 9px;
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
