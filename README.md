@@ -1,19 +1,14 @@
 <p align="center">
     <strong>Anais</strong>
     <br>
-    Anais is an SSE-powered Azuracast Radio Player.
+    <it></it>Anais is an SSE-powered Azuracast Radio Player.</it>
+    <br>
+    <br>
+    <img src="https://github.com/user-attachments/assets/8cb5ade0-8ee1-4cb5-8b64-a08df8b8e1ef">
+    <br>
+    <img src="https://github.com/user-attachments/assets/03c2787f-b3be-44d2-846d-701efd1fa604">
+    <br>
+    <img src="https://github.com/user-attachments/assets/264fac64-4c56-43ee-9e6c-fb01cdc2471a">
+    <br>
+    <img src="https://github.com/user-attachments/assets/6aff6112-6528-455b-b9fe-d5f5e8beb646">
 </p>
-
-
-<details>
-  <summary><strong>Screenshots</strong></summary>
-
-  <ul>
-    <img src="src/gallery/Screenshot From 2025-04-04 02-52-07.png" alt="Image 1" >
-    <img src="src/gallery/Screenshot From 2025-04-04 02-52-14.png" alt="Image 2">
-    <img src="src/gallery/Screenshot From 2025-04-04 01-31-50.png" alt="Image 3">
-    <img src="src/gallery/Screenshot From 2025-04-04 01-32-11.png" alt="Image 4">
-  </ul>
-
-</details>
-
