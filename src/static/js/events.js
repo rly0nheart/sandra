@@ -24,6 +24,7 @@ export {
     stationModalHeader,
     playbackHistoryModalHeader,
     stationsList,
+    playIcon,
     pauseIcon,
     volumeMuteIcon,
     volumeLowIcon,

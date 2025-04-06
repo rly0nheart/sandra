@@ -27,6 +27,7 @@ import {
     stationsList,
     stationModalHeader,
     playbackHistoryModalHeader,
+    playIcon,
     pauseIcon,
 } from "./events.js";
 
