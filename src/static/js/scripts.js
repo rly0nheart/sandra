@@ -17,6 +17,8 @@ import {
     playerControls,
     playerProgressContainer,
     volumeSlider,
+    volumeLowIcon,
+    volumeUpIcon,
     progress, 
     currentTimeDisplay, 
     totalTimeDisplay,
