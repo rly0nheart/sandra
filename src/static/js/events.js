@@ -77,9 +77,11 @@ import {
     updateStreamUrlAndPlay, 
     populatePlaybackHistory, 
     hideModal, 
-    showModal, 
-    togglePlayPause 
-} from "./scripts.js"; // Import isLoading
+    showModal,
+    updateVolumeIcon,
+    togglePlayPause,
+    toggleMuteUnmute
+} from "./scripts.js";
 
 
 // Ensure the play/pause button starts in the paused state
@@ -105,27 +107,6 @@ playPauseButton.addEventListener("click", () => {
         });
     }
 }, { once: true });
-
-/**
- * Updates the volume icon based on the current volume level and mute state.
- */
-function updateVolumeIcon() {
-    if (radioPlayer.muted || radioPlayer.volume === 0) {
-        volumeMuteUnmuteBtn.innerHTML = volumeMuteIcon;
-    } else if (radioPlayer.volume > 0 && radioPlayer.volume < 0.5) {
-        volumeMuteUnmuteBtn.innerHTML = volumeLowIcon;
-    } else {
-        volumeMuteUnmuteBtn.innerHTML = volumeUpIcon;
-    }
-}
-
-/**
- * Toggles the mute/unmute state of the radio player.
- */
-function toggleMuteUnmute() {
-    radioPlayer.muted = !radioPlayer.muted;
-    updateVolumeIcon();
-}
 
 /**
  * Event listener for playback history button

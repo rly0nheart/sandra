@@ -26,7 +26,6 @@ import {
     stationModalHeader,
     playbackHistoryModalHeader,
     pauseIcon,
-    updateVolumeIcon
 } from "./events.js";
 
 export { 
@@ -37,8 +36,10 @@ export {
     updateStreamUrlAndPlay, 
     populatePlaybackHistory, 
     hideModal, 
-    showModal, 
-    togglePlayPause 
+    showModal,
+    updateVolumeIcon,
+    togglePlayPause,
+    toggleMuteUnmute
 }; 
 
 const config = await loadConfig();
@@ -60,6 +61,27 @@ async function loadConfig() {
     const response = await fetch('static/json/config.json');
     const config = await response.json();
     return config;
+}
+
+/**
+ * Updates the volume icon based on the current volume level and mute state.
+ */
+function updateVolumeIcon() {
+    if (radioPlayer.muted || radioPlayer.volume === 0) {
+        volumeMuteUnmuteBtn.innerHTML = volumeMuteIcon;
+    } else if (radioPlayer.volume > 0 && radioPlayer.volume < 0.5) {
+        volumeMuteUnmuteBtn.innerHTML = volumeLowIcon;
+    } else {
+        volumeMuteUnmuteBtn.innerHTML = volumeUpIcon;
+    }
+}
+
+/**
+ * Toggles the mute/unmute state of the radio player.
+ */
+function toggleMuteUnmute() {
+    radioPlayer.muted = !radioPlayer.muted;
+    updateVolumeIcon();
 }
 
 /**
