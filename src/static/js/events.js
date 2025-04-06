@@ -30,8 +30,6 @@ export {
     volumeUpIcon,
     albumIconSpinning,
     artistIcon,
-    hideModal,
-    populatePlaybackHistory
 };
 
 const artworkImg = document.getElementById("artwork");
@@ -71,71 +69,18 @@ let playIcon = '<i class="fas fa-play"></i>';
 let albumIconSpinning = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
 let artistIcon = '<i class="fa-solid fa-user"></i> '
 
-import { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay } from "./scripts.js"; // Import isLoading
+import { 
+    songHistory, 
+    currentStationShortcode, 
+    isLoading, 
+    updateNowPlayingUI, 
+    updateStreamUrlAndPlay, 
+    populatePlaybackHistory, 
+    hideModal, 
+    showModal, 
+    togglePlayPause 
+} from "./scripts.js"; // Import isLoading
 
-/**
- * Show the modal with a slight delay to ensure the display property is set before adding the class.
- * @param {HTMLElement} modal - The modal element to show.
- */
-function showModal(modal) {
-    modal.style.display = "block";
-    setTimeout(() => {
-        modal.classList.add("show");
-    }, 10);
-    document.body.classList.add("modal-open"); // Dim the background
-}
-
-/**
- * Hide the modal with a slight delay to match the transition duration.
- * @param {HTMLElement} modal - The modal element to hide.
- */
-function hideModal(modal) {
-    modal.classList.remove("show");
-    modal.classList.add("hide");
-    setTimeout(() => {
-        document.body.classList.remove("modal-open"); // Remove dim effect
-        modal.style.display = "none";
-        modal.classList.remove("hide");
-    }, 300); // Match the transition duration
-}
-
-/**
- * Populate the playback history modal with song history.
- */
-function populatePlaybackHistory() {
-    playbackHistoryList.innerHTML = "";
-    songHistory.forEach(song => {
-        const minutesAgo = Math.floor((new Date() - new Date(song.playedAt)) / 60000);
-        const songItem = document.createElement("li");
-        songItem.className = "song-history-item";
-        songItem.innerHTML = `
-            <img src="${song.art}" alt="Artwork" _target="blank">
-            <div>
-                <p>${song.title}</p>
-                <p>${song.artist || 'Unknown'} - ${song.album || 'Unknown'}</p>
-                <p class="faded">${minutesAgo} minutes ago</p>
-            </div>
-        `;
-        playbackHistoryList.appendChild(songItem);
-    });
-}
-
-/**
- * Toggles the play/pause state of the radio player.
- */
-function togglePlayPause() {
-    if (radioPlayer.paused) {
-        radioPlayer.load();
-        radioPlayer.play().then(() => {
-            playPauseButton.innerHTML = pauseIcon; // Change icon to pause
-        }).catch((error) => {
-            console.error("Error playing the stream:", error);
-        });
-    } else {
-        radioPlayer.pause();
-        playPauseButton.innerHTML = playIcon; // Change icon to play
-    }
-}
 
 // Ensure the play/pause button starts in the paused state
 playPauseButton.innerHTML = playIcon;
@@ -186,7 +131,7 @@ function toggleMuteUnmute() {
  * Event listener for playback history button
  */
 playbackHistoryButton.addEventListener("click", () => {
-    populatePlaybackHistory();
+    populatePlaybackHistory(songHistory);
     showModal(playbackHistoryModal);
 });
 

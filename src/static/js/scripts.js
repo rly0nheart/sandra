@@ -1,5 +1,4 @@
 import {
-    hideModal,
     artworkImg, 
     songTitle, 
     songAlbum, 
@@ -27,13 +26,22 @@ import {
     stationModalHeader,
     playbackHistoryModalHeader,
     pauseIcon,
-    populatePlaybackHistory,
+    updateVolumeIcon
 } from "./events.js";
 
-export { songHistory, currentStationShortcode, isLoading, updateNowPlayingUI, updateStreamUrlAndPlay }; 
+export { 
+    songHistory, 
+    currentStationShortcode, 
+    isLoading, 
+    updateNowPlayingUI, 
+    updateStreamUrlAndPlay, 
+    populatePlaybackHistory, 
+    hideModal, 
+    showModal, 
+    togglePlayPause 
+}; 
 
-const response = await fetch('static/json/config.json');
-const config = await response.json();
+const config = await loadConfig();
 const colorThief = new ColorThief();
 
 let lastSong = "";
@@ -43,6 +51,61 @@ let songHistory = [];
 let isLoading = false;
 let currentStationShortcode = null; 
 
+
+/**
+ * Loads the configuration from the static JSON file.
+ * @returns {Promise<Object>} A promise that resolves to the configuration object.
+ */
+async function loadConfig() {
+    const response = await fetch('static/json/config.json');
+    const config = await response.json();
+    return config;
+}
+
+/**
+ * Show the modal with a slight delay to ensure the display property is set before adding the class.
+ * @param {HTMLElement} modal - The modal element to show.
+ */
+function showModal(modal) {
+    modal.style.display = "block";
+    setTimeout(() => {
+        modal.classList.add("show");
+    }, 10);
+    document.body.classList.add("modal-open"); // Dim the background
+}
+
+/**
+ * Hide the modal with a slight delay to match the transition duration.
+ * @param {HTMLElement} modal - The modal element to hide.
+ */
+function hideModal(modal) {
+    modal.classList.remove("show");
+    modal.classList.add("hide");
+    setTimeout(() => {
+        document.body.classList.remove("modal-open"); // Remove dim effect
+        modal.style.display = "none";
+        modal.classList.remove("hide");
+    }, 300); // Match the transition duration
+}
+
+
+
+/**
+ * Toggles the play/pause state of the radio player.
+ */
+function togglePlayPause() {
+    if (radioPlayer.paused) {
+        radioPlayer.load();
+        radioPlayer.play().then(() => {
+            playPauseButton.innerHTML = pauseIcon; // Change icon to pause
+        }).catch((error) => {
+            console.error("Error playing the stream:", error);
+        });
+    } else {
+        radioPlayer.pause();
+        playPauseButton.innerHTML = playIcon; // Change icon to play
+    }
+}
 
 /**
  * Updates the UI with the currently playing song information.
@@ -56,17 +119,13 @@ async function updateNowPlayingUI(station) {
     songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown artist"}`;
     artworkImg.crossOrigin = "Anonymous";
     artworkImg.src = song.art;
-    document.title = `Playing: ${song.title} by ${song.artist} on ${station.station.name} - Anais`;
+    document.title = `Playing: ${song.title} by ${song.artist} — ${station.station.name}`;
 
     if (artistImage && config.ui.artistImageAsBackground) {
-        // If artist image exists and config.ui.artistImageAsBackground is true, apply it as background
         document.body.style.background = `url(${artistImage}) center/cover no-repeat fixed`;
-        // Try to extract colors from the image
         extractColorsFromExternalImage(artistImage);
     } else {
-        // If no artist image or config.ui.artistImageAsBackground is false, fallback to song artwork
         document.body.style.background = `url(${song.art}) center/cover no-repeat fixed`;
-        // Always extract colors from song artwork
         artworkImg.onload = () => extractColorsFromInternalImage(artworkImg);
     }
 
@@ -79,7 +138,7 @@ async function updateNowPlayingUI(station) {
         playedAt: new Date(song.played_at * 1000)
     }));
 
-    populatePlaybackHistory(); // Immediately update the playback history modal
+    populatePlaybackHistory(songHistory);
 }
 
 /**
@@ -120,6 +179,28 @@ function updateStreamUrlAndPlay(station) {
     }, { once: true });
 
     radioPlayer.addEventListener('error', onError, { once: true });
+}
+
+/**
+ * Populate the playback history modal with song history.
+ * @param {Array} songHistory - List of previously played song objects.
+ */
+function populatePlaybackHistory(songHistory) {
+    playbackHistoryList.innerHTML = "";
+    songHistory.forEach(song => {
+        const minutesAgo = Math.floor((new Date() - new Date(song.playedAt)) / 60000);
+        const songItem = document.createElement("li");
+        songItem.className = "song-history-item";
+        songItem.innerHTML = `
+            <img src="${song.art}" alt="Artwork" _target="blank">
+            <div>
+                <p>${song.title}</p>
+                <p>${song.artist || 'Unknown'} - ${song.album || 'Unknown'}</p>
+                <p class="faded">${minutesAgo} minutes ago</p>
+            </div>
+        `;
+        playbackHistoryList.appendChild(songItem);
+    });
 }
 
 /**
@@ -569,5 +650,6 @@ function initialiseSSE() {
 
 initialiseSSE();
 setPlayerVolume(radioPlayer);
+updateVolumeIcon();
 setInterval(updateProgress, 1000); // Update progress bar every 1 second
 hideElementsOnInactivity([playerControls, playerProgressContainer], 3000); // Hide player controls on inactivity for 3 seconds
