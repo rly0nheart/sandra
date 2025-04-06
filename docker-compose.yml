@@ -5,6 +5,6 @@ services:
     ports:
       - "3000:80"
     restart: unless-stopped
-    hostname: radio.lan
-    extra_hosts:
-      - "radio.lan:127.0.0.1"
+#   hostname: radio.lan
+#   extra_hosts:
+#     - "radio.lan:127.0.0.1"
