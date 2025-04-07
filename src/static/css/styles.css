@@ -124,20 +124,18 @@ body::before {
 
 #title {
     font-family: "Higher Jump";
-    font-size: 20px;
+    font-size: 18px;
     text-wrap: nowrap;
     display: block;
     max-width: fit-content;
     padding: 5px 10px 5px 5px;
     margin-bottom: 5px;
-}
 
-#title {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 80%; /* Ensures text stays within its container */
+    max-width: 70%; /* Ensures text stays within its container */
 }
 
 #album, #artist {
@@ -278,7 +276,8 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 20px;
+    padding: 5px 10px;
+    
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     width: 100%;
@@ -288,13 +287,17 @@ body::before {
     z-index: 1;
 }
 
+.modal-title {
+    font-weight: bold;
+}
+
 .modal-content {
     display: flex;
     flex-direction: column;
     width: 80%;
     margin: 0 auto;
     max-width: fit-content;
-    max-height: 80%;
+    max-height: 65%;
     color: white;
     border-radius: 8px;
     overflow: hidden; /* Prevent scrollbars from breaking sticky */
@@ -344,16 +347,36 @@ body::before {
     cursor: pointer;
 }
 
-#playbackHistoryModal .modal-content {
-    max-width: 450px;
+#playbackHistoryList {
+    counter-reset: song-counter;
+    list-style: none;
+    max-width: 80%;
+    padding-right: 15px;
+    padding-top: 10px;
+    
 }
+
+
 
 /* Song History */
 .song-history-item {
+    counter-increment: song-counter;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-    padding: 10px 15px;
+    gap: 10px; /* adds space between number/artwork/text */
+    margin-bottom:8px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.song-history-item::before {
+    font-family: Hazel;
+    font-weight: bold;
+    content: counter(song-counter);
+    margin-right: 10px;
+    flex-shrink: 0;
+    text-align: left;
 }
 
 .song-history-item img {
@@ -377,13 +400,13 @@ body::before {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 500px; /* Ensures text stays within its container */
+    max-width: 300px; /* Ensures text stays within its container */
      
 }
 .song-history-item p:first-child {
     font-family: "Higher Jump";
     font-weight: bold;
-    font-size: 9px;
+    font-size: 8px;
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
@@ -396,7 +419,10 @@ body::before {
     color: rgba(255, 255, 255, 0.8);
     font-size: 18px;
     margin-bottom: 2px;
-    text-wrap: wrap;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Prevents text from overflowing */
+    max-width: 500px; /* Ensures text stays within its container */
 }
 
 .song-history-item p:nth-child(3) {
@@ -518,8 +544,9 @@ body::before {
 /* Playing Station Highlight */
 #stationModal .modal-content ul li.playing {
     pointer-events: none;
-    transform: scale(1.03);
-    background-color: rgba(255, 235, 205, 0.3); /* Light highlight for playing station */
+    background-color: rgba(255, 255, 255, 0.1); /* Light highlight for playing station */
+    border: 1px solid white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Media Queries */

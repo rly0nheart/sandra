@@ -2,7 +2,7 @@ import {
     artworkImg, 
     songTitle, 
     songAlbum, 
-    songArtist, 
+    songArtist,
     radioPlayer, 
     playPauseButton, 
     previousButton, 
@@ -20,6 +20,7 @@ import {
     volumeSlider,
     volumeLowIcon,
     volumeUpIcon,
+    volumeMuteIcon,
     progress, 
     currentTimeDisplay, 
     totalTimeDisplay,
@@ -139,10 +140,12 @@ function togglePlayPause() {
  */
 async function updateNowPlayingUI(station) {
     const { song } = station.now_playing;
+    console.log(song);
     const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; 
-    songTitle.textContent = song.title || "Unknown title";
-    songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown album"}`;
-    songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown artist"}`;
+    songTitle.textContent = song.title || "Unknown Title";
+    songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown Album"}`;
+    songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown Artist"}`;
+
     artworkImg.crossOrigin = "Anonymous";
     artworkImg.src = song.art;
     document.title = `Playing: ${song.title} by ${song.artist} — ${station.station.name}`;
@@ -214,7 +217,6 @@ function updateStreamUrlAndPlay(station) {
 function populatePlaybackHistory(songHistory) {
     playbackHistoryList.innerHTML = ""; // Clear the list
     songHistory.forEach(song => {
-        console.log(playbackHistoryList.tagName); 
         const minutesAgo = Math.floor((new Date() - new Date(song.playedAt)) / 60000);
         const songItem = document.createElement("li");
         songItem.className = "song-history-item";
@@ -242,7 +244,7 @@ function updateStationListItem(stationData) {
     if (existingItem) {
         existingItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next"><strong>Up Next</strong>: <u>${stationData.playing_next.song.title ?? "N/A"}</u> by <strong>${stationData.playing_next.song.artist ?? "N/A"}</strong></p>`
+            ? `<p class="up-next"><strong>NEXT</strong>: “${ stationData.playing_next.song.title }” by <strong>${stationData.playing_next.song.artist}</strong></p>`
             : '';
 
         existingItem.innerHTML = `
@@ -252,7 +254,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><strong>Now Playing</strong>: <u>${stationData.now_playing.song.title}</u> by <strong>${stationData.now_playing.song.artist}</strong></p>
+                <p class="now-playing"><strong>PLAYING</strong>: “${ stationData.now_playing.song.title }” by <strong>${stationData.now_playing.song.artist}</strong></p>
                 ${upNextHTML} <!-- Insert Up Next info only if it exists -->
             </div>
         `;
@@ -263,7 +265,7 @@ function updateStationListItem(stationData) {
         stationItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
 
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next"><strong>Up Next</strong>: <u>${stationData.playing_next.song.title ?? "N/A"}</u> by <strong>${stationData.playing_next.song.artist ?? "N/A"}</strong></p>`
+            ? `<p class="up-next"><strong>NEXT</strong>: “${ stationData.playing_next.song.title }” by <strong>${stationData.playing_next.song.artist}</strong></p>`
             : '';
 
         stationItem.innerHTML = `
@@ -273,7 +275,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><strong>Now Playing</strong>: <u>${stationData.now_playing.song.title}</u> by <strong>${stationData.now_playing.song.artist}</strong></p>
+                <p class="now-playing"><strong>PLAYING</strong>: “${ stationData.now_playing.song.title }” by <strong>${stationData.now_playing.song.artist}</strong></p>
                 ${upNextHTML} <!-- Insert Up Next info only if it exists -->
             </div>
         `;
@@ -674,41 +676,6 @@ function initialiseSSE() {
         }
     });
 }
-
-
-function applyEllipsisOrScrolling(elementId, maxLength = 50) {
-    const element = document.getElementById(elementId);
-    
-    if (element) {
-        const textContent = element.textContent;
-
-        // If text is too long, truncate with ellipsis
-        if (textContent.length > maxLength) {
-            element.textContent = textContent.substring(0, maxLength) + '...';
-        } else {
-            // If the text is short enough, apply the scrolling effect
-            const span = document.createElement('span');
-            span.className = 'scroll-text';
-            span.textContent = textContent;
-            
-            // Clear any previous content and append the span for scrolling
-            element.innerHTML = '';
-            element.appendChild(span);
-
-            // Apply the scroll effect to the span
-            span.style.whiteSpace = 'nowrap';
-            span.style.position = 'absolute';
-            span.style.left = '100%';
-            span.style.animation = 'scroll-left 10s linear infinite';
-        }
-    }
-}
-
-// Call this function on page load or whenever you need to update
-applyEllipsisOrScrolling('title', 30);  // Example with title and max length of 30 characters
-applyEllipsisOrScrolling('artist', 30);
-applyEllipsisOrScrolling('album', 30);
-
 
 initialiseSSE();
 setPlayerVolume(radioPlayer);

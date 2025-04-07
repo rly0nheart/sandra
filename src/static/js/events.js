@@ -69,7 +69,7 @@ let volumeUpIcon = '<i class="fas fa-volume-up"></i>';
 let pauseIcon = '<i class="fas fa-pause"></i>';
 let playIcon = '<i class="fas fa-play"></i>';
 let albumIconSpinning = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
-let artistIcon = '<i class="fa-solid fa-user"></i> '
+let artistIcon = '<i class="fa-solid fa-user"></i>';
 
 import { 
     songHistory, 
