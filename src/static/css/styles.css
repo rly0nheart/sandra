@@ -511,6 +511,7 @@ body::before {
 /* Playing Station Highlight */
 #stationModal .modal-content ul li.playing {
     pointer-events: none;
+    transform: scale(1.03);
     background-color: rgba(255, 235, 205, 0.3); /* Light highlight for playing station */
 }
 
