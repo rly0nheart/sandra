@@ -675,6 +675,41 @@ function initialiseSSE() {
     });
 }
 
+
+function applyEllipsisOrScrolling(elementId, maxLength = 50) {
+    const element = document.getElementById(elementId);
+    
+    if (element) {
+        const textContent = element.textContent;
+
+        // If text is too long, truncate with ellipsis
+        if (textContent.length > maxLength) {
+            element.textContent = textContent.substring(0, maxLength) + '...';
+        } else {
+            // If the text is short enough, apply the scrolling effect
+            const span = document.createElement('span');
+            span.className = 'scroll-text';
+            span.textContent = textContent;
+            
+            // Clear any previous content and append the span for scrolling
+            element.innerHTML = '';
+            element.appendChild(span);
+
+            // Apply the scroll effect to the span
+            span.style.whiteSpace = 'nowrap';
+            span.style.position = 'absolute';
+            span.style.left = '100%';
+            span.style.animation = 'scroll-left 10s linear infinite';
+        }
+    }
+}
+
+// Call this function on page load or whenever you need to update
+applyEllipsisOrScrolling('title', 30);  // Example with title and max length of 30 characters
+applyEllipsisOrScrolling('artist', 30);
+applyEllipsisOrScrolling('album', 30);
+
+
 initialiseSSE();
 setPlayerVolume(radioPlayer);
 updateVolumeIcon();

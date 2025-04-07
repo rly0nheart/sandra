@@ -132,6 +132,14 @@ body::before {
     margin-bottom: 5px;
 }
 
+#title {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Prevents text from overflowing */
+    max-width: 80%; /* Ensures text stays within its container */
+}
+
 #album, #artist {
     display: block;
     max-width: fit-content;
@@ -271,9 +279,8 @@ body::before {
     justify-content: space-between;
     align-items: center;
     padding: 5px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     width: 100%;
     box-sizing: border-box;
     position: sticky;
@@ -422,7 +429,7 @@ body::before {
     display: flex;
     flex-direction: column; /* Ensures items stack vertically */
     gap: 10px; /* Adds spacing between each station */
-    padding: 10px 20px; /* Adds some padding inside the modal */
+    padding: 15px 20px; /* Adds some padding inside the modal */
 }
 
 #stationModal .modal-content ul li {
