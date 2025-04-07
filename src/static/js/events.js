@@ -9,6 +9,7 @@ export {
     nextButton, 
     stationsListButton, 
     playbackHistoryButton,
+    playbackHistoryList,
     playbackHistoryModalContent,
     availableStationsModalContent,
     closePlaybackHistoryModalButton,

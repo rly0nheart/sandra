@@ -266,6 +266,44 @@ body::before {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    width: 100%;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0 auto;
+    max-width: fit-content;
+    max-height: 80%;
+    color: white;
+    border-radius: 8px;
+    overflow: hidden; /* Prevent scrollbars from breaking sticky */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease, transform 0.3s ease-in-out;
+    transform: translateY(-100%);
+    margin-top: 20px;
+    backdrop-filter: var(--modal-background-blur);
+    -webkit-backdrop-filter: var(--modal-background-blur);
+}
+
+.modal-body {
+    overflow-y: auto;
+    max-height: 80%;
+}
+
 .modal-open::before {
     background: rgba(0, 0, 0, 0.5);
     transition: background 0.3s ease-in-out;
@@ -284,24 +322,6 @@ body::before {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-.modal-content {
-    backdrop-filter: var(--modal-background-blur);
-    -webkit-backdrop-filter: var(--modal-background-blur);
-    margin: 0 auto;
-    justify-content: left;
-    width: 80%;
-    max-width: fit-content;
-    max-height: 80%;
-    color: white;
-    border-radius: 8px;
-    transition: opacity 0.3s ease, transform 0.3s ease-in-out;
-    transform: translateY(-100%);
-    margin-top: 20px;
-    overflow: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.1);
-}
-
-
 .modal.show .modal-content {
     transform: translateY(0);
 }
@@ -310,20 +330,8 @@ body::before {
     transform: translateY(-100%);
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
-    width: 100%;
-    box-sizing: border-box;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
+
+
 
 .close-modal {
     font-size: 25px;
@@ -335,6 +343,7 @@ body::before {
 #playbackHistoryModal .modal-content {
     max-width: 450px;
 }
+
 /* Song History */
 .song-history-item {
     display: flex;
@@ -522,7 +531,25 @@ body::before {
         width: 100%;
         margin-left: 0;
         gap: 10px;
-    }  
+    } 
+
+    #stationModal .modal-content ul li {
+        border-radius: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        
+    }
+
+    #stationModal .modal-content ul li .now-playing, 
+    #stationModal .modal-content ul li .up-next {
+        white-space: wrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Prevents text from overflowing */
+        max-width: 300px; /* Ensures text stays within its container */
+    }
+  
+    #stationModal .modal-content ul li .station-artwork {
+        display: none;
+    }
 
     #playbackHistoryModal .modal-content {
         max-width: 350px;
@@ -541,7 +568,7 @@ body::before {
     } 
     
     #title {  
-        font-size: 25px;
+        font-size: 10px;
     }  
 
     #album {  
@@ -582,4 +609,10 @@ body::before {
         width: 400px;
         height: fit-content;
     }
+}
+
+#playbackHistoryList {
+    list-style-type: decimal; /* Ensure numbers are used */
+    padding-left: 20px; /* Add padding for alignment */
+    margin: 0;
 }
