@@ -21,5 +21,15 @@
       <img src="src/screenshots/Screenshot From 2025-04-07 22-10-50.png" width="45%" alt="Screenshot 3">
       <img src="src/screenshots/Screenshot From 2025-04-07 22-10-59.png" width="45%" alt="Screenshot 4">
   </p>
+
+  <p float="left">
+      <img src="src/screenshots/Screenshot From 2025-04-07 22-17-17.png" width="45%" alt="Screenshot 3">
+      <img src="src/screenshots/Screenshot From 2025-04-07 22-17-22.png" width="45%" alt="Screenshot 4">
+  </p>
+
+  <p float="left">
+      <img src="src/screenshots/Screenshot From 2025-04-07 22-17-28.png" width="45%" alt="Screenshot 3">
+      <img src="src/screenshots/Screenshot From 2025-04-07 22-17-41.png" width="45%" alt="Screenshot 4">
+  </p>
 </p>
 
