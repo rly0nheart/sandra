@@ -1,13 +1,13 @@
 /* Font Definitions */
 @font-face {
-    font-family: Hazel; /* https://www.1001fonts.com/cs-hazel-demo-font.html */
-    src: url('../fonts/cs-hazel-demo.regular.otf') format('opentype');
+    font-family: Bistan; /* https://www.1001fonts.com/bistan-font.html */
+    src: url('../fonts/bistan.regular.otf') format('truetype');
 }
 
 /* Font Definitions */
 @font-face {
-    font-family: "Higher Jump"; /* https://www.1001fonts.com/higher-jump-font.html */
-    src: url('../fonts/higher-jump.regular.ttf') format('truetype');
+    font-family: "Queen Rocker"; /* https://www.1001fonts.com/queen-rocker-personal-use-font.html */
+    src: url('../fonts/queen-rocker-personal-use.regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -42,7 +42,7 @@
 }
 
 body {
-    font-family: Hazel, sans-serif;
+    font-family: Bistan, sans-serif;
     height: 100vh;
     text-align: center;
     justify-content: flex-end;
@@ -123,8 +123,8 @@ body::before {
 }
 
 #title {
-    font-family: "Higher Jump";
-    font-size: 18px;
+    font-family: "Queen Rocker";
+    font-size: 28px;
     text-wrap: nowrap;
     display: block;
     max-width: fit-content;
@@ -188,7 +188,7 @@ body::before {
 }
 
 .time {
-    font-family: Hazel !important;
+    font-family: Bistan !important;
     color: white;
     font-size: 15px;
     opacity: 0.8;
@@ -371,7 +371,7 @@ body::before {
 }
 
 .song-history-item::before {
-    font-family: Hazel;
+    font-family: Bistan;
     font-weight: bold;
     content: counter(song-counter);
     margin-right: 10px;
@@ -404,9 +404,9 @@ body::before {
      
 }
 .song-history-item p:first-child {
-    font-family: "Higher Jump";
+    font-family: "Queen Rocker";
     font-weight: bold;
-    font-size: 8px;
+    font-size: 12px;
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
@@ -517,22 +517,36 @@ body::before {
 
 /* Station Name */
 #stationModal .modal-content ul li .station-name {
-    font-family: "Higher Jump";
-    font-size: 10px;
+    font-family: "Queen Rocker";
+    font-size: 15px;
     font-weight: bold;
+    margin-bottom: 5px;
+    width: fit-content;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Now Playing & Up Next */
-#stationModal .modal-content ul li .now-playing, 
-#stationModal .modal-content ul li .up-next {
+#stationModal .modal-content ul li .now-playing {
     display: block; 
     font-size: 22px;
     margin: 2px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 400px; /* Ensures text stays within its container */
+    max-width: 500px; /* Ensures text stays within its container */
+    margin-bottom: 5px;
      
+}
+
+#stationModal .modal-content ul li .up-next {
+    opacity: 0.6;
+    display: block; 
+    font-size: 22px;
+    margin: 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Prevents text from overflowing */
+    max-width: 500px; /* Ensures text stays within its container */
 }
 
 /* Hover Effect */

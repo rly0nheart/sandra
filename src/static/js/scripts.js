@@ -244,7 +244,7 @@ function updateStationListItem(stationData) {
     if (existingItem) {
         existingItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next"><strong>NEXT</strong>: “${ stationData.playing_next.song.title }” by <strong>${stationData.playing_next.song.artist}</strong></p>`
+            ? `<p class="up-next"><strong>Up Next</strong>: <i>${ stationData.playing_next.song.text}</i></p>`
             : '';
 
         existingItem.innerHTML = `
@@ -254,7 +254,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><strong>PLAYING</strong>: “${ stationData.now_playing.song.title }” by <strong>${stationData.now_playing.song.artist}</strong></p>
+                <p class="now-playing"><strong>Now Playing</strong>: <i>${ stationData.now_playing.song.text }</i></p>
                 ${upNextHTML} <!-- Insert Up Next info only if it exists -->
             </div>
         `;
@@ -265,7 +265,7 @@ function updateStationListItem(stationData) {
         stationItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
 
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next"><strong>NEXT</strong>: “${ stationData.playing_next.song.title }” by <strong>${stationData.playing_next.song.artist}</strong></p>`
+            ? `<p class="up-next"><strong>Up Next</strong>: <i>${ stationData.playing_next.song.text }</i></p>`
             : '';
 
         stationItem.innerHTML = `
@@ -275,7 +275,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><strong>PLAYING</strong>: “${ stationData.now_playing.song.title }” by <strong>${stationData.now_playing.song.artist}</strong></p>
+                <p class="now-playing"><strong>Now Playing</strong>: <i>${ stationData.now_playing.song.text }</i></p>
                 ${upNextHTML} <!-- Insert Up Next info only if it exists -->
             </div>
         `;
