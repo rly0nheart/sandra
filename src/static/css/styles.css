@@ -1,7 +1,7 @@
 /* Font Definitions */
 @font-face {
     font-family: Bistan; /* https://www.1001fonts.com/bistan-font.html */
-    src: url('../fonts/bistan.regular.otf') format('truetype');
+    src: url('../fonts/bistan.regular.otf') format('opentype');
 }
 
 /* Font Definitions */
@@ -349,14 +349,15 @@ body::before {
 
 #playbackHistoryList {
     counter-reset: song-counter;
+    list-style-type: decimal;
     list-style: none;
+    padding-left: 20px;
+    margin: 0;
     max-width: 80%;
     padding-right: 15px;
     padding-top: 10px;
     
 }
-
-
 
 /* Song History */
 .song-history-item {
@@ -657,8 +658,3 @@ body::before {
     }
 }
 
-#playbackHistoryList {
-    list-style-type: decimal; /* Ensure numbers are used */
-    padding-left: 20px; /* Add padding for alignment */
-    margin: 0;
-}
