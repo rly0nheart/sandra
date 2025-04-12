@@ -7,15 +7,10 @@ import {
     playPauseButton, 
     previousButton, 
     nextButton, 
-    stationsListButton, 
-    playbackHistoryButton,
     playbackHistoryList,
-    closePlaybackHistoryModalButton,
-    closeStationModalButton,
     volumeMuteUnmuteBtn,
     playerControls,
     playerProgressContainer,
-    volumeSlider,
     volumeLowIcon,
     volumeUpIcon,
     volumeMuteIcon,
@@ -27,7 +22,6 @@ import {
     stationsList,
     playIcon,
     pauseIcon,
-    songHistoryImages,
 } from "./events.js";
 
 export { 
@@ -115,8 +109,6 @@ function hideModal(modal) {
     }, 300); // Match the transition duration
 }
 
-
-
 /**
  * Toggles the play/pause state of the radio player.
  */
@@ -133,18 +125,6 @@ function togglePlayPause() {
         playPauseButton.innerHTML = playIcon; // Change icon to play
     }
 }
-
-/**
- * Applies a border to all song history images using the specified light theme colour.
- *
- * @param {string} lightColor - The light colour to use for the image borders.
- */
-function styleAllSongHistoryImages(lightColor) {
-    songHistoryImages.forEach(img => {
-        img.style.border = `2px solid ${lightColor}`;
-    });
-}
-
 
 /**
  * Updates the UI with the currently playing song information.
@@ -466,23 +446,6 @@ function applyColors(lightColor, darkColor) {
 
     document.documentElement.style.setProperty('--light-color', lightColor);
     document.documentElement.style.setProperty('--dark-color', darkColor);
-    setElementStyles([
-        { element: closePlaybackHistoryModalButton, styles: { color: darkColor  } },
-        { element: closeStationModalButton, styles: { color: darkColor  } },
-        { element: progress, styles: { background: `linear-gradient(to right, ${lightColor}, ${darkColor})` } },
-        { element: volumeSlider, styles: { accentColor: lightColor } }
-    ]);
-    
-    // Apply colors and hover effect color change to buttons
-    [
-        playbackHistoryButton,
-        nextButton,
-        previousButton,
-        stationsListButton,
-        volumeMuteUnmuteBtn,
-    ].forEach(button => {
-        button.style.color = lightColor;
-    });
 }
 
 /**
