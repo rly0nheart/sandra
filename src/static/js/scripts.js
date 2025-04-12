@@ -449,38 +449,6 @@ function applyColors(lightColor, darkColor) {
 }
 
 /**
-     * Converts an RGB colour string into an RGBA string with a specified alpha (transparency) level.
-     *
-     * This function is useful when you have a theme colour defined as a standard 'rgb(r, g, b)' string
-     * and you want to apply a semi-transparent version of that colour for styling hover states,
-     * overlays, highlights, or other subtle effects.
-     *
-     * @param {string} rgbString - A string in the format 'rgb(r, g, b)', where r, g, and b are integers.
-     * @param {number} [alpha=0.2] - The transparency value between 0 (fully transparent) and 1 (fully opaque).
-     * @returns {string} A valid 'rgba(r, g, b, a)' string. If parsing fails, the original string is returned.
-     *
-     * @example
-     * const lightColor = 'rgb(255, 200, 100)';
-     * const translucent = makeTranslucent(lightColor, 0.3);
-     * // returns 'rgba(255, 200, 100, 0.3)'
-     */
-function makeTranslucent(rgbString, alpha = 0.2) {
-    const rgbValues = rgbString.match(/\d+/g);
-    if (!rgbValues || rgbValues.length < 3) return rgbString; // Fallback if the string can't be parsed
-    return `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alpha})`;
-}
-
-/**
- * Sets multiple styles on multiple elements.
- * @param {Array} elements - Array of objects containing elements and their styles.
- */
-function setElementStyles(elements) {
-    elements.forEach(({ element, styles }) => {
-        Object.assign(element.style, styles);
-    });
-}
-
-/**
  * Hides specified elements after a period of user inactivity (no mouse movement).
  *
  * @param {HTMLElement[]} elementsArray - An array of actual DOM elements (e.g., [document.querySelector(".controls"), document.getElementById("navBar")]).
