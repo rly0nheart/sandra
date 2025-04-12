@@ -72,7 +72,7 @@ let albumIconSpinning = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
 let artistIcon = '<i class="fa-solid fa-user"></i>';
 
 import { 
-    songHistory, 
+    songHistory,
     currentStationShortcode, 
     isLoading, 
     updateNowPlayingUI, 
@@ -82,7 +82,7 @@ import {
     showModal,
     updateVolumeIcon,
     togglePlayPause,
-    toggleMuteUnmute
+    toggleMuteUnmute,
 } from "./scripts.js";
 
 
@@ -216,7 +216,6 @@ stationsList.addEventListener("click", (event) => {
         const stationData = JSON.parse(stationItem.dataset.stationData);
         updateStreamUrlAndPlay(stationData); // Pass the full stationData (which includes .station)
         updateNowPlayingUI(stationData);
-
         // Save the current station and stream URL in localStorage
         localStorage.setItem("currentStation", stationData.station.shortcode);
         localStorage.setItem("currentStreamUrl", stationData.station.listen_url);

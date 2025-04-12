@@ -10,8 +10,6 @@ import {
     stationsListButton, 
     playbackHistoryButton,
     playbackHistoryList,
-    playbackHistoryModalContent,
-    availableStationsModalContent,
     closePlaybackHistoryModalButton,
     closeStationModalButton,
     volumeMuteUnmuteBtn,
@@ -27,10 +25,9 @@ import {
     artistIcon,
     albumIconSpinning,
     stationsList,
-    stationModalHeader,
-    playbackHistoryModalHeader,
     playIcon,
     pauseIcon,
+    songHistoryImages,
 } from "./events.js";
 
 export { 
@@ -44,7 +41,7 @@ export {
     showModal,
     updateVolumeIcon,
     togglePlayPause,
-    toggleMuteUnmute
+    toggleMuteUnmute,
 }; 
 
 const config = await loadConfig();
@@ -56,6 +53,9 @@ let elapsedTime = 0;
 let songHistory = [];
 let isLoading = false;
 let currentStationShortcode = null; 
+
+let lightColor = null;
+let darkColor = null;
 
 
 /**
@@ -133,6 +133,18 @@ function togglePlayPause() {
         playPauseButton.innerHTML = playIcon; // Change icon to play
     }
 }
+
+/**
+ * Applies a border to all song history images using the specified light theme colour.
+ *
+ * @param {string} lightColor - The light colour to use for the image borders.
+ */
+function styleAllSongHistoryImages(lightColor) {
+    songHistoryImages.forEach(img => {
+        img.style.border = `2px solid ${lightColor}`;
+    });
+}
+
 
 /**
  * Updates the UI with the currently playing song information.
@@ -280,7 +292,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing">Now Playing: <i><u>${nowPlayingTitle}</u></i> by <strong>${nowPlayingArtist}</strong></p>
+                <p class="now-playing">Now Playing: <u>${nowPlayingTitle}</u> by <strong>${nowPlayingArtist}</strong></p>
                 ${upNextHTML}
             </div>
         `;
@@ -421,8 +433,8 @@ function extractColorsFromInternalImage(image) {
         const colors = colorThief.getPalette(image, 2);
         if (colors && colors.length >= 2) {
             const [color1, color2] = colors.map(rgb => `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
-            const lightColor = getLuminance(colors[0]) > getLuminance(colors[1]) ? color1 : color2;
-            const darkColor = getLuminance(colors[0]) > getLuminance(colors[1]) ? color2 : color1;
+            lightColor = getLuminance(colors[0]) > getLuminance(colors[1]) ? color1 : color2;
+            darkColor = getLuminance(colors[0]) > getLuminance(colors[1]) ? color2 : color1;
             applyColors(lightColor, darkColor);
         }
     }
@@ -443,13 +455,20 @@ function getLuminance(color) {
  * @param {string} darkColor - The dark color to apply.
  */
 function applyColors(lightColor, darkColor) {
+    const [lr, lg, lb] = lightColor.match(/\d+/g);
+    const [dr, dg, db] = darkColor.match(/\d+/g);
+
+    document.documentElement.style.setProperty('--light-color', lightColor);
+    document.documentElement.style.setProperty('--light-color-rgb', `${lr}, ${lg}, ${lb}`);
+
+    document.documentElement.style.setProperty('--dark-color', darkColor);
+    document.documentElement.style.setProperty('--dark-color-rgb', `${dr}, ${dg}, ${db}`);
+
+    document.documentElement.style.setProperty('--light-color', lightColor);
+    document.documentElement.style.setProperty('--dark-color', darkColor);
     setElementStyles([
-        { element: playPauseButton, styles: { color: lightColor, background: darkColor } },
         { element: closePlaybackHistoryModalButton, styles: { color: darkColor  } },
         { element: closeStationModalButton, styles: { color: darkColor  } },
-        // { element: playbackHistoryModalContent, styles: { border: `1px solid ${lightColor}` } },
-        // { element: availableStationsModalContent, styles: { border: `1px solid ${lightColor}` } },
-        { element: artworkImg, styles: { border: `3px solid ${lightColor}` } },
         { element: progress, styles: { background: `linear-gradient(to right, ${lightColor}, ${darkColor})` } },
         { element: volumeSlider, styles: { accentColor: lightColor } }
     ]);
@@ -464,28 +483,28 @@ function applyColors(lightColor, darkColor) {
     ].forEach(button => {
         button.style.color = lightColor;
     });
+}
 
-    [ stationModalHeader, playbackHistoryModalHeader ].forEach (header => {
-        header.style.color = darkColor;
-        header.style.background = lightColor;
-    });
-
-    // Apply colors to labels
-    [songTitle, songAlbum, songArtist].forEach(label => {
-        label.style.backgroundColor = lightColor;
-        label.style.color = darkColor;
-    });
-
-    // Apply colors to Play/Pause button
-    playPauseButton.addEventListener("mouseover", () => {
-        playPauseButton.style.color = darkColor;
-        playPauseButton.style.background = lightColor;
-    })
-
-    playPauseButton.addEventListener("mouseout", () => {
-        playPauseButton.style.color = lightColor;
-        playPauseButton.style.background = darkColor;
-    })
+/**
+     * Converts an RGB colour string into an RGBA string with a specified alpha (transparency) level.
+     *
+     * This function is useful when you have a theme colour defined as a standard 'rgb(r, g, b)' string
+     * and you want to apply a semi-transparent version of that colour for styling hover states,
+     * overlays, highlights, or other subtle effects.
+     *
+     * @param {string} rgbString - A string in the format 'rgb(r, g, b)', where r, g, and b are integers.
+     * @param {number} [alpha=0.2] - The transparency value between 0 (fully transparent) and 1 (fully opaque).
+     * @returns {string} A valid 'rgba(r, g, b, a)' string. If parsing fails, the original string is returned.
+     *
+     * @example
+     * const lightColor = 'rgb(255, 200, 100)';
+     * const translucent = makeTranslucent(lightColor, 0.3);
+     * // returns 'rgba(255, 200, 100, 0.3)'
+     */
+function makeTranslucent(rgbString, alpha = 0.2) {
+    const rgbValues = rgbString.match(/\d+/g);
+    if (!rgbValues || rgbValues.length < 3) return rgbString; // Fallback if the string can't be parsed
+    return `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alpha})`;
 }
 
 /**
