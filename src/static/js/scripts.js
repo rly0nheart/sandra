@@ -400,8 +400,6 @@ async function getArtistImageFromDeezer(artistName, currentTrackTitle = null) {
 }
 
 
-
-
 /**
  * Loads an external image and extracts its dominant colours.
  * @param {string} imageUrl - The URL of the image to process.
