@@ -1,10 +1,23 @@
-/* Font Definitions */
+/* Start: Font Definitions */
+
+/* Odin Round Light */
 @font-face {
-    font-family: Bistan; /* https://www.1001fonts.com/bistan-font.html */
-    src: url('../fonts/bistan.regular.otf') format('opentype');
+    font-family: "Odin Round Light"; /* https://www.1001fonts.com/odin-rounded-font.html */
+    src: url('../fonts/odin-rounded.light.otf') format('opentype');
 }
 
-/* Font Definitions */
+/* Odin Round Regular */
+@font-face {
+    font-family: "Odin Round Regular"; /* https://www.1001fonts.com/odin-rounded-font.html */
+    src: url('../fonts/odin-rounded.regular.otf') format('opentype');
+}
+
+/* Odin Round Bold */
+@font-face {
+    font-family: "Odin Round Bold"; /* https://www.1001fonts.com/odin-rounded-font.html */
+    src: url('../fonts/odin-rounded.bold.otf') format('opentype');
+}
+
 @font-face {
     font-family: "Queen Rocker"; /* https://www.1001fonts.com/queen-rocker-personal-use-font.html */
     src: url('../fonts/queen-rocker-personal-use.regular.ttf') format('truetype');
@@ -16,6 +29,8 @@
     font-weight: 900;
     src: url("../../assets/fontawesome/webfonts/fa-solid-900.woff2") format("woff2");
 }
+
+/* End: Font Definitions */
 
 /* Keyframes */
 @keyframes artworkSpin {
@@ -42,7 +57,7 @@
 }
 
 body {
-    font-family: Bistan, sans-serif;
+    font-family: "Odin Round Regular", sans-serif;
     height: 100vh;
     text-align: center;
     justify-content: flex-end;
@@ -146,15 +161,16 @@ body::before {
 }
 
 #title, #album, #artist {
-    font-weight: bold;
     border-radius: 10px 50px 50px 10px;
 }
 
 #album {
+    font-family: "Odin Round Bold";
     font-size: 30px;
 }
 
 #artist {
+    font-family: "Odin Round Regular";
     font-size: 25px;
 }
 
@@ -188,7 +204,7 @@ body::before {
 }
 
 .time {
-    font-family: Bistan !important;
+    font-family: "Odin Round Light" !important;
     color: white;
     font-size: 15px;
     opacity: 0.8;
@@ -253,7 +269,7 @@ body::before {
     width: 100%;
 }
 
-/* Modal Styles */
+/* Start: Modal Styles */
 .modal {
     display: none;
     position: fixed;
@@ -288,7 +304,7 @@ body::before {
 }
 
 .modal-title {
-    font-weight: bold;
+    font-family: "Odin Round Bold";
 }
 
 .modal-content {
@@ -347,6 +363,8 @@ body::before {
     cursor: pointer;
 }
 
+/* End: Modal Styles */
+
 #playbackHistoryList {
     counter-reset: song-counter;
     list-style-type: decimal;
@@ -372,9 +390,8 @@ body::before {
 }
 
 .song-history-item::before {
-    font-family: Bistan;
-    font-weight: bold;
-    content: counter(song-counter);
+    font-family: "Odin Round Regular";
+    content: counter(song-counter) ".";
     margin-right: 10px;
     flex-shrink: 0;
     text-align: left;
@@ -427,10 +444,10 @@ body::before {
 }
 
 .song-history-item p:nth-child(3) {
+    font-family: "Odin Round Light";
     color: rgba(255, 255, 255, 0.9);
     font-size: 18px;
     margin-bottom: 4px;
-    text-wrap: wrap;
 }
 
 .song-history-item p:last-child {
@@ -518,36 +535,36 @@ body::before {
 
 /* Station Name */
 #stationModal .modal-content ul li .station-name {
-    font-family: "Queen Rocker";
-    font-size: 15px;
+    font-family: "Odin Round Bold";
+    font-size: 22px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-top: 8px;
     width: fit-content;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Now Playing & Up Next */
-#stationModal .modal-content ul li .now-playing {
+
+#stationModal .modal-content ul li .now-playing, #stationModal .modal-content ul li .up-next {
     display: block; 
-    font-size: 22px;
+    font-size: 20px;
     margin: 2px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Prevents text from overflowing */
     max-width: 500px; /* Ensures text stays within its container */
-    margin-bottom: 5px;
+}
+#stationModal .modal-content ul li .now-playing {
+    font-family: "Odin Round Regular";
+    margin-top: 10px;
      
 }
 
 #stationModal .modal-content ul li .up-next {
+    font-family: "Odin Round Light";
     opacity: 0.6;
-    display: block; 
-    font-size: 22px;
-    margin: 2px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 500px; /* Ensures text stays within its container */
+    margin-top: 8px;
+
 }
 
 /* Hover Effect */

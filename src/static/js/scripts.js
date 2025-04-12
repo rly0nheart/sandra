@@ -140,7 +140,6 @@ function togglePlayPause() {
  */
 async function updateNowPlayingUI(station) {
     const { song } = station.now_playing;
-    console.log(song);
     const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; 
     songTitle.textContent = song.title || "Unknown Title";
     songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown Album"}`;
@@ -239,23 +238,29 @@ function populatePlaybackHistory(songHistory) {
  */
 function updateStationListItem(stationData) {
     const existingItem = stationsList.querySelector(`[data-shortcode="${stationData.station.shortcode}"]`);
+    let nowPlayingTitle = stationData.now_playing.song.title
+    let nowPlayingArtist = stationData.now_playing.song.artist
+    let nowPlayingArt = stationData.now_playing.song.art
+
+    let upNextTitle =  stationData.playing_next.song.title
+    let upNextArtist =  stationData.playing_next.song.artist
 
     // If the station already exists in the list, update it
     if (existingItem) {
         existingItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next"><strong>Up Next</strong>: <i>${ stationData.playing_next.song.text}</i></p>`
+            ? `<p class="up-next">Up Next: <u>${upNextTitle}</u> by <strong>${upNextArtist}</strong></p>`
             : '';
 
         existingItem.innerHTML = `
             <div class="station-artwork">
-                <img src="${stationData.now_playing.song.art}" alt="Artwork">
+                <img src="${nowPlayingArt}" alt="Artwork">
                 <div class="equalizer"></div>
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><strong>Now Playing</strong>: <i>${ stationData.now_playing.song.text }</i></p>
-                ${upNextHTML} <!-- Insert Up Next info only if it exists -->
+                <p class="now-playing">Now Playing: <u>${nowPlayingTitle}</u> by <strong>${nowPlayingArtist}</strong></p>
+                ${upNextHTML}
             </div>
         `;
     } else {
@@ -265,18 +270,18 @@ function updateStationListItem(stationData) {
         stationItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
 
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next"><strong>Up Next</strong>: <i>${ stationData.playing_next.song.text }</i></p>`
+            ? `<p class="up-next">Up Next: <u>${upNextTitle}</u> by <strong>${upNextArtist}</strong></p>`
             : '';
 
         stationItem.innerHTML = `
             <div class="station-artwork">
-                <img src="${stationData.now_playing.song.art}" alt="Artwork">
+                <img src="${nowPlayingArt}" alt="Artwork">
                 <div class="equalizer"></div>
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><strong>Now Playing</strong>: <i>${ stationData.now_playing.song.text }</i></p>
-                ${upNextHTML} <!-- Insert Up Next info only if it exists -->
+                <p class="now-playing">Now Playing: <u>${nowPlayingTitle}</u> by <strong>${nowPlayingArtist}</strong></p>
+                ${upNextHTML}
             </div>
         `;
 
