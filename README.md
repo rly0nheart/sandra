@@ -4,8 +4,8 @@
     <strong>Sandra</strong><i> is an elegant SSE-powered Azuracast Radio Player.</i>
     
   <details>
-  <summary style="cursor: pointer; font-weight: bold; margin-bottom: 10px;">
-    Show Screenshots
+  <summary>
+    <strong>Player Screenshots</strong>
   </summary>
     <p style="float: left; width: 100%;">
       <img src="src/screenshots/Screenshot From 2025-04-12 02-52-59.png" width="45%" alt="Screenshot 3">
