@@ -8,36 +8,36 @@
     <strong>Gallery</strong>
   </summary>
   <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-07.png" width="45%" alt="Screenshot 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-12.png" width="45%" alt="Screenshot 4">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-37-59.png" width="45%" alt="Mack the Knife 1">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-05.png" width="45%" alt="Mack the Knife 2">
     </p>
     <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-20.png" width="45%" alt="Screenshot 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-29.png" width="45%" alt="Screenshot 4">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-12.png" width="45%" alt="Mack the Knife 3">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-21.png" width="45%" alt="Mack the Knife 4">
+    </p>
+  <p style="float: left; width: 100%;" align="center">
+      <img src="src/screenshots/Screenshot From 2025-04-12 07-07-49.png" width="45%" alt="The Box 1">
+      <img src="src/screenshots/Screenshot From 2025-04-12 07-07-54.png" width="45%" alt="The Box 2">
     </p>
     <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-37-59.png" width="45%" alt="Screenshot 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-05.png" width="45%" alt="Screenshot 4">
+      <img src="src/screenshots/Screenshot From 2025-04-12 07-08-00.png" width="45%" alt="The Box 3">
+      <img src="src/screenshots/Screenshot From 2025-04-12 07-08-10.png" width="45%" alt="The Box 4">
+    </p>
+  <p style="float: left; width: 100%;" align="center">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-07.png" width="45%" alt="Not Like Us 1">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-12.png" width="45%" alt="Not Like Us 2">
     </p>
     <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-12.png" width="45%" alt="Screenshot 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-21.png" width="45%" alt="Screenshot 4">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-20.png" width="45%" alt="Not Like Us 3">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-29.png" width="45%" alt="Not Like Us 4">
     </p>
     <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 02-52-59.png" width="45%" alt="Screenshot 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 02-53-05.png" width="45%" alt="Screenshot 4">
+      <img src="src/screenshots/Screenshot From 2025-04-12 02-57-41.png" width="45%" alt="MH 1">
+      <img src="src/screenshots/Screenshot From 2025-04-12 02-57-51.png" width="45%" alt="MH 2">
     </p>
     <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 02-53-15.png" width="45%" alt="Screenshot 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 02-53-27.png" width="45%" alt="Screenshot 4">
-    </p>
-    <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 02-57-41.png" width="45%" alt="Screenshot 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 02-57-51.png" width="45%" alt="Screenshot 4">
-    </p>
-    <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 02-58-01.png" width="45%" alt="Screenshot 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 02-58-13.png" width="45%" alt="Screenshot 4">
+      <img src="src/screenshots/Screenshot From 2025-04-12 02-58-01.png" width="45%" alt="MH 3">
+      <img src="src/screenshots/Screenshot From 2025-04-12 02-58-13.png" width="45%" alt="MH 4">
     </p>
 </details>
 
