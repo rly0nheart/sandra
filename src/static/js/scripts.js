@@ -140,7 +140,7 @@ function togglePlayPause() {
  */
 async function updateNowPlayingUI(station) {
     const { song } = station.now_playing;
-    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist) : null; 
+    const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist, song.title) : null; 
     songTitle.textContent = song.title || "Unknown Title";
     songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown Album"}`;
     songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown Artist"}`;
@@ -280,7 +280,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing">Now Playing: <u>${nowPlayingTitle}</u> by <strong>${nowPlayingArtist}</strong></p>
+                <p class="now-playing">Now Playing: <i><u>${nowPlayingTitle}</u></i> by <strong>${nowPlayingArtist}</strong></p>
                 ${upNextHTML}
             </div>
         `;
@@ -316,30 +316,91 @@ function updateStationListItem(stationData) {
 }
 
 /**
- * Fetches the artist's image from Deezer API.
+ * Fetches the best-matching artist image from Deezer.
+ * It tries to find an exact artist name match in the search results.
+ * Optionally compares current track with top tracks to resolve ambiguity.
+ *
  * @param {string} artistName - The name of the artist.
- * @returns {Promise<string|null>} The artist's image URL or null if not found.
+ * @param {string|null} currentTrackTitle - The currently playing track title (optional).
+ * @returns {Promise<string|null>} A URL to the best artist image or null.
  */
-async function getArtistImageFromDeezer(artistName) {
+async function getArtistImageFromDeezer(artistName, currentTrackTitle = null) {
+    /**
+     * Checks if a given track title appears in the artist's top tracks on Deezer.
+     *
+     * @param {number} artistId - Deezer artist ID.
+     * @param {string} trackTitle - The current track title.
+     * @returns {Promise<boolean>} True if match found, false otherwise.
+     */
+    async function trackMatchesArtistTopTracks(artistId, trackTitle) {
+        try {
+            const url = `${config.ui.artistImageAPI}/artist/${artistId}/top?limit=100`;
+            const response = await fetch(config.corsProxy + url);
+
+            if (!response.ok) return false;
+
+            const data = await response.json();
+            const normalise = str => str.toLowerCase().replace(/[^\w\s]/gi, '').trim();
+            const cleanTitle = normalise(trackTitle);
+
+            return data.data.some(track => normalise(track.title) === cleanTitle);
+        } catch (error) {
+            console.warn("Track match check failed:", error);
+            return false;
+        }
+    }
+
     try {
-        const url = `${config.ui.artistImageAPI}?q=${encodeURIComponent(artistName)}`;
-        
-        const response = await fetch(config.corsProxy + url);
-        if (!response.ok) throw new Error(`Deezer API request failed with status: ${response.status}`);
-        
-        const data = await response.json();
-        
-        // Check if the artist data exists and contains the image
-        if (data.data && data.data.length > 0 && data.data[0].picture_xl) {
-            return data.data[0].picture_xl; // Return the artist's image (large size)
+        const query = encodeURIComponent(artistName.trim());
+        const apiUrl = `${config.ui.artistImageAPI}/search/artist?q=${query}`;
+        const response = await fetch(config.corsProxy + apiUrl);
+
+        if (!response.ok) {
+            throw new Error(`Deezer API request failed with status: ${response.status}`);
         }
 
-        return null; // No image found for the artist
+        const data = await response.json();
+        const results = data.data;
+
+        if (!results || results.length === 0) {
+            return null;
+        }
+
+        // Step 1: Try to find an exact match for the artist name
+        const normalise = str => str.toLowerCase().replace(/\s+/g, '').trim();
+        const cleanedArtistName = normalise(artistName);
+
+        let bestMatch = results.find(artist => normalise(artist.name) === cleanedArtistName);
+
+        // Step 2: If no exact match, try partial match
+        if (!bestMatch) {
+            bestMatch = results.find(artist => normalise(artist.name).includes(cleanedArtistName));
+        }
+
+        // Step 3: If still unsure, compare with top tracks if a current track is provided
+        if (!bestMatch && currentTrackTitle) {
+            for (const artist of results.slice(0, 3)) { // Check top 3 candidates
+                const trackMatch = await trackMatchesArtistTopTracks(artist.id, currentTrackTitle);
+                if (trackMatch) {
+                    bestMatch = artist;
+                    break;
+                }
+            }
+        }
+
+        // Step 4: Fallback to first result if nothing else works
+        bestMatch = bestMatch || results[0];
+
+        return bestMatch.picture_xl || bestMatch.picture_big || null;
+
     } catch (error) {
         console.error("Error fetching Deezer artist image:", error);
-        return null; // On failure, return null
+        return null;
     }
 }
+
+
+
 
 /**
  * Loads an external image and extracts its dominant colours.

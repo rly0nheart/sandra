@@ -7,6 +7,22 @@
   <summary>
     <strong>Gallery</strong>
   </summary>
+  <p style="float: left; width: 100%;" align="center">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-07.png" width="45%" alt="Screenshot 3">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-12.png" width="45%" alt="Screenshot 4">
+    </p>
+    <p style="float: left; width: 100%;" align="center">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-20.png" width="45%" alt="Screenshot 3">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-54-29.png" width="45%" alt="Screenshot 4">
+    </p>
+    <p style="float: left; width: 100%;" align="center">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-37-59.png" width="45%" alt="Screenshot 3">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-05.png" width="45%" alt="Screenshot 4">
+    </p>
+    <p style="float: left; width: 100%;" align="center">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-12.png" width="45%" alt="Screenshot 3">
+      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-21.png" width="45%" alt="Screenshot 4">
+    </p>
     <p style="float: left; width: 100%;" align="center">
       <img src="src/screenshots/Screenshot From 2025-04-12 02-52-59.png" width="45%" alt="Screenshot 3">
       <img src="src/screenshots/Screenshot From 2025-04-12 02-53-05.png" width="45%" alt="Screenshot 4">
