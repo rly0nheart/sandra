@@ -158,14 +158,14 @@ body::before {
 #album, #artist {
     display: block;
     max-width: fit-content;
-    padding: 5px 10px 5px 5px;
+    padding: 7px 10px 5px 5px;
     margin-bottom: 5px;
 }
 
 #title, #album, #artist {
     color: var(--dark-color);
     background-color: var(--light-color);
-    border-radius: 10px 50px 50px 10px;
+    border-radius: 15px 50px 50px 15px;
 }
 
 #album {
@@ -554,7 +554,7 @@ body::before {
     transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
     background: none;
     text-align: left;
-    border-radius: 10px 60px 60px 10px;
+    border-radius: 15px 60px 60px 15px;
     position: relative; /* Needed for absolute positioning of pseudo-elements */
 }
 
@@ -563,7 +563,7 @@ body::before {
     width: 90px;
     height: 90px;
     margin-right: 15px; /* Adds spacing between image and text */
-    border-radius: 6px;
+    border-radius: 8px;
     position: relative; /* Ensure the equalizer is positioned relative to the artwork */
     overflow: hidden; /* Hide overflow to ensure the equalizer stays within the artwork */
 }

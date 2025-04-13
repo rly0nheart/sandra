@@ -8,14 +8,14 @@
     <strong>Gallery</strong>
   </summary>
   <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-37-59.png" width="45%" alt="Mack the Knife 1">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-05.png" width="45%" alt="Mack the Knife 2">
+      <img src="src/gallery/Screenshot From 2025-04-13 17-54-04.png" width="45%" alt="Mack the Knife 1">
+      <img src="src//gallery/Screenshot From 2025-04-13 17-54-09.png" width="45%" alt="Mack the Knife 2">
     </p>
     <p style="float: left; width: 100%;" align="center">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-12.png" width="45%" alt="Mack the Knife 3">
-      <img src="src/screenshots/Screenshot From 2025-04-12 06-38-21.png" width="45%" alt="Mack the Knife 4">
+      <img src="src/gallery/Screenshot From 2025-04-13 17-54-15.png" width="45%" alt="Mack the Knife 3">
+      <img src="src/gallery/Screenshot From 2025-04-13 17-54-30.png" width="45%" alt="Mack the Knife 4">
     </p>
-  <p style="float: left; width: 100%;" align="center">
+  <!--<p style="float: left; width: 100%;" align="center">
       <img src="src/screenshots/Screenshot From 2025-04-12 07-07-49.png" width="45%" alt="The Box 1">
       <img src="src/screenshots/Screenshot From 2025-04-12 07-07-54.png" width="45%" alt="The Box 2">
     </p>
@@ -38,7 +38,7 @@
     <p style="float: left; width: 100%;" align="center">
       <img src="src/screenshots/Screenshot From 2025-04-12 02-58-01.png" width="45%" alt="MH 3">
       <img src="src/screenshots/Screenshot From 2025-04-12 02-58-13.png" width="45%" alt="MH 4">
-    </p>
+    </p>-->
 </details>
 
 </p>
