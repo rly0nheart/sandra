@@ -325,14 +325,15 @@ body::before {
 }
 
 .modal-title {
-    background: linear-gradient(to right, var(--dark-color), var(--light-color));
+    color: var(--light-color);
+    /*background: linear-gradient(to right, var(--dark-color), var(--light-color));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 22px;
     font-family: "Odin Round Bold";
-    display: inline-block; /* makes sure the background works correctly */
-    user-select: none;
+    display: inline-block; /* makes sure the background works correctly
+    user-select: none;*/
 }
 
 
@@ -560,6 +561,7 @@ body::before {
 
 /* Artwork Container */
 #stationModal .modal-content ul li .station-artwork {
+    background-image: url("../img/artwork.jpg");
     width: 90px;
     height: 90px;
     margin-right: 15px; /* Adds spacing between image and text */
