@@ -554,12 +554,16 @@ body::before {
 
 /* Station Name */
 #stationModal .modal-content ul li .station-name {
+    color: var(--light-color);
     font-family: "Odin Round Bold";
     font-size: 22px;
     font-weight: bold;
     margin-top: 8px;
     width: fit-content;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#stationModal .modal-content ul li.playing .station-name {
+    color: var(--dark-color);
 }
 
 /* Now Playing & Up Next */
