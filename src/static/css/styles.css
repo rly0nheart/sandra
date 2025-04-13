@@ -101,18 +101,18 @@ body::before {
 .player-container::after {
     content: "";
     display: block;
-    width: 1px; /* Thickness of the line */
-    height: 100%; /* Full height of the container */
-    background: rgba(255, 255, 255, 0.2); /* Light line color */
-    order: 1; /* Ensure the line appears after the artwork */
+    width: 1px;
+    height: 100%; 
+    background: rgba(255, 255, 255, 0.2); 
+    order: 1; 
 }
 
 /* Artwork Styles */
 .artwork {
     background: url("../img/artwork.jpg") no-repeat center/cover; /* I have completely forgotten where I found this */
-    width: 200px; /* 250 */
-    height: 200px; /* 250 */
-    border-radius: 50%; /* 50% */
+    width: 200px; 
+    height: 200px; 
+    border-radius: 50%; 
     order: 0; /* Ensure the artwork appears before the line */
     animation: var(--artwork-animation);
     -webkit-animation: var(--artwork-animation);
@@ -151,8 +151,8 @@ body::before {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 70%; /* Ensures text stays within its container */
+    text-overflow: ellipsis; 
+    max-width: 70%; 
 }
 
 #album, #artist {
@@ -247,14 +247,14 @@ body::before {
 
 /* Apply background light effect on click to all buttons except playPause and volume buttons */
 .control-button:active {
-    background-color: rgba(255, 255, 255, 0.3); /* Light background on click */
-    transform: scale(0.95); /* Slight shrink effect */
+    background-color: rgba(var(--light-color-rgb), 0.3); 
+    transform: scale(0.95); 
 }
 
 /* Exclude playPauseBtn and volumeMuteUnmuteBtn from the active effect */
 #playPauseBtn:active, #volumeMuteUnmuteBtn:active {
-    background: none; /* No background effect */
-    transform: none; /* No shrinking */
+    background: none; 
+    transform: none; 
 }
 
 #playPauseBtn {
@@ -306,9 +306,9 @@ body::before {
 }
 
 .modal-header {
-    position: relative; /* Needed for absolutely positioning the title */
+    position: relative; 
     display: flex;
-    justify-content: flex-end; /* Pushes close button to the right */
+    justify-content: flex-end; 
     align-items: center;
     padding: 12px 10px;
     background: rgba(var(--light-color-rgb), 0.2);
@@ -326,8 +326,8 @@ body::before {
     font-family: "Odin Round Bold";
     color: var(--light-color);
     margin: 0;
-    white-space: nowrap; /* optional: prevents wrapping */
-    pointer-events: none; /* optional: prevents interfering with drag/clicks */
+    white-space: nowrap; 
+    pointer-events: none; 
 }
 
 .modal-content {
@@ -344,14 +344,14 @@ body::before {
     overflow: hidden;
     transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
     transform: translateY(-10px) scale(0.95);
-    background: rgba(255, 255, 255, 0.06); /* transparent white */
+    background: rgba(255, 255, 255, 0.06); 
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(180%);
     box-shadow:
         0 0 0.5px rgba(255, 255, 255, 0.6) inset,
         0 12px 35px rgba(0, 0, 0, 0.35);
 
-    border: 1px solid rgba(255, 255, 255, 0.12); /* optional hairline outline */
+    border: 1px solid rgba(255, 255, 255, 0.12); 
 }
 
 .modal-content:hover {
@@ -422,8 +422,6 @@ body::before {
     transform: scale(1.1);
     filter: brightness(1.2);
 }
-
-
 /* End: Modal Styles */
 
 #playbackHistoryList {
@@ -477,8 +475,8 @@ body::before {
 .song-history-item p {
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 300px; /* Ensures text stays within its container */
+    text-overflow: ellipsis; 
+    max-width: 300px; 
      
 }
 .song-history-item p:first-child {
@@ -489,8 +487,8 @@ body::before {
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 300px; /* Ensures text stays within its container */
+    text-overflow: ellipsis; 
+    max-width: 300px; 
 }
 
 .song-history-item p:nth-child(2) {
@@ -499,8 +497,8 @@ body::before {
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 500px; /* Ensures text stays within its container */
+    text-overflow: ellipsis; 
+    max-width: 500px; 
 }
 
 .song-history-item p:nth-child(3) {
@@ -531,34 +529,34 @@ body::before {
 
 #stationModal .modal-content ul {
     display: flex;
-    flex-direction: column; /* Ensures items stack vertically */
-    gap: 10px; /* Adds spacing between each station */
-    padding: 15px 20px; /* Adds some padding inside the modal */
+    flex-direction: column; 
+    gap: 10px; 
+    padding: 15px 20px; 
 }
 
 #stationModal .modal-content ul li {
     color: white;
-    display: flex; /* Keeps image and text side by side */
+    display: flex; 
     flex-direction: row;
     align-items: center;
     font-size: 25px;
-    padding: 10px 15px; /* Ensures consistent padding */
+    padding: 10px 15px; 
     cursor: pointer;
     transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
     background: none;
     text-align: left;
     border-radius: 15px 60px 60px 15px;
-    position: relative; /* Needed for absolute positioning of pseudo-elements */
+    position: relative; 
 }
 
 /* Artwork Container */
 #stationModal .modal-content ul li .station-artwork {
     width: 90px;
     height: 90px;
-    margin-right: 15px; /* Adds spacing between image and text */
+    margin-right: 15px; 
     border-radius: 8px;
-    position: relative; /* Ensure the equalizer is positioned relative to the artwork */
-    overflow: hidden; /* Hide overflow to ensure the equalizer stays within the artwork */
+    position: relative; 
+    overflow: hidden; 
 }
 
 /* Artwork Image */
@@ -576,8 +574,8 @@ body::before {
     top: 0;
     margin-left: 10px;
     margin-top: 30px;
-    display: none; /* Initially hidden */
-    background: url("../img/equalizer.gif") center/cover no-repeat; /* Use background image for the equalizer */
+    display: none; 
+    background: url("../img/equalizer.gif") center/cover no-repeat; 
 }
 
 /* Show Equalizer When Playing */
@@ -589,8 +587,8 @@ body::before {
 #stationModal .modal-content ul li .station-info {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Ensures text is properly aligned */
-    flex: 1; /* Makes sure text takes remaining space */
+    justify-content: center; 
+    flex: 1; 
 }
 
 /* Station Name */
@@ -614,8 +612,8 @@ body::before {
     margin: 2px 0;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Prevents text from overflowing */
-    max-width: 500px; /* Ensures text stays within its container */
+    text-overflow: ellipsis; 
+    max-width: 500px; 
 }
 #stationModal .modal-content ul li .now-playing {
     font-family: "Odin Round Regular";
@@ -634,17 +632,16 @@ body::before {
 #stationModal .modal-content ul li:hover {
     color: var(--light-color);
     transform: scale(1.03);
-    background-color: rgba(255, 255, 255, 0.1); /* Slight hover background */
+    background-color: rgba(var(--light-color-rgb), 0.1); 
 }
 
 /* Playing Station Highlight */
 #stationModal .modal-content ul li.playing {
     color: var(--dark-color);
-    background-color: var(--light-color); /* Translucent light colour */
-    box-shadow: 0 4px 12px rgba(var(--dark-color-rgb, 0, 0, 0), 0.3);   /* Soft shadow using dark colour */
+    background-color: var(--light-color); 
+    box-shadow: 0 4px 12px rgba(var(--dark-color-rgb, 0, 0, 0), 0.3);   
     pointer-events: none;
     transition: all 0.3s ease-in-out;
-     /* border: 1px solid var(--dark-color); solid border using CSS var */
 }
 
 /* Playing Station – get themed border colour */
@@ -683,8 +680,8 @@ body::before {
     #stationModal .modal-content ul li .up-next {
         white-space: wrap;
         overflow: hidden;
-        text-overflow: ellipsis; /* Prevents text from overflowing */
-        max-width: 300px; /* Ensures text stays within its container */
+        text-overflow: ellipsis; 
+        max-width: 300px; 
     }
   
     #stationModal .modal-content ul li .station-artwork {
