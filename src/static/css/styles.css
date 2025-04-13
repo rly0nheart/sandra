@@ -325,9 +325,16 @@ body::before {
 }
 
 .modal-title {
+    background: linear-gradient(to right, var(--dark-color), var(--light-color));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     font-size: 22px;
     font-family: "Odin Round Bold";
+    display: inline-block; /* makes sure the background works correctly */
+    user-select: none;
 }
+
 
 .modal-content {
     position: relative;
@@ -343,11 +350,9 @@ body::before {
     overflow: hidden;
     transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
     transform: translateY(-10px) scale(0.95);
-
     background: rgba(255, 255, 255, 0.06); /* transparent white */
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(180%);
-
     box-shadow:
         0 0 0.5px rgba(255, 255, 255, 0.6) inset,
         0 12px 35px rgba(0, 0, 0, 0.35);
@@ -358,8 +363,9 @@ body::before {
 .modal-content:hover {
     background: rgba(255, 255, 255, 0.1);
     box-shadow:
-        0 0 1px rgba(255, 255, 255, 0.8) inset,
+        0 0 1px rgba(255, 255, 255, 0.5) inset,
         0 14px 40px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 
