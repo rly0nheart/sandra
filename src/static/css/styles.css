@@ -18,11 +18,13 @@
     src: url('../fonts/odin-rounded.bold.otf') format('opentype');
 }
 
+/* Queen Rocker */
 @font-face {
     font-family: "Queen Rocker"; /* https://www.1001fonts.com/queen-rocker-personal-use-font.html */
     src: url('../fonts/queen-rocker-personal-use.regular.ttf') format('truetype');
 }
 
+/* Font Awesome 6 Free */
 @font-face {
     font-family: "Font Awesome 6 Free"; /* https://fontawesome.com */
     font-style: normal;
