@@ -306,36 +306,29 @@ body::before {
 }
 
 .modal-header {
-    color: var(--light-color);
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: inset 0 -1px rgba(255, 255, 255, 0.1);
+    position: relative; /* Needed for absolutely positioning the title */
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end; /* Pushes close button to the right */
     align-items: center;
-    padding: 6px 10px;
+    padding: 12px 10px;
+    background: rgba(var(--light-color-rgb), 0.2);
+    box-shadow: inset 0 -1px rgba(--dark-color-rgb, 0.1);
     border-top-left-radius: 7px;
     border-top-right-radius: 7px;
-    width: 100%;
-    box-sizing: border-box;
-    position: sticky;
-    top: 0;
     z-index: 1;
 }
 
 .modal-title {
-    color: var(--light-color);
-    /*background: linear-gradient(to right, var(--dark-color), var(--light-color));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 22px;
     font-family: "Odin Round Bold";
-    display: inline-block; /* makes sure the background works correctly
-    user-select: none;*/
+    color: var(--light-color);
+    margin: 0;
+    white-space: nowrap; /* optional: prevents wrapping */
+    pointer-events: none; /* optional: prevents interfering with drag/clicks */
 }
-
 
 .modal-content {
     position: relative;
@@ -368,7 +361,6 @@ body::before {
         0 14px 40px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
-
 
 .modal-body {
     overflow-y: auto;
@@ -417,7 +409,7 @@ body::before {
 .close-dot {
     width: 12px;
     height: 12px;
-    background-color: #ff5f57; /* iconic Apple red */
+    background-color: #ff5f57;
     border-radius: 50%;
     box-shadow:
         0 0 0 1px rgba(0, 0, 0, 0.15),
@@ -451,7 +443,7 @@ body::before {
     counter-increment: song-counter;
     display: flex;
     align-items: center;
-    gap: 10px; /* adds space between number/artwork/text */
+    gap: 10px;
     margin-bottom:8px;
     padding-bottom: 1px;
     padding-left: 10px;
@@ -561,7 +553,6 @@ body::before {
 
 /* Artwork Container */
 #stationModal .modal-content ul li .station-artwork {
-    background-image: url("../img/artwork.jpg");
     width: 90px;
     height: 90px;
     margin-right: 15px; /* Adds spacing between image and text */
