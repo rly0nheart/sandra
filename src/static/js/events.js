@@ -222,6 +222,51 @@ stationsList.addEventListener("click", (event) => {
     }
 });
 
+document.querySelectorAll('.modal').forEach(modal => {
+    const modalContent = modal.querySelector('.modal-content');
+    const modalHeader = modal.querySelector('.modal-header');
 
+    if (!modalContent || !modalHeader) return; // Safety first!
 
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    modalHeader.style.cursor = 'grab';
+
+    modalHeader.addEventListener('mousedown', (e) => {
+        const rect = modalContent.getBoundingClientRect();
+
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+
+        // Remove margin for accurate positioning
+        modalContent.style.margin = '0';
+
+        // Set absolute positioning based on current visual layout
+        modalContent.style.position = 'absolute';
+        modalContent.style.left = `${rect.left}px`;
+        modalContent.style.top = `${rect.top}px`;
+
+        // Prevent transition jumpiness while dragging
+        modalContent.style.transition = 'none';
+
+        isDragging = true;
+        modalHeader.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        modalContent.style.left = `${e.clientX - offsetX}px`;
+        modalContent.style.top = `${e.clientY - offsetY}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+
+        isDragging = false;
+        modalHeader.style.cursor = 'grab';
+    });
+});
 
