@@ -567,7 +567,6 @@ body::before {
 }
 
 /* Now Playing & Up Next */
-
 #stationModal .modal-content ul li .now-playing, #stationModal .modal-content ul li .up-next {
     display: block; 
     font-size: 20px;
