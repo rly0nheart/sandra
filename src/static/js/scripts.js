@@ -185,7 +185,7 @@ function updateStreamUrlAndPlay(station) {
 
     isLoading = true;
     radioPlayer.src = STREAM_URL; // Update the audio stream
-    // radioPlayer.load(); // Load the stream without starting playback
+    radioPlayer.load(); // Load the stream without starting playback
     radioPlayer.play(); // Start playback
 
     // Update the play/pause button to reflect the playing state
@@ -553,6 +553,7 @@ function initialiseSSE() {
                 currentStationShortcode = savedStationShortcode;
                 radioPlayer.src = savedStreamUrl;
                 updateNowPlayingUI(nowplaying);
+                updateStreamUrlAndPlay(nowplaying);
             } else {
                 currentStationShortcode = nowplaying.station.shortcode;
                 radioPlayer.src = nowplaying.station.listen_url; // Set the stream URL

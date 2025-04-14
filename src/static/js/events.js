@@ -98,18 +98,6 @@ radioPlayer.addEventListener("pause", () => {
     playPauseButton.innerHTML = playIcon; // Update to play icon when paused
 });
 
-// Add a listener to ensure playback only starts after user interaction
-playPauseButton.addEventListener("click", () => {
-    if (radioPlayer.paused && !isLoading) {
-        // radioPlayer.load();
-        radioPlayer.play().then(() => {
-            playPauseButton.innerHTML = pauseIcon; // Update button to "pause" state
-        }).catch((error) => {
-            console.error("Error playing the stream after user interaction:", error);
-        });
-    }
-}, { once: true });
-
 /**
  * Event listener for playback history button
  */
