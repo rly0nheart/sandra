@@ -109,16 +109,27 @@ function hideModal(modal) {
  * Toggles the play/pause state of the radio player.
  */
 function togglePlayPause() {
+    if (isLoading) return;
+
     if (radioPlayer.paused) {
-        // radioPlayer.load();
-        radioPlayer.play().then(() => {
-            playPauseButton.innerHTML = pauseIcon; // Change icon to pause
-        }).catch((error) => {
-            console.error("Error playing the stream:", error);
-        });
+        if (!radioPlayer.src) {
+            console.error("No stream URL set");
+            return;
+        }
+
+        isLoading = true;
+        radioPlayer.play()
+            .then(() => {
+                playPauseButton.innerHTML = pauseIcon;
+                isLoading = false;
+            })
+            .catch((error) => {
+                console.error("Error playing the stream:", error);
+                isLoading = false;
+            });
     } else {
         radioPlayer.pause();
-        playPauseButton.innerHTML = playIcon; // Change icon to play
+        playPauseButton.innerHTML = playIcon;
     }
 }
 
@@ -532,14 +543,8 @@ function initialiseSSE() {
      */
     function handleSseData(ssePayload, useTime = true) {
         const jsonData = ssePayload.data;
-
-        if (useTime && 'current_time' in jsonData) {
-            currentTime = jsonData.current_time;
-        }
-
         const nowplaying = jsonData.np;
 
-        // Automatically prepare the first station to be receive data
         if (!firstStationInitialised) {
             const savedStationShortcode = localStorage.getItem("currentStation");
             const savedStreamUrl = localStorage.getItem("currentStreamUrl");
@@ -550,19 +555,21 @@ function initialiseSSE() {
                 updateNowPlayingUI(nowplaying);
             } else {
                 currentStationShortcode = nowplaying.station.shortcode;
-                updateStreamUrlAndPlay(nowplaying);
+                radioPlayer.src = nowplaying.station.listen_url; // Set the stream URL
+                updateNowPlayingUI(nowplaying);
             }
-            
 
-            // Mark the first station (to receive updates) as "playing" in the stations modal
+            // Mark the first station as "playing" in the stations modal
             const firstStationItem = stationsList.querySelector(`[data-shortcode="${currentStationShortcode}"]`);
             if (firstStationItem) {
                 firstStationItem.classList.add("playing");
             }
 
             firstStationInitialised = true;
+        }
 
-            updateStreamUrlAndPlay(nowplaying);
+        if (useTime && 'current_time' in jsonData) {
+            currentTime = jsonData.current_time;
         }
 
         // Update the UI for the current station
