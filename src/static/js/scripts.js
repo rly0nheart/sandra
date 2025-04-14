@@ -118,6 +118,7 @@ function togglePlayPause() {
         }
 
         isLoading = true;
+        radioPlayer.load();
         radioPlayer.play()
             .then(() => {
                 playPauseButton.innerHTML = pauseIcon;
