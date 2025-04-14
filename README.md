@@ -8,12 +8,12 @@
     <strong>Gallery</strong>
   </summary>
   <p style="float: left; width: 100%;" align="center">
-      <img src="src/gallery/Screenshot From 2025-04-13 20-35-22.png" width="45%" alt="Wahala 1">
-      <img src="src//gallery/Screenshot From 2025-04-13 20-35-27.png" width="45%" alt="Wahala 2">
+      <img src="src/gallery/Screenshot From 2025-04-14 08-38-52.png" width="45%" alt="Wahala 1">
+      <img src="src//gallery/Screenshot From 2025-04-14 08-38-57.png" width="45%" alt="Wahala 2">
     </p>
     <p style="float: left; width: 100%;" align="center">
-      <img src="src/gallery/Screenshot From 2025-04-13 20-35-35.png" width="45%" alt="Wahala 3">
-      <img src="src/gallery/Screenshot From 2025-04-13 20-35-44.png" width="45%" alt="Wahala 4">
+      <img src="src/gallery/Screenshot From 2025-04-14 08-39-03.png" width="45%" alt="Wahala 3">
+      <img src="src/gallery/Screenshot From 2025-04-14 08-39-12.png" width="45%" alt="Wahala 4">
     </p>
 </details>
 
