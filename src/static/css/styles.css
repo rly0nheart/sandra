@@ -102,7 +102,7 @@ body::before {
     content: "";
     display: block;
     width: 1px;
-    height: 85%; 
+    height: 100%; 
     background: rgba(255, 255, 255, 0.2); 
     order: 1; 
 }
@@ -136,18 +136,13 @@ body::before {
     order: 2; /* Ensure the song info appears after the line */
 }
 
-.song-info p {
-    margin-bottom: 5px;
-}
-
 #title {
     font-family: "Queen Rocker";
     font-size: 28px;
     text-wrap: nowrap;
     display: block;
     max-width: fit-content;
-    padding: 5px 10px 5px 5px;
-    margin-bottom: 5px;
+    padding: 5px 10px 5px 10px;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
@@ -165,7 +160,7 @@ body::before {
 #title, #album, #artist {
     color: var(--dark-color);
     background-color: var(--light-color);
-    border-radius: 15px 50px 50px 15px;
+    border-radius: 50px;
 }
 
 #album {
@@ -559,7 +554,7 @@ body::before {
     transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
     background: none;
     text-align: left;
-    border-radius: 15px 60px 60px 15px;
+    border-radius: 15px;
     position: relative; 
 }
 
