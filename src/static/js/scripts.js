@@ -110,7 +110,7 @@ function hideModal(modal) {
  */
 function togglePlayPause() {
     if (radioPlayer.paused) {
-        radioPlayer.load();
+        // radioPlayer.load();
         radioPlayer.play().then(() => {
             playPauseButton.innerHTML = pauseIcon; // Change icon to pause
         }).catch((error) => {
@@ -174,7 +174,7 @@ function updateStreamUrlAndPlay(station) {
 
     isLoading = true;
     radioPlayer.src = STREAM_URL; // Update the audio stream
-    radioPlayer.load(); // Load the stream without starting playback
+    // radioPlayer.load(); // Load the stream without starting playback
     radioPlayer.play(); // Start playback
 
     // Update the play/pause button to reflect the playing state
@@ -438,12 +438,6 @@ function hideElementsOnInactivity(elementsArray, timeout = 5000) {
     resetTimer();
 }
 
-// Apply smooth transition to the elements that will be hidden on curesor inactivity 
-[playerControls, playerProgressContainer].forEach(element => {
-    element.style.transition = "opacity 0.3s ease-in-out";
-});
-
-
 /**
  * Updates the state of a button (enabled/disabled).
  * @param {HTMLElement} button - The button element to update.
@@ -514,9 +508,15 @@ function setPlayerVolume(player, defaultVolume = config.audio.defaultVolume) {
  */
 function initialiseSSE() {
     const sseBaseUri = `${config.azuracast.server}/api/live/nowplaying/sse`;
+
+    // Process subscriptions to prepend "station:" to each key
+    const processedSubscriptions = Object.fromEntries(
+        Object.entries(config.azuracast.subscriptions).map(([key, value]) => [`station:${key}`, value])
+    );
+
     const sseUriParams = new URLSearchParams({
         "cf_connect": JSON.stringify({
-            "subs": config.azuracast.subscriptions
+            "subs": processedSubscriptions
         })
     });
     const sseUri = `${sseBaseUri}?${sseUriParams.toString()}`;

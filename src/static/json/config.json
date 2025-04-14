@@ -2,11 +2,11 @@
     "azuracast": {
         "server": "http://127.0.0.1",
         "subscriptions": {
-                "station:boomer_fm": { "recover": true },
-                "station:abba_radio": { "recover": true },
-                "station:afro_flava": { "recover": true },
-                "station:rap_royalty": { "recover": true },
-                "station:colors": { "recover": true }
+                "boomer_fm": { "recover": true },
+                "abba_radio": { "recover": true },
+                "afro_flava": { "recover": true },
+                "rap_royalty": { "recover": true },
+                "colors": { "recover": true }
             }
     },
     "ui": {

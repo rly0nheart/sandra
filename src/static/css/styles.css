@@ -188,6 +188,7 @@ body::before {
     gap: 10px;
     margin: 0 auto;
     margin-bottom: 40px;
+    transition: opacity 0.3s ease-in-out;
 }
 
 #progress-bar {
@@ -223,7 +224,7 @@ body::before {
     justify-content: center;
     gap: 20px;
     margin-bottom: 100px;
-    transition: display 0.3s ease-in-out;
+    transition: display 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .control-button {
