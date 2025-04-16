@@ -74,7 +74,6 @@ let artistIcon = '<i class="fa-solid fa-user"></i>';
 import { 
     songHistory,
     currentStationShortcode, 
-    isLoading, 
     updateNowPlayingUI, 
     updateStreamUrlAndPlay, 
     populatePlaybackHistory, 
@@ -82,7 +81,7 @@ import {
     showModal,
     updateVolumeIcon,
     togglePlayPause,
-    toggleMuteUnmute,
+    toggleMuteUnmute
 } from "./scripts.js";
 
 
@@ -255,6 +254,7 @@ document.querySelectorAll('.modal').forEach(modal => {
 
         isDragging = false;
         modalHeader.style.cursor = 'grab';
+        modalContent.style.transition = "all 0.3s ease-in-out";
     });
 });
 

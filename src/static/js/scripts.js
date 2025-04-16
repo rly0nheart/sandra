@@ -27,8 +27,7 @@ import {
 import { extractColorsFromExternalImage, extractColorsFromInternalImage } from "./theme.js"
 export {
     songHistory, 
-    currentStationShortcode, 
-    isLoading, 
+    currentStationShortcode,
     updateNowPlayingUI, 
     updateStreamUrlAndPlay, 
     populatePlaybackHistory, 

@@ -16,7 +16,6 @@
       <img src="src/gallery/Screenshot From 2025-04-14 08-39-12.png" width="45%" alt="Wahala 4">
     </p>
 </details>
-
 </p>
 
 

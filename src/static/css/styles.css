@@ -326,19 +326,6 @@ body::before {
     pointer-events: none; 
 }
 
-/* 
-.modal-title {
-    font-size: 22px;
-    font-family: "Odin Round Bold";
-    color: var(--light-color);
-    margin: 0;
-    white-space: nowrap; 
-    pointer-events: none;
-    text-align: left;
-    flex-grow: 1;
-}
-*/
-
 .modal-content {
     position: relative;
     color: white;
