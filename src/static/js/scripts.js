@@ -334,7 +334,7 @@ async function getArtistImageFromDeezer(artistName, currentTrackTitle = null) {
     async function trackMatchesArtistTopTracks(artistId, trackTitle) {
         try {
             const url = `${config.ui.artistImageAPI}/artist/${artistId}/top?limit=100`;
-            const response = await fetch(config.corsProxy + url);
+            const response = await fetch(config.corsProxy + encodeURIComponent(url));
 
             if (!response.ok) return false;
 
@@ -352,7 +352,7 @@ async function getArtistImageFromDeezer(artistName, currentTrackTitle = null) {
     try {
         const query = encodeURIComponent(artistName.trim());
         const apiUrl = `${config.ui.artistImageAPI}/search/artist?q=${query}`;
-        const response = await fetch(config.corsProxy + apiUrl);
+        const response = await fetch(config.corsProxy + encodeURIComponent(apiUrl));
 
         if (!response.ok) {
             throw new Error(`Deezer API request failed with status: ${response.status}`);
