@@ -160,7 +160,12 @@ body::before {
 #title, #album, #artist {
     color: var(--dark-color);
     background-color: var(--light-color);
-    border-radius: 16px 50px 50px 16px;
+    border-radius: 11px;
+    box-shadow:
+        inset 0 0 1px rgba(255, 255, 255, 0.05),
+        0 4px 12px rgba(var(--dark-color-rgb), 0.2);
+
+    transition: all 0.3s ease-in-out;
 }
 
 #album {
@@ -458,6 +463,7 @@ body::before {
     margin-right: 15px;
     border-radius: 50%;
     pointer-events: none;
+    border: 1px solid var(--light-color);
 }
 
 .song-history-item div {
