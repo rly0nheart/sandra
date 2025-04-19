@@ -450,9 +450,8 @@ body::before {
      
 }
 .song-history-item p:first-child {
-    font-family: "Queen Rocker";
-    font-weight: bold;
-    font-size: 12px;
+    font-family: "Odin Round Bold";
+    font-size: 22px;
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;

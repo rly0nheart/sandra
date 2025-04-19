@@ -399,57 +399,6 @@ async function getArtistImageFromDeezer(artistName, currentTrackTitle = null) {
 }
 
 /**
- * Hides specified elements after a period of user inactivity (no mouse movement).
- *
- * @param {HTMLElement[]} elementsArray - An array of actual DOM elements (e.g., [document.querySelector(".controls"), document.getElementById("navBar")]).
- * @param {number} [timeout=5000] - The inactivity time (in milliseconds) before hiding the elements. Default is 5000ms (5 seconds).
- */
-function hideElementsOnInactivity(elementsArray, timeout = 5000) {
-    if (!Array.isArray(elementsArray) || elementsArray.length === 0) {
-        console.error("Invalid input: Provide an array of elements.");
-        return;
-    }
-    let inactivityTimer;
-
-    /**
-     * Hides all target elements by setting opacity to 0 and then display to none.
-     */
-    function hideElements() {
-        elementsArray.forEach(element => {
-            if (element instanceof HTMLElement) {
-                element.style.opacity = "0";
-                setTimeout(() => {
-                    element.style.display = "none";
-                }, 300); // Match the transition duration
-            }
-        });
-    }
-
-    /**
-     * Resets the inactivity timer, makes the elements visible,
-     * and starts a new countdown to hide them.
-     */
-    function resetTimer() {
-        elementsArray.forEach(element => {
-            if (element instanceof HTMLElement) {
-                element.style.display = "flex";
-                setTimeout(() => {
-                    element.style.opacity = "1";
-                }, 10); // Slight delay to ensure display is set before changing opacity
-            }
-        });
-        clearTimeout(inactivityTimer);
-        inactivityTimer = setTimeout(hideElements, timeout);
-    }
-
-    // Listen for mouse movement to reset the timer
-    document.addEventListener("mousemove", resetTimer);
-
-    // Start the timer initially
-    resetTimer();
-}
-
-/**
  * Updates the state of a button (enabled/disabled).
  * @param {HTMLElement} button - The button element to update.
  * @param {boolean} isDisabled - Whether the button should be disabled.
@@ -642,8 +591,6 @@ initialiseSSE();
 setPlayerVolume(radioPlayer);
 updateVolumeIcon();
 setInterval(updateProgress, 1000); // Update progress bar every 1 second
-hideElementsOnInactivity([playerControls, playerProgressContainer], 3000); // Hide player controls on inactivity for 3 seconds
-
 
 // Function to check if the song title should scroll
 function checkAndScrollSong() {
