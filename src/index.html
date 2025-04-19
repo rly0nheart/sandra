@@ -6,78 +6,113 @@
     <title>Sandra</title>
 
     <!-- Font Awesome (Free) -->
-    <!-- https://fontawesome.com -->
     <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
 
     <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="static/img/favicon.png"> <!-- https://www.flaticon.com/free-icon/orange-slice_1999991 -->
+    <link rel="icon" type="image/x-icon" href="static/img/favicon.png">
 
-    <!-- Color Thief Library v2.6.0 -->
-    <!-- https://github.com/lokesh/color-thief -->
+    <!-- Colour Thief Library v2.6.0 -->
     <script src="assets/color-thief.js/color-thief.min.js"></script>
 </head>
+
 <body>
-    <div class="player-container">
-        <img id="artwork" class="artwork" src="static/img/artwork.jpg">
-        <div class="song-info">
-            <p id="title">Loading...</p>
-            <p id="album">Loading...</p>
-            <p id="artist">Loading...</p>
+    <!-- ─────────────────────────── PLAYER ─────────────────────────── -->
+    <div class="player">
+        <!-- Vinyl artwork -->
+        <div class="player__vinyl">
+            <img
+                class="player__artwork"
+                id="js-artwork"
+                src="static/img/artwork.jpg"
+            >
+            <!-- <img class="player__disc" src="static/img/vinyl.png" alt=""> -->
         </div>
-    </div>
 
-    <div class="progress-container">
-        <span id="current-time" class="time">0:00</span>
-        <div id="progress-bar">
-            <div id="progress"></div>
-        </div>
-        <span id="total-time" class="time">0:00</span>
-    </div>
+        <!-- Track information -->
+        <div class="track-info">
+            <h2 class="track-info__title scroll-text" id="js-track-title">Loading…</h2>
+            <p  class="track-info__album scroll-text" id="js-track-album">Loading…</p>
+            <p  class="track-info__artist scroll-text" id="js-track-artist">Loading…</p>
 
-    <div class="controls">
-        <button id="playbackHistoryBtn" class="control-button" title="Playback History"><i class="fa-solid fa-clock-rotate-left"></i></button>
-        <button id="playPreviousBtn" class="control-button" title="Previous Station"><i class="fa-solid fa-backward-step"></i></button>
-        <button id="playPauseBtn" class="control-button"><i class="fas fa-pause"></i></button>
-        <button id="playNextBtn" class="control-button" title="Next Station"><i class="fa-solid fa-forward-step"></i></button>
-        <button id="stationsListBtn" class="control-button" title="Available Stations"><i class="fa-solid fa-radio"></i></button>
-        <div class="volume-container">
-            <button id="volumeMuteUnmuteBtn" class="control-button"><i class="fas fa-volume-up"></i></button>
-            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
-        </div>
-    </div>
-
-    <!-- Station Modal -->
-    <div id="stationModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Available Stations</h2>
-                <button class="close-modal" title="Close modal">
-                    <span class="close-dot"></span>
-                  </button>
-            </div>
-            <div class="modal-body">
-                <ul id="stationsList"></ul>
+            <!-- Volume -->
+            <div class="volume-control">
+                <button class="volume-control__toggle" id="js-volume-toggle" title="Mute / un-mute">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <input
+                    class="volume-control__slider"
+                    id="js-volume-slider"
+                    type="range"
+                    min="0" max="1" step="0.01" value="1"
+                >
             </div>
         </div>
     </div>
 
-    <!-- Playback History Modal -->
-    <div id="playbackHistoryModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Playback History</h2>
-                <button class="close-modal" title="Close modal">
-                    <span class="close-dot"></span>
-                  </button>                  
-            </div>
-            <div class="modal-body">
-                <ol id="playbackHistoryList"></ol>
+    <!-- ──────────────────────── PROGRESS BAR ──────────────────────── -->
+    <div class="progress">
+        <span class="progress__time" id="js-current-time">0:00</span>
+
+        <div class="progress__bar" id="js-progress-bar">
+            <div class="progress__fill" id="js-progress"></div>
+        </div>
+
+        <span class="progress__time" id="js-total-time">0:00</span>
+    </div>
+
+    <!-- ───────────────────────── CONTROLS ────────────────────────── -->
+    <div class="player-controls">
+        <button class="player-controls__button player-controls__button--history" id="js-history-button" title="Playback history">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </button>
+        <button class="player-controls__button player-controls__button--previous" id="js-previous-button" title="Previous station">
+            <i class="fa-solid fa-backward-step"></i>
+        </button>
+        <button class="player-controls__button player-controls__button--play-pause" id="js-play-pause-button" title="Play / pause">
+            <i class="fas fa-pause"></i>
+        </button>
+        <button class="player-controls__button player-controls__button--next" id="js-next-button" title="Next station">
+            <i class="fa-solid fa-forward-step"></i>
+        </button>
+        <button class="player-controls__button player-controls__button--stations" id="js-stations-button" title="Available stations">
+            <i class="fa-solid fa-radio"></i>
+        </button>
+    </div>
+
+    <!-- ────────────────────────── STATION MODAL ───────────────────────── -->
+    <div class="modal" id="station-modal">
+        <div class="modal__content">
+            <header class="modal__header">
+                <h2 class="modal__title">Available stations</h2>
+                <button class="modal__close" title="Close">
+                    <span class="modal__close-dot"></span>
+                </button>
+            </header>
+            <div class="modal__body">
+                <ul class="station-list" id="js-station-list"></ul>
             </div>
         </div>
     </div>
 
-    <audio id="radioPlayer" preload="auto"></audio>
+    <!-- ─────────────────────── PLAYBACK HISTORY MODAL ──────────────────── -->
+    <div class="modal" id="history-modal">
+        <div class="modal__content">
+            <header class="modal__header">
+                <h2 class="modal__title">Playback history</h2>
+                <button class="modal__close" title="Close">
+                    <span class="modal__close-dot"></span>
+                </button>
+            </header>
+            <div class="modal__body">
+                <ol class="history-list" id="js-history-list"></ol>
+            </div>
+        </div>
+    </div>
 
+    <!-- ─────────────────────────── AUDIO ──────────────────────────── -->
+    <audio id="js-radio-player" preload="auto"></audio>
+
+    <!-- ─────────────────────────── SCRIPTS ────────────────────────── -->
     <script type="module" src="static/js/theme.js"></script>
     <script type="module" src="static/js/scripts.js"></script>
     <script type="module" src="static/js/events.js"></script>

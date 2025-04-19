@@ -643,3 +643,26 @@ setPlayerVolume(radioPlayer);
 updateVolumeIcon();
 setInterval(updateProgress, 1000); // Update progress bar every 1 second
 hideElementsOnInactivity([playerControls, playerProgressContainer], 3000); // Hide player controls on inactivity for 3 seconds
+
+
+// Function to check if the song title should scroll
+function checkAndScrollSong() {
+    // If the song title is long enough, add the scrolling animation
+    if (songTitle.textContent.length > 10) {  // You can adjust the length threshold here
+        songTitle.style.animation = 'marquee 12s linear infinite';  // Apply the scroll animation
+    } else {
+        songTitle.style.animation = 'none';  // No scrolling effect for shorter titles
+    }
+}
+
+
+// Observer configuration: we want to detect textContent changes
+const observer = new MutationObserver(() => {
+    checkAndScrollSong();  // Automatically check if it should scroll when the title changes
+});
+
+// Observer options: look for changes to the "childList" (text) within the song title element
+const confi = { childList: true, subtree: true };
+
+// Start observing the song title element
+observer.observe(songTitle, confi);
