@@ -212,7 +212,7 @@ M = Mute / Unmute
 X = CLose modal (Available Station / Playback History)
 */
 document.addEventListener('keydown', function(event) {
-    event.preventDefault(); // Also wont trigger inspect Q
+    event.preventDefault(); // Also wont trigger mobile view (CTRL + SHIFT + M)
     if (event.key.toLowerCase() === 'f') {
       playNextStation();
     }
