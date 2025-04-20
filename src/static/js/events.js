@@ -1,7 +1,7 @@
 /* ====================================================================
    Exports – same variable names, now pointing at the new selectors
    ==================================================================== */
-   export {
+export {
     artworkImg,
     songTitle,
     songAlbum,
@@ -115,7 +115,9 @@ let artistIcon         = '<i class="fa-solid fa-user"></i>';
    Imports from sibling module
    ==================================================================== */
 import {
+    playNextStation,
     songHistory,
+    playPreviousStation,
     currentStationShortcode,
     updateNowPlayingUI,
     updateStreamUrlAndPlay,
@@ -175,29 +177,11 @@ radioPlayer.addEventListener('pause', () => vinyl.classList.remove('playing'));
 
 /* Previous / next station ------------------------------------------- */
 previousButton.addEventListener('click', () => {
-    const stationItems = Array.from(stationsList.querySelectorAll('li'));
-    const currentIndex = stationItems.findIndex(
-        item => item.dataset.shortcode === currentStationShortcode
-    );
-    if (currentIndex > 0) {
-        const previousStation     = stationItems[currentIndex - 1];
-        previousStation.click();                                   // pretend click
-        const previousStationData = JSON.parse(previousStation.dataset.stationData);
-        updateNowPlayingUI(previousStationData);
-    }
+    playPreviousStation();
 });
 
 nextButton.addEventListener('click', () => {
-    const stationItems = Array.from(stationsList.querySelectorAll('li'));
-    const currentIndex = stationItems.findIndex(
-        item => item.dataset.shortcode === currentStationShortcode
-    );
-    if (currentIndex < stationItems.length - 1) {
-        const nextStation     = stationItems[currentIndex + 1];
-        nextStation.click();
-        const nextStationData = JSON.parse(nextStation.dataset.stationData);
-        updateNowPlayingUI(nextStationData);
-    }
+    playNextStation();
 });
 
 /* Stations list modal ----------------------------------------------- */
@@ -214,6 +198,48 @@ stationsList.addEventListener('click', event => {
         // Persist current choice
         localStorage.setItem('currentStation',   stationData.station.shortcode);
         localStorage.setItem('currentStreamUrl', stationData.station.listen_url);
+    }
+});
+
+
+/* 
+P = Play / Pause
+F = Next Station
+B = Previous Station
+S = Available Stations
+H = Playback History
+M = Mute / Unmute
+X = CLose modal (Available Station / Playback History)
+*/
+document.addEventListener('keydown', function(event) {
+    event.preventDefault(); // Also wont trigger inspect Q
+    if (event.key.toLowerCase() === 'f') {
+      playNextStation();
+    }
+
+    else if (event.key.toLowerCase() === 'b') {
+        playPreviousStation();
+    }
+    
+    else if (event.key.toLowerCase() === 'p') {
+        togglePlayPause();
+    }
+
+    else if (event.key.toLowerCase() === 's') {
+        showModal(stationModal);
+    }
+    else if (event.key.toLowerCase() === 'h') {
+        showModal(playbackHistoryModal);
+    }
+    else if (event.key.toLowerCase() === 'm') {
+        toggleMuteUnmute();
+    }
+    else if (event.key.toLowerCase() === 'x') {
+        const modals = [stationModal, playbackHistoryModal];
+        modals.forEach(modal => {
+            if (modal) hideModal(modal);
+        });
+
     }
 });
 

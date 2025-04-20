@@ -28,6 +28,8 @@ import { extractColorsFromExternalImage, extractColorsFromInternalImage } from "
 export {
     songHistory, 
     currentStationShortcode,
+    playNextStation,
+    playPreviousStation,
     updateNowPlayingUI, 
     updateStreamUrlAndPlay, 
     populatePlaybackHistory, 
@@ -47,6 +49,32 @@ let songHistory = [];
 let isLoading = false;
 let currentStationShortcode = null; 
 
+
+function playNextStation() {
+    const stationItems = Array.from(stationsList.querySelectorAll('li'));
+        const currentIndex = stationItems.findIndex(
+            item => item.dataset.shortcode === currentStationShortcode
+        );
+        if (currentIndex < stationItems.length - 1) {
+            const nextStation     = stationItems[currentIndex + 1];
+            nextStation.click();
+            const nextStationData = JSON.parse(nextStation.dataset.stationData);
+            updateNowPlayingUI(nextStationData);
+        }
+    }
+
+function playPreviousStation() {
+    const stationItems = Array.from(stationsList.querySelectorAll('li'));
+        const currentIndex = stationItems.findIndex(
+            item => item.dataset.shortcode === currentStationShortcode
+        );
+        if (currentIndex > 0) {
+            const previousStation     = stationItems[currentIndex - 1];
+            previousStation.click();                                   // pretend click
+            const previousStationData = JSON.parse(previousStation.dataset.stationData);
+            updateNowPlayingUI(previousStationData);
+        }
+    }
 /**
  * Loads the configuration from the static JSON file.
  * @returns {Promise<Object>} A promise that resolves to the configuration object.
