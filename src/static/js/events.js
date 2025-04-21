@@ -209,7 +209,7 @@ B = Previous Station
 S = Available Stations
 H = Playback History
 M = Mute / Unmute
-X = CLose modal (Available Station / Playback History)
+X = Close modal (Available Station / Playback History)
 */
 document.addEventListener('keydown', function(event) {
     event.preventDefault(); // Also wont trigger mobile view (CTRL + SHIFT + M)
