@@ -730,7 +730,7 @@ body::before {
 
     /* extra tokens for the glass effect */
     --glass-bg:   rgba(255,255,255,0.10);
-    --label-bg: rgba(var(--light-color-rgb), 0.50);
+    --label-bg: rgba(var(--light-color-rgb), 0.45);
     --glass-brd:   rgba(255,255,255,0.35);
     --text-high:   rgba(255,255,255,0.95);
     --text-med:    rgba(255,255,255,0.80);
