@@ -490,12 +490,12 @@ body::before {
     flex-direction: row;
     align-items: center;
     font-size: 25px;
-    padding: 8px 20px 8px 8px; 
+    padding: 8px 20px 8px 10px; 
     cursor: pointer;
     transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
     background: none;
     text-align: left;
-    border-radius: 80px;
+    border-radius: 60px;
     /*border-top-right-radius: 16px;
     border-bottom-right-radius: 16px;*/
     position: relative;
@@ -575,7 +575,7 @@ body::before {
 
 /* Playing Station Highlight */
 #station-modal .modal__content ul li.playing {
-    color: var(--light-color);
+    color: var(--dark-color);
     background: var(--label-bg);
     box-shadow: 0 4px 12px rgba(var(--dark-color-rgb, 0, 0, 0), 0.3);   
     pointer-events: none;
@@ -778,7 +778,8 @@ body::before {
     display: flex;
     align-items: center;
     gap: var(--player-pad);
-    width: clamp(320px, 55vw, 550px);
+    width: clamp(320px, 55vw, 580px);
+    height: 270px;
     margin: 4rem auto 2.5rem;
     padding: var(--player-pad);
     background: var(--label-bg);
@@ -799,6 +800,7 @@ body::before {
     position: relative;
     width: 200px;
     height: 200px;
+    margin-left: 8px;
     animation: var(--artwork-animation);
     animation-play-state: paused;
 }
@@ -835,6 +837,7 @@ body::before {
     justify-content: centre;
     gap: 0.35rem;
     min-width: 0;
+    margin-bottom: 27px;
 }
 
 .track-info__title,
@@ -849,9 +852,9 @@ body::before {
     white-space: nowrap;
     line-height: 1.3;
     padding: 5px 10px 0px 10px;
-    border-radius: 50px;
     margin-bottom: 8px;
     box-shadow:  var(--neumorphic);
+    border-radius: 50px;
 }
 
 .track-info__title {
