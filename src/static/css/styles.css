@@ -496,8 +496,8 @@ body::before {
     background: none;
     text-align: left;
     border-radius: 80px;
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
+    /*border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;*/
     position: relative;
 }
 
@@ -519,12 +519,6 @@ body::before {
 }
 
 
-
-/* Show Equalizer When Playing */
-#station-modal .modal__content ul li.playing .station-artwork .equalizer {
-    display: block;
-}
-
 /* Station Info Container */
 #station-modal .modal__content ul li .station-info {
     display: flex;
@@ -536,7 +530,7 @@ body::before {
 /* Station Name */
 #station-modal .modal__content ul li .station-name {
     font-family: "Odin Round Bold";
-    font-size: 22px;
+    font-size: 20px;
     margin-top: 8px;
     width: fit-content;
 }
@@ -598,6 +592,7 @@ body::before {
 }
 
 #station-modal .modal__content ul li.playing .station-artwork {
+    transition: all 0.3s ease-in-out;
     box-shadow:  -5px -5px 15px var(--dark-color),
                  5px 5px 15px var(--light-color);
 }
@@ -783,13 +778,13 @@ body::before {
     display: flex;
     align-items: center;
     gap: var(--player-pad);
-    width: clamp(320px, 55vw, 540px);
+    width: clamp(320px, 55vw, 550px);
     margin: 4rem auto 2.5rem;
     padding: var(--player-pad);
     background: var(--label-bg);
     border-radius: 150px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
+    /*border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;*/
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(160%);
     box-shadow:
@@ -928,8 +923,8 @@ body::before {
 .progress__bar {
     position: relative;
     flex: 1 1 auto;
-    height: 10px;
-    background: rgba(255,255,255,0.22);
+    height: 15px;
+    background: rgba(255,255,255,0.20);
     border-radius: 50px;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -956,6 +951,7 @@ body::before {
     height: 100%;
     background-image: url("../img/wave.svg");
     background-size: 300px 100%;
+    background-repeat: repeat-x;
     animation: waveFlowRight 5s linear infinite;
     opacity: 0.3;
     mix-blend-mode: overlay;
