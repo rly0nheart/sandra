@@ -171,10 +171,10 @@ volumeSlider.addEventListener('input', () => {
 });
 volumeMuteUnmuteBtn.addEventListener('click', toggleMuteUnmute);
 
-/* Vinyl spin effect -------------------------------------------------- */
+/* Vinyl spin effect -------------------------------------------------- 
 radioPlayer.addEventListener('play',  () => vinyl.classList.add('playing'));
 radioPlayer.addEventListener('pause', () => vinyl.classList.remove('playing'));
-
+*/
 /* Previous / next station ------------------------------------------- */
 previousButton.addEventListener('click', () => {
     playPreviousStation();
