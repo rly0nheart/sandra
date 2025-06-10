@@ -16,37 +16,34 @@
 </head>
 
 <body>
-    <!-- ─────────────────────────── PLAYER ─────────────────────────── -->
     <div class="player">
-        <!-- Vinyl artwork -->
-        <div class="player__vinyl">
-            <img
-                class="player__artwork"
-                id="js-artwork"
-                src="static/img/artwork.jpg"
-            >
-        </div>
+  <!-- Vinyl artwork -->
+  <div class="player__vinyl">
+    <img class="player__artwork" id="js-artwork" src="static/img/artwork.jpg">
+  </div>
 
-        <!-- Track information -->
-        <div class="track-info">
-            <h2 class="track-info__title scroll-text" id="js-track-title">Loading…</h2>
-            <p  class="track-info__album scroll-text" id="js-track-album">Loading…</p>
-            <p  class="track-info__artist scroll-text" id="js-track-artist">Loading…</p>
-
-            <!-- Volume -->
-            <div class="volume-control">
-                <button class="volume-control__toggle" id="js-volume-toggle" title="Mute / un-mute">
-                    <i class="fas fa-volume-up"></i>
-                </button>
-                <input
-                    class="volume-control__slider"
-                    id="js-volume-slider"
-                    type="range"
-                    min="0" max="1" step="0.01" value="1"
-                >
-            </div>
-        </div>
+  <!-- RIGHT SIDE: Track info + volume -->
+  <div class="player__right">
+    <div class="track-info">
+      <h2 class="track-info__title scroll-text" id="js-track-title">Loading…</h2>
+      <p class="track-info__album scroll-text" id="js-track-album">Loading…</p>
+      <p class="track-info__artist scroll-text" id="js-track-artist">Loading…</p>
     </div>
+
+    <div class="volume-control">
+      <button class="volume-control__toggle" id="js-volume-toggle" title="Mute / un-mute">
+        <i class="fas fa-volume-up"></i>
+      </button>
+      <input
+        class="volume-control__slider"
+        id="js-volume-slider"
+        type="range"
+        min="0" max="1" step="0.01" value="1"
+      >
+    </div>
+  </div>
+</div>
+
 
     <!-- ──────────────────────── PROGRESS BAR ──────────────────────── -->
     <div class="progress">
@@ -65,13 +62,13 @@
             <i class="fa-solid fa-clock-rotate-left"></i>
         </button>
         <button class="player-controls__button player-controls__button--previous" id="js-previous-button" title="(B) Previous Station">
-            <i class="fa-solid fa-backward-step"></i>
+            <i class="fa-solid fa-backward"></i>
         </button>
         <button class="player-controls__button player-controls__button--play-pause" id="js-play-pause-button" title="(P) Play / Pause">
             <i class="fas fa-pause"></i>
         </button>
         <button class="player-controls__button player-controls__button--next" id="js-next-button" title="(F) Next Station">
-            <i class="fa-solid fa-forward-step"></i>
+            <i class="fa-solid fa-forward"></i>
         </button>
         <button class="player-controls__button player-controls__button--stations" id="js-stations-button" title="(S) Available Stations">
             <i class="fa-solid fa-list-ul"></i>
