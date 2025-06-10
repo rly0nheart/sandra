@@ -167,8 +167,8 @@ async function updateNowPlayingUI(station) {
     const { song } = station.now_playing;
     const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist, song.title) : null; 
     songTitle.textContent = song.title || "Unknown Title";
-    songAlbum.innerHTML = `${song.album || "Unknown Album"}`;
-    songArtist.innerHTML = `${song.artist || "Unknown Artist"}`;
+    songAlbum.innerHTML = `<i>from</i> ${song.album || "Unknown Album"}`;
+    songArtist.innerHTML = `<i>by</i> ${song.artist || "Unknown Artist"}`;
 
     artworkImg.crossOrigin = "Anonymous";
     artworkImg.src = song.art;
@@ -248,8 +248,8 @@ function populatePlaybackHistory(songHistory) {
             <img src="${song.art}" alt="Artwork" _target="blank">
             <div>
                 <p>${song.title}</p>
-                <p>${song.artist || 'Unknown'} - ${song.album || 'Unknown'}</p>
-                <p class="faded">${minutesAgo} minutes ago</p>
+                <p><i>by</i> ${song.artist || 'Unknown Artist'} <i>from</i> ${song.album || 'Unknown'}</p>
+                <p class="faded"><i class="fa-regular fa-clock"></i> ${minutesAgo} minutes ago</p>
             </div>
         `;
         playbackHistoryList.appendChild(songItem);
@@ -274,7 +274,7 @@ function updateStationListItem(stationData) {
     if (existingItem) {
         existingItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next">Up Next: <u>${upNextTitle}</u> by <strong>${upNextArtist}</strong></p>`
+            ? `<p class="up-next"><i>up next</i> ${upNextTitle} <i>by</i> <strong>${upNextArtist}</strong></p>`
             : '';
 
         existingItem.innerHTML = `
@@ -284,7 +284,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing">Now Playing: <u>${nowPlayingTitle}</u> by <strong>${nowPlayingArtist}</strong></p>
+                <p class="now-playing"><i>playing</i> ${nowPlayingTitle} <i>by</i> <strong>${nowPlayingArtist}</strong></p>
                 ${upNextHTML}
             </div>
         `;
@@ -295,7 +295,7 @@ function updateStationListItem(stationData) {
         stationItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
 
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next">Up Next: <u>${upNextTitle}</u> by <strong>${upNextArtist}</strong></p>`
+            ? `<p class="up-next"><i>up next</i> ${upNextTitle} <i>by</i> <strong>${upNextArtist}</strong></p>`
             : '';
 
         stationItem.innerHTML = `
@@ -305,7 +305,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing">Now Playing: <u>${nowPlayingTitle}</u> by <strong>${nowPlayingArtist}</strong></p>
+                <p class="now-playing"><i>playing</i> ${nowPlayingTitle} <i>by</i> <strong>${nowPlayingArtist}</strong></p>
                 ${upNextHTML}
             </div>
         `;
