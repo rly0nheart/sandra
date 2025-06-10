@@ -1,7 +1,7 @@
 <p align="center">
     <img src="src/static/img/favicon.png" style="height: 90px; width: 90px">
     <br>
-    <strong>Sandra</strong> is an elegant SSE-powered Azuracast Radio Player.
+    <strong>Sandra</strong>: An elegant SSE-powered Azuracast Radio Player.
 </p>
 
 ## Player Controls
