@@ -188,9 +188,8 @@ body::before {
     display: flex;
     justify-content: flex-end; 
     align-items: center;
-    padding: 18px 10px;
+    padding: 15px 10px;
     background: var(--label-bg);
-    box-shadow: inset 0 -1px rgba(--dark-color-rgb, 0.1);
     border-top-left-radius: 7px;
     border-top-right-radius: 7px;
     transition: all 0.3s ease-in-out;
@@ -213,7 +212,7 @@ body::before {
     white-space: nowrap; 
     pointer-events: none;
     transition: all 0.3s ease-in-out;
-    box-shadow: var(--neumorphic);
+    box-shadow: var(--box-shadow);
 }
 
 .modal__body {
@@ -295,9 +294,9 @@ body::before {
 .modal__close-dot {
     width: 15px;
     height: 15px;
-    background-color: var(--dark-color); /*#ff5f57*/
+    background-color: #ff5f57;
     border-radius: 50%;
-    box-shadow:var(--neumorphic);
+    box-shadow: var(--box-shadow);
     transition: transform 0.2s ease;
 }
 
@@ -305,8 +304,8 @@ body::before {
     transform: scale(1.1);
     filter: brightness(1.2);
 }
-/* End: Modal Styles */
 
+/* End: Modal Styles */
 .history-list {
     counter-reset: song-counter;
     list-style-type: decimal;
@@ -343,10 +342,9 @@ body::before {
     width: 90px;
     height: 90px;
     margin-right: 15px;
-    border-radius: 50%;
+    border-radius: 10%;
     pointer-events: none;
-    box-shadow:  -5px -5px 15px var(--dark-color),
-    5px 5px 15px var(--light-color);
+    box-shadow: var(--box-shadow);
 }
 
 .song-history-item div {
@@ -428,10 +426,8 @@ body::before {
     transition: background 0.3s ease-in-out, all 0.3s ease-in-out;
     background: none;
     text-align: left;
-    border-radius: 16px;
-    /*border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;*/
     position: relative;
+    border-radius: 15px;
 }
 
 /* Artwork Container */
@@ -442,6 +438,7 @@ body::before {
     border-radius: 12px;
     position: relative; 
     overflow: hidden;
+    box-shadow: var(--box-shadow);
 }
 
 /* Artwork Image */
@@ -499,13 +496,6 @@ body::before {
     background-color: rgba(var(--light-color-rgb), 0.1); 
 }
 
-/* Playing Station – get themed border colour */
-#station-modal .modal__content ul li:hover .station-artwork {
-    box-shadow:  -5px -5px 15px var(--dark-color),
-                 5px 5px 15px var(--light-color);
-}
-
-
 /* Playing Station Highlight */
 #station-modal .modal__content ul li.playing {
     color: var(--dark-color);
@@ -517,17 +507,6 @@ body::before {
             0 0 0 1px rgba(0, 0, 0, 0.15),
             inset 0 -1px 1px rgba(0, 0, 0, 0.2),
             inset 0 1px 1px rgba(255, 255, 255, 0.3);
-}
-
-/* Playing Station – get themed border colour */
-#station-modal .modal__content ul li.playing .station-artwork img {
-    filter: brightness(50%);
-}
-
-#station-modal .modal__content ul li.playing .station-artwork {
-    transition: all 0.3s ease-in-out;
-    box-shadow:  -5px -5px 15px var(--dark-color),
-                 5px 5px 15px var(--light-color);
 }
 
 /* Hover effect – but only when NOT playing */
@@ -632,15 +611,6 @@ body::before {
     }
 }
 
-
-
-/* =======================================================================
-   macOS‑inspired overhaul for the AzuraCast player
-   Author: Juniper 🦊
-   Date: 19 April 2025
-   Replaces: static/css/styles.css
-   ======================================================================= */
-
 /* ---------- font stack ------------------------------------------------- */
 @font-face {
     font-family: "Odin Round Regular";
@@ -673,38 +643,15 @@ body::before {
     --timing-med:  300ms;
     --timing-slow: 0.3s;
     --neumorphic: -5px -5px 15px var(--dark-color), 5px 5px 15px var(--light-color);
+    --box-shadow:
+        0 8px 24px rgba(0,0,0,0.35),
+        0 1px 2px rgba(255,255,255,0.12) inset;
 }
 
 /* ---------- global reset ---------------------------------------------- */
 *,
 *::before,
 *::after { box-sizing: border-box; }
-
-/*html, body {
-    margin: 0;
-    height: 100%;
-    font-family: var(--sys-font);
-    color: var(--text-high);
-    -webkit-font-smoothing: antialiased;
-    background:
-        radial-gradient(120% 120% at 50% 0,
-            rgba(255,255,255,0.08) 0%,
-            rgba(0,0,0,0.92) 100%)
-        fixed #000;
-}
-
-/* Subtle vignette overlay 
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(circle at 50% 50%,
-            rgba(255,255,255,0.04) 0,
-            rgba(0,0,0,0.85) 100%);
-    z-index: -1;
-}*/
 
 /* ---------- PLAYER SHELL ---------------------------------------------- */
 .player {
@@ -716,14 +663,10 @@ body::before {
     margin: 4rem auto 2.5rem;
     padding: var(--player-pad);
     background: var(--label-bg);
-    border-radius: 40px;
-    /*border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;*/
+    border-radius: 35px;
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(160%);
-    box-shadow:
-        0 8px 24px rgba(0,0,0,0.35),
-        0 1px 2px rgba(255,255,255,0.12) inset;
+    box-shadow: var(--box-shadow);
     transition: backdrop-filter var(--timing-med);
 }
 
@@ -759,7 +702,7 @@ body::before {
     background: transparent;
     transition: background var(--timing-slow) ease-in-out;
     background: linear-gradient(315deg, var(--light-color), var(--dark-color));
-    box-shadow:  var(--neumorphic);
+    box-shadow: var(--box-shadow);
 }
 
 /* controls -------------------------------------------------------------- */
@@ -818,9 +761,7 @@ body::before {
     color: var(--light-color);
     background: var(--dark-color);
     border: none;
-    box-shadow:
-        0 8px 24px rgba(0,0,0,0.35),
-        0 1px 2px rgba(255,255,255,0.12) inset;
+    box-shadow: var(--box-shadow);
 }
 .player-controls__button--play-pause:hover {
     color: var(--dark-color);
@@ -830,9 +771,7 @@ body::before {
 /* small glow on hover for prev/next ------------------------------------- */
 .player-controls__button--previous:hover,
 .player-controls__button--next:hover {
-    box-shadow:
-        0 4px 8px rgba(0,0,0,0.45),
-        0 0 0 3px rgba(255,255,255,0.18) inset;
+    box-shadow: var(--box-shadow);
 }
 
 
@@ -860,7 +799,7 @@ body::before {
     line-height: 1.3;
     padding: 5px 10px 0px 10px;
     margin-bottom: 8px;
-    box-shadow:  var(--neumorphic);
+    box-shadow: var(--box-shadow);
     border-radius: 50px;
 }
 
@@ -893,7 +832,7 @@ body::before {
     width: 80%;
     cursor: pointer;
     accent-color: var(--dark-color);
-    box-shadow: var(--neumorphic);
+    box-shadow: var(--box-shadow);
 }
 
 .volume-control__toggle {
@@ -905,7 +844,7 @@ body::before {
     background: var(--dark-color);
     color: var(--light-color);
     transition: background var(--timing-slow) ease-in-out;
-    box-shadow: var(--neumorphic);
+    box-shadow: var(--box-shadow);
 }
 .volume-control__toggle:hover {
     background: var(--light-color);
@@ -986,12 +925,6 @@ body::before {
 
 
 /* ---------- responsive tweaks ----------------------------------------- */
-/* =======================================================================
-   Mobile‑first full‑screen layout
-   Target: phones & small tablets (≤ 640 px)
-   Author: Juniper 🦊 – 19 April 2025
-   Paste beneath your existing styles so it overrides where needed
-   ======================================================================= */
    @media (max-width: 640px) {
     /* make sure the whole viewport is usable */
     html, body {
@@ -1018,7 +951,7 @@ body::before {
         backdrop-filter: blur(30px) saturate(200%);
         -webkit-backdrop-filter: blur(40px) saturate(200%);
         border: none;
-        box-shadow: none;
+        box-shadow: var(--box-shadow);
     }
 
     .track-info__title,
@@ -1083,9 +1016,7 @@ body::before {
         z-index: 20;
     }
     .player-controls__button  {
-        box-shadow:
-            0 4px 12px rgba(0,0,0,0.5),
-            0 1px 1px rgba(255,255,255,0.18) inset;
+        box-shadow: var(--box-shadow);
     }
     .player-controls__button--play-pause {
         width: calc(var(--control-size) + 12px);

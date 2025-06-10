@@ -17,8 +17,6 @@ import {
     progress, 
     currentTimeDisplay, 
     totalTimeDisplay,
-    artistIcon,
-    albumIconSpinning,
     stationsList,
     playIcon,
     pauseIcon,
@@ -169,8 +167,8 @@ async function updateNowPlayingUI(station) {
     const { song } = station.now_playing;
     const artistImage = config.ui.artistImageAsBackground ? await getArtistImageFromDeezer(song.artist, song.title) : null; 
     songTitle.textContent = song.title || "Unknown Title";
-    songAlbum.innerHTML = `${albumIconSpinning} ${song.album || "Unknown Album"}`;
-    songArtist.innerHTML = `${artistIcon} ${song.artist || "Unknown Artist"}`;
+    songAlbum.innerHTML = `${song.album || "Unknown Album"}`;
+    songArtist.innerHTML = `${song.artist || "Unknown Artist"}`;
 
     artworkImg.crossOrigin = "Anonymous";
     artworkImg.src = song.art;
