@@ -205,14 +205,14 @@ body::before {
     transform: translateX(-50%);
     font-size: 20px;
     font-family: "Odin Round Bold";
-    color: var(--light-color);
-    background: var(--dark-color);
+    color: rgba(255, 255, 255, 0.95);
+    /*background: var(--dark-color);*/
     margin: 0;
     border-radius: 50px;
     white-space: nowrap; 
     pointer-events: none;
     transition: all 0.3s ease-in-out;
-    box-shadow: var(--box-shadow);
+    /*box-shadow: var(--box-shadow);*/
 }
 
 .modal__body {
@@ -678,16 +678,6 @@ body::before {
     position: relative;
 }
 
-.player__artwork {
-    width: 190px;
-    height: 190px;
-    min-width: 190px;
-    min-height: 190px;
-    max-width: 190px;
-    max-height: 190px;
-    /* ...existing code... */
-}
-
 .player__right {
     flex: 1 1 0;
     min-width: 0; /* Allows ellipsis on text */
@@ -824,7 +814,7 @@ body::before {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    justify-content: centre;
+    justify-content: left;
     max-width: 100%;
     gap: 0.3rem;
 
