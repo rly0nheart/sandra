@@ -2,7 +2,6 @@
     <img src="src/static/img/favicon.png" style="height: 90px; width: 90px">
     <br>
     <strong>Sandra</strong>: An elegant SSE-powered Azuracast Radio Player.
-    <img src="src/gallery/Screenshot 2025-06-11 at 17-37-51 Playing Bécane by Yamê — COLORS.png">
 </p>
 
 ## Player Controls
