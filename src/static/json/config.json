@@ -10,7 +10,7 @@
             }
     },
     "ui": {
-        "artistImageAsBackground": false,
+        "artistImageAsBackground": true,
         "artistImageAPI": "https://api.deezer.com"
     },
     "corsProxy": "https://corsproxy.io/?",

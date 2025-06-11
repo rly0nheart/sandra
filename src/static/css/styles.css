@@ -830,12 +830,20 @@ body::before {
     transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
 }
 
-.track-info__album i,
-.track-info__artist i {
-    color: #aaa;
+i {
+    color: var(--light-color);
+    background-color: var(--dark-color);
     font-style: normal;
-    opacity: 0.8;
     font-weight: 400;
+    border-radius: 50px;
+    padding-bottom: 0.1rem;
+    padding-top: 0.1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    font-size: 1rem;
+    text-shadow: none; /* no glow for icons */
+    user-select: none;
 }
 
 .track-info__title {
