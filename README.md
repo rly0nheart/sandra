@@ -4,6 +4,8 @@
     <strong>Sandra</strong>: An elegant SSE-powered Azuracast Radio Player.
 </p>
 
+## Setup & Installation
+Wait, let me work on that other thing first.
 ## Player Controls
 * <kbd>P</kbd> - **Play / Pause**
 * <kbd>M</kbd> - **Mute / Un-mute**
