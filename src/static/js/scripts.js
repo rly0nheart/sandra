@@ -274,7 +274,7 @@ function updateStationListItem(stationData) {
     if (existingItem) {
         existingItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next"><i>up next</i> ${upNextTitle} <i>by</i> <strong>${upNextArtist}</strong></p>`
+            ? `<p class="up-next"><i>Up next</i> ${upNextTitle} <i>by</i> <strong>${upNextArtist}</strong></p>`
             : '';
 
         existingItem.innerHTML = `
@@ -284,7 +284,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><i>playing</i> ${nowPlayingTitle} <i>by</i> <strong>${nowPlayingArtist}</strong></p>
+                <p class="now-playing"><i>Playing</i> ${nowPlayingTitle} <i>by</i> <strong>${nowPlayingArtist}</strong></p>
                 ${upNextHTML}
             </div>
         `;
@@ -295,7 +295,7 @@ function updateStationListItem(stationData) {
         stationItem.dataset.stationData = JSON.stringify(stationData); // Store station data in the element
 
         const upNextHTML = stationData.playing_next
-            ? `<p class="up-next"><i>up next</i> ${upNextTitle} <i>by</i> <strong>${upNextArtist}</strong></p>`
+            ? `<p class="up-next"><i>Up next</i> ${upNextTitle} <i>by</i> <strong>${upNextArtist}</strong></p>`
             : '';
 
         stationItem.innerHTML = `
@@ -305,7 +305,7 @@ function updateStationListItem(stationData) {
             </div>
             <div class="station-info">
                 <span class="station-name">${stationData.station.name}</span>
-                <p class="now-playing"><i>playing</i> ${nowPlayingTitle} <i>by</i> <strong>${nowPlayingArtist}</strong></p>
+                <p class="now-playing"><i>Playing</i> ${nowPlayingTitle} <i>by</i> <strong>${nowPlayingArtist}</strong></p>
                 ${upNextHTML}
             </div>
         `;
